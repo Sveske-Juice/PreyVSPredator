@@ -4,6 +4,4 @@ public class Prey extends Animal
     {
         super(name, moveSpeed);
     }
-    
-
 }

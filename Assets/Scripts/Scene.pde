@@ -3,7 +3,7 @@
 public abstract class Scene
 {
     /* Members. */
-    protected String m_SceneName;
+    protected String m_SceneName = "New Scene";
     protected ArrayList<GameObject> m_GameObjects = new ArrayList<GameObject>();
     
     /* Getters/Setters. */
@@ -15,7 +15,7 @@ public abstract class Scene
     {
         m_SceneName = sceneName;
     }
-        
+    
     /* Methods. */
     public abstract void CreateScene();
     
@@ -24,7 +24,7 @@ public abstract class Scene
     {
         for (int i = 0; i < m_GameObjects.size(); i++)
         {
-            m_GameObjects.get(i).Start();
+            m_GameObjects.get(i).StartObject();
         }
     }
     
@@ -32,7 +32,7 @@ public abstract class Scene
     {
         for (int i = 0; i < m_GameObjects.size(); i++)
         {
-            m_GameObjects.get(i).Update();
+            m_GameObjects.get(i).UpdateObject();
         }
     }
     
@@ -40,8 +40,16 @@ public abstract class Scene
     {
         for (int i = 0; i < m_GameObjects.size(); i++)
         {
-            m_GameObjects.get(i).Exit();
+            m_GameObjects.get(i).ExitObject();
         }
+    }
+    
+    public void AddGameObject(GameObject go)
+    {
+        if (go == null)
+            return;
+        
+        m_GameObjects.add(go);
     }
 }
 
@@ -54,7 +62,7 @@ public class GameScene extends Scene
     
     public void CreateScene()
     {
-        m_GameObjects.add(new Prey("Prey", 5f));
-        m_GameObjects.add(new Predator("Predator", 5f));
+        AddGameObject(new Prey("Prey", 5f));
+        AddGameObject(new Predator("Predator", 5f));
     }
 }

@@ -33,4 +33,12 @@ public class SceneManager
         }
         return false;
     }
+    
+    public void UpdateScene()
+    {
+         if (m_ActiveScene == null)
+             return;
+        
+        m_ActiveScene.UpdateObjects();
+    }
 }

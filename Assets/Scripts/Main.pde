@@ -9,5 +9,5 @@ void setup()
 
 void draw()
 {
-    g_SceneManager.GetActiveScene().UpdateObjects();
+    g_SceneManager.UpdateScene();
 }
