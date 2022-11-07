@@ -15,6 +15,7 @@ public class SceneManager
     /// specified by the argument "sceneName"
     public boolean LoadScene(String sceneName)
     {
+        print("Loading scene: " + sceneName + "\n");
         for (int i = 0; i < m_Scenes.size(); i++)
         {
             // If scenenames match
@@ -26,12 +27,32 @@ public class SceneManager
 
                 // Load new scene by creating and starting all objects in that scene
                 m_ActiveScene = m_Scenes.get(i);
+
                 m_ActiveScene.CreateScene();
+
+                // Create all the components on every GameObject
+                CreateObjects(m_ActiveScene);
+
+                // Start all the objects
                 m_ActiveScene.StartObjects();
                 return true;
             }
         }
         return false;
+    }
+
+    /// Create the components on all GameObjects in a scene
+    private void CreateObjects(Scene scene)
+    {
+        if (scene == null)
+            return;
+
+        print("Creating all objects in scene: " + scene.GetSceneName() + "\n");
+        ArrayList<GameObject> objects = scene.GetGameObjects();
+        for (int i = 0; i < objects.size(); i++)
+        {
+            objects.get(i).CreateComponents();
+        }
     }
     
     public void UpdateScene()

@@ -1,4 +1,5 @@
 SceneManager g_SceneManager = new SceneManager();
+InputManager g_InputManager = new InputManager();
 
 void setup()
 {
@@ -10,4 +11,15 @@ void setup()
 void draw()
 {
     g_SceneManager.UpdateScene();
+
+}
+
+void keyPressed()
+{
+    InputManager.GetInstance().RegisterKey(key);
+}
+
+void keyReleased()
+{
+    InputManager.GetInstance().UnregisterKey(key);    
 }

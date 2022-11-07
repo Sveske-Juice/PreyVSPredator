@@ -10,14 +10,10 @@ public abstract class Animal extends GameObject
         super(name);
         m_MoveSpeed = moveSpeed;
     }
-    
-    public void Start()
+
+    @Override
+    public void CreateComponents()
     {
-        print("Starting Animal with name: " + m_Name + "\n");
-    }
-    
-    public void Update()
-    {
-        print("Updating Animal with name: " + m_Name + "\n");
+        super.CreateComponents();
     }
 }

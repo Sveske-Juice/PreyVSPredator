@@ -1,27 +1,42 @@
 public class GameObject
 {
     /* Members. */
-    protected String m_Name;
+    protected String m_Name = "New GameObject";
+    protected boolean m_ObjectStarted = false;
     
     protected ArrayList<Component> m_Components = new ArrayList<Component>();
     
     // TODO support for parent and children
+    public GameObject() {}
+
     public GameObject(String name)
     {
         m_Name = name;
     }
 
+    /* Getters/Setters. */
+    public String GetName() { return m_Name; }
+
     /* Methods. */
+    public void CreateComponents()
+    {
+        AddComponent(new Transform());
+    }
+
     public void AddComponent(Component component)
     {
         if (component == null)
             return;
         
+        print("Adding component: " + component.GetName() + " on object: " + m_Name + "\n");
         m_Components.add(component);
         
         // Link the component to this GameObject, 
         // so it can reference it later.
         component.SetGameObject(this);
+
+        if (m_ObjectStarted)
+            component.Start();
     }
     
     /// Gets a component of type T on this GameObject.
@@ -63,10 +78,14 @@ public class GameObject
     // TODO use delegate for method
     public void StartObject()
     {
-        for (int i = 0; i < m_Components.size(); i++)
+        m_ObjectStarted = true;        
+        int size = m_Components.size();
+        for (int i = 0; i < size; i++)
         {
+            print("Starting component: " + m_Components.get(i).GetName() + " on object: " + m_Name + "\n");
             m_Components.get(i).Start();
         }
+        
     }
     
     public void UpdateObject()
