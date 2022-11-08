@@ -5,6 +5,7 @@ public class GameObject
     protected boolean m_ObjectStarted = false;
     
     protected ArrayList<Component> m_Components = new ArrayList<Component>();
+    protected Transform m_Transform;
     
     // TODO support for parent and children
     public GameObject() {}
@@ -16,11 +17,13 @@ public class GameObject
 
     /* Getters/Setters. */
     public String GetName() { return m_Name; }
+    public Transform GetTransform() { return m_Transform; }
 
     /* Methods. */
     public void CreateComponents()
     {
-        AddComponent(new Transform());
+        m_Transform = new Transform();
+        AddComponent(m_Transform);
     }
 
     public void AddComponent(Component component)

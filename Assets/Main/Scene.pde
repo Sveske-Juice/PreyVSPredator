@@ -59,10 +59,15 @@ public class GameScene extends Scene
     {
         super(sceneName);
     }
+
+    public GameScene()
+    {
+        super("Game Scene");
+    }
     
     public void CreateScene()
     {
-        AddGameObject(new Prey("Prey", 5f));
-        AddGameObject(new Predator("Predator", 5f));
+        AddGameObject(new Prey("Prey"));
+        //AddGameObject(new Predator("Predator"));
     }
 }
