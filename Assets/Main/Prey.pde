@@ -9,7 +9,7 @@ public class Prey extends Animal
     public void CreateComponents()
     {
         super.CreateComponents();
-        AddComponent(new PreyMover(5f));
+        //AddComponent(new PreyMover(5f));
     }
 }
 
@@ -25,6 +25,7 @@ public class PreyMover extends AnimalMover
     public PreyMover(float moveSpeed)
     {
         m_MovementSpeed = moveSpeed;
+        m_Name = "Prey Mover";
     }
 
     @Override
@@ -49,8 +50,5 @@ public class PreyMover extends AnimalMover
         
         m_MoveController.SetVelocity(m_Movement.mult(m_MovementSpeed));
         m_MoveController.Move();
-        print(m_GameObject.GetTransform().Position + "\n");
     }
-
-
 }

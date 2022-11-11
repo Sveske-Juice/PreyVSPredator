@@ -1,12 +1,13 @@
 public abstract class Component
 {
     /* Members. */
-    protected String m_Name;
+    protected String m_Name = "New Component";
     protected GameObject m_GameObject;
     
     /* Getters/Setters. */
     public String GetName() { return m_Name; }
     public void SetGameObject(GameObject go) { m_GameObject = go; }
+    public GameObject GetGameObject() { return m_GameObject; }
     
     /* Methods. */
     public void Start() {}

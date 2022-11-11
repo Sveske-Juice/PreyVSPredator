@@ -31,7 +31,7 @@ public class SceneManager
                 m_ActiveScene.CreateScene();
 
                 // Create all the components on every GameObject
-                CreateObjects(m_ActiveScene);
+                CreateComponentsOnObjects(m_ActiveScene);
 
                 // Start all the objects
                 m_ActiveScene.StartObjects();
@@ -41,13 +41,21 @@ public class SceneManager
         return false;
     }
 
+    public void UnloadActiveScene()
+    {
+        if (m_ActiveScene == null)
+            return;
+        
+        m_ActiveScene.ExitObjects();
+    }
+
     /// Create the components on all GameObjects in a scene
-    private void CreateObjects(Scene scene)
+    private void CreateComponentsOnObjects(Scene scene)
     {
         if (scene == null)
             return;
 
-        print("Creating all objects in scene: " + scene.GetSceneName() + "\n");
+        //println("Creating all components on every object in scene: " + scene.GetSceneName());
         ArrayList<GameObject> objects = scene.GetGameObjects();
         for (int i = 0; i < objects.size(); i++)
         {
@@ -61,5 +69,8 @@ public class SceneManager
              return;
         
         m_ActiveScene.UpdateObjects();
+
+        // Check for collissions
+        m_ActiveScene.GetCollissionSystem().CheckCollisions();
     }
 }

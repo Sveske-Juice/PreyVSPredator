@@ -3,16 +3,24 @@ public class GameObject
     /* Members. */
     protected String m_Name = "New GameObject";
     protected boolean m_ObjectStarted = false;
-    
+    protected Scene m_BelongingToScene = null;
+
     protected ArrayList<Component> m_Components = new ArrayList<Component>();
     protected Transform m_Transform;
+
+    /* Getters/Setters. */
+    public Scene GetBelongingToScene() { return m_BelongingToScene; }
+    public void SetBelongingToScene(Scene scene) { m_BelongingToScene = scene; }
     
-    // TODO support for parent and children
     public GameObject() {}
 
     public GameObject(String name)
     {
         m_Name = name;
+
+        // Always add a transform to a Game Object
+        m_Transform = new Transform();
+        AddComponent(m_Transform);
     }
 
     /* Getters/Setters. */
@@ -20,11 +28,7 @@ public class GameObject
     public Transform GetTransform() { return m_Transform; }
 
     /* Methods. */
-    public void CreateComponents()
-    {
-        m_Transform = new Transform();
-        AddComponent(m_Transform);
-    }
+    public void CreateComponents() { }
 
     public void AddComponent(Component component)
     {
@@ -59,7 +63,7 @@ public class GameObject
         return null;
     }
     
-     /// Removes a component of type T on this GameObject.
+    /// Removes a component of type T on this GameObject.
     /// Returns true if it was removed or false if it couldn't be.
     public <T extends Component> boolean RemoveComponent(Class<T> componentClassType)
     {
@@ -77,12 +81,10 @@ public class GameObject
         return false;
     }
     
-
-    // TODO use delegate for method
     public void StartObject()
     {
-        m_ObjectStarted = true;        
         int size = m_Components.size();
+        m_ObjectStarted = true;
         for (int i = 0; i < size; i++)
         {
             print("Starting component: " + m_Components.get(i).GetName() + " on object: " + m_Name + "\n");
@@ -103,6 +105,7 @@ public class GameObject
     {
         for (int i = 0; i < m_Components.size(); i++)
         {
+            print("Exiting component: " + m_Components.get(i).GetName() + " on object: " + m_Name + "\n");
             m_Components.get(i).Exit();
         }
     }

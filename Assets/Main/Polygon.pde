@@ -17,6 +17,7 @@ public class Polygon extends Component
     public Polygon(PShape shape)
     {
         m_PShape = shape;
+        m_Name = "Polygon";
     }
 
     /* Methods. */
@@ -32,13 +33,18 @@ public class Polygon extends Component
     private void Display()
     {
         PVector pos = m_GameObject.GetTransform().Position;
+        
+        // Create new transformation matrix for displaying the polygon
+        pushMatrix();
+        
+        // Translate the coordinate system so the polygon to draw is in center
         translate(pos.x, pos.y);
-        shape(m_PShape);
-    }
 
-    public PShape CreateRect(PVector position, PVector extents)
-    {
-        PShape shape = createShape(RECT, position.x, position.y, extents.x, extents.y);
-        return shape;
+        // Draw the polygon
+        shape(m_PShape);
+
+        // Restore the old coordinate system for the next draw call
+        // by popping the newly created transformation matrix from the matrix stack
+        popMatrix();
     }
 }
