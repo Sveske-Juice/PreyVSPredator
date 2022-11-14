@@ -38,4 +38,14 @@ public class InputManager
     {
         return m_KeyMap.IsSet(code);
     }
+
+    public String GetMap()
+    {
+        String out = "";
+        for (int i = 0; i < 255; i++)
+        {
+            out += (m_KeyMap.IsSet(i) ? "1" : "0") + " ";
+        }
+        return out;
+    }
 }

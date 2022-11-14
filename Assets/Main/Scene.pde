@@ -75,11 +75,18 @@ public class GameScene extends Scene
     {
         GameObject prey1 = AddGameObject(new Prey("Prey"));
         prey1.AddComponent(new PreyMover(5f));
-        prey1.GetTransform().Position = new PVector(0, 0);
+        prey1.AddComponent(new CircleCollider());
 
         GameObject prey2 = AddGameObject(new Prey("Prey2"));
         prey2.GetTransform().Position = new PVector(width/2, height/2);
+        prey2.AddComponent(new BoxCollider());
 
+        /*
+        GameObject pred1 = AddGameObject(new Predator("Pred1"));
+        pred1.GetTransform().Position = new PVector(width/2, 25);
+        prey1.AddComponent(new BoxCollider());
+
+        
         GameObject prey3 = AddGameObject(new Prey("Prey3"));
         prey3.GetTransform().Position = new PVector(width/2, height/2);
 
@@ -95,7 +102,7 @@ public class GameScene extends Scene
         GameObject prey7 = AddGameObject(new Prey("Prey7"));
         prey7.GetTransform().Position = new PVector(width/2, height/2);
         //AddGameObject(new Predator("Predator"));
-
+        */
         
     }
 }

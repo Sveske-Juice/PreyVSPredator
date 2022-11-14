@@ -37,7 +37,9 @@ public class PreyMover extends AnimalMover
     @Override
     public void Update()
     {
+        
         PVector m_Movement = new PVector();
+        
         if (InputManager.GetInstance().GetKey('w'))
             m_Movement.y = -1;
         else if (InputManager.GetInstance().GetKey('s'))
@@ -50,5 +52,14 @@ public class PreyMover extends AnimalMover
         
         m_MoveController.SetVelocity(m_Movement.mult(m_MovementSpeed));
         m_MoveController.Move();
+
+
+        // radius resize
+        CircleCollider collider = GetGameObject().GetComponent(CircleCollider.class);
+        //println(InputManager.GetInstance().GetMap());
+        if (InputManager.GetInstance().GetKey(38)) // up arrow
+            collider.SetRadius(collider.GetRadius() + 0.5);
+        else if (InputManager.GetInstance().GetKey(40)) // dwn arrow
+            collider.SetRadius(collider.GetRadius() - 0.5);
     }
 }

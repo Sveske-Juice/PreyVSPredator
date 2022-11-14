@@ -11,21 +11,20 @@ public class GameObject
     /* Getters/Setters. */
     public Scene GetBelongingToScene() { return m_BelongingToScene; }
     public void SetBelongingToScene(Scene scene) { m_BelongingToScene = scene; }
-    
+    public String GetName() { return m_Name; }
+    public Transform GetTransform() { return m_Transform; }
+
     public GameObject() {}
 
     public GameObject(String name)
     {
         m_Name = name;
 
+        println("Setting transform");
         // Always add a transform to a Game Object
         m_Transform = new Transform();
         AddComponent(m_Transform);
     }
-
-    /* Getters/Setters. */
-    public String GetName() { return m_Name; }
-    public Transform GetTransform() { return m_Transform; }
 
     /* Methods. */
     public void CreateComponents() { }

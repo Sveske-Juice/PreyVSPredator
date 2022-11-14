@@ -4,7 +4,7 @@ InputManager g_InputManager = new InputManager();
 
 void setup()
 {
-    size(1920, 1080);
+    size(640, 480);
 
     g_SceneManager.AddScene(new GameScene());
     g_SceneManager.LoadScene("Game Scene");
@@ -29,10 +29,22 @@ void exit()
 
 void keyPressed()
 {
-    InputManager.GetInstance().RegisterKey(key);
+    // Check its a special character
+    if (key != CODED)
+    {
+        InputManager.GetInstance().RegisterKey(key);
+        return;
+    }
+    InputManager.GetInstance().RegisterKey((char) keyCode);
 }
 
 void keyReleased()
 {
-    InputManager.GetInstance().UnregisterKey(key);    
+    // Check its a special character
+    if (key != CODED)
+    {
+        InputManager.GetInstance().UnregisterKey(key);
+        return;
+    }
+    InputManager.GetInstance().UnregisterKey((char) keyCode);  
 }

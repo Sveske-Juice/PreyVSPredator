@@ -4,4 +4,11 @@ public class Predator extends Animal
     {
         super(name);
     }
+
+    @Override
+    public void CreateComponents()
+    {
+        super.CreateComponents();
+        //AddComponent(new PreyMover(5f));
+    }
 }
