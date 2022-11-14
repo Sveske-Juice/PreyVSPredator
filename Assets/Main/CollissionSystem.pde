@@ -21,7 +21,7 @@ public class CollissionSystem
                 //println("Collider: " + collider.GetName() + " is a circle collider");
                 for (int j = i + 1; j < m_Colliders.size(); j++)
                 {
-                    println("Checking for collision between " + collider.GetName() + " on " + collider.GetGameObject().GetName() + " and " +  m_Colliders.get(j).GetName() + " on " + m_Colliders.get(j).GetGameObject().GetName());
+                    //println("Checking for collision between " + collider.GetName() + " on " + collider.GetGameObject().GetName() + " and " +  m_Colliders.get(j).GetName() + " on " + m_Colliders.get(j).GetGameObject().GetName());
                     RunCollisionCheck(m_Colliders.get(i), m_Colliders.get(j));
                 }
             }
@@ -30,7 +30,7 @@ public class CollissionSystem
                 //println("Collider: " + collider.GetName() + " is a circle collider");
                 for (int j = i + 1; j < m_Colliders.size(); j++)
                 {
-                    println("Checking for collision between " + collider.GetName() + " on " + collider.GetGameObject().GetName() + " and " +  m_Colliders.get(j).GetName() + " on " + m_Colliders.get(j).GetGameObject().GetName());
+                    //println("Checking for collision between " + collider.GetName() + " on " + collider.GetGameObject().GetName() + " and " +  m_Colliders.get(j).GetName() + " on " + m_Colliders.get(j).GetGameObject().GetName());
                     RunCollisionCheck(m_Colliders.get(i), m_Colliders.get(j));
                 }
             }
@@ -44,12 +44,12 @@ public class CollissionSystem
     {
         if (CircleCollider.class.isAssignableFrom(secondCollider.getClass()))
         {
-            println("Testing for circle v cirlce");
+            //println("Testing for circle v cirlce");
             firstCollider.CollideAgainstCircle((CircleCollider) secondCollider);
         }
         else if (BoxCollider.class.isAssignableFrom(secondCollider.getClass()))
         {
-            println("Testing for box v box");
+            //println("Testing for box v box");
             firstCollider.CollideAgainstBox((BoxCollider) secondCollider);
         }
     }

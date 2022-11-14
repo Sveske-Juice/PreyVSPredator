@@ -3,7 +3,7 @@ public class CircleCollider extends Collider
     /* Members. */
     private PVector m_CenterOffset = new PVector();
     private PVector m_OurPosition;
-    private float m_Radius = 100f;
+    private float m_Radius = 30f;
 
     /* Getters/Setters. */
     public float GetRadius() { return m_Radius; }
@@ -27,14 +27,14 @@ public class CircleCollider extends Collider
     @Override
     public void CollideAgainstCircle(CircleCollider collider)
     {
-        PVector checkPosition = collider.GetGameObject().GetTransform().Position;
+        PVector checkPosition = collider.transform().Position;
         float checkRadius = collider.GetRadius();
 
-        float dist = dist(m_GameObject.GetTransform().Position.x, m_GameObject.GetTransform().Position.y, m_GameObject.GetTransform().Position.x, m_GameObject.GetTransform().Position.y);
-        println("dist: " + dist + " radius: " + m_Radius);
+        float dist = checkPosition.dist(transform().Position);
+        //println("dist: " + dist + " radius: " + m_Radius);
         if (dist < (m_Radius + checkRadius))
         {
-            println("Collision!!!");
+            //println("Collision!!!");
             fill(255, 0, 0);
         }
         fill(255);
@@ -45,19 +45,20 @@ public class CircleCollider extends Collider
     {
         PVector checkPosition = collider.GetCenter();
 
-        float distBetweenCenters = m_GameObject.GetTransform().Position.dist(checkPosition);
-        PVector circleToBoxDir = PVector.sub(checkPosition, m_GameObject.GetTransform().Position).normalize();
-        PVector outerPoint = PVector.add(m_GameObject.GetTransform().Position, circleToBoxDir.mult(m_Radius));
+        PVector circleToBoxDir = PVector.sub(checkPosition, transform().Position).normalize();
 
-        println(outerPoint);
+        // Get outer point on circle in the direction of the box to test
+        PVector outerPoint = PVector.add(transform().Position, circleToBoxDir.mult(m_Radius));
+
         circle(outerPoint.x, outerPoint.y, 5);
+
+        // If the outer point in inside the circle there is a collision
         println(collider.PointInCollider(outerPoint));
     }
 
     @Override
     public void DrawCollider()
     {
-        println(m_GameObject.GetTransform().Position);
-        circle(m_GameObject.GetTransform().Position.x, m_GameObject.GetTransform().Position.y, m_Radius*2);
+        circle(transform().Position.x, transform().Position.y, m_Radius*2);
     }
 }

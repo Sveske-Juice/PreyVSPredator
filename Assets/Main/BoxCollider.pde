@@ -1,13 +1,15 @@
 public class BoxCollider extends Collider
 {
     /* Members. */
-    private float m_Width = 100f;
-    private float m_Height = 100f;
+    private float m_Width = 50f;
+    private float m_Height = 50f;
 
     /* Getters/Setters. */
     public float GetWidth() { return m_Width; }
+    public void SetWidth(float width) { m_Width = width; }
     public float GetHeight() { return m_Height; }
-    public PVector GetCenter() { return new PVector(m_GameObject.GetTransform().Position.x + m_Width / 2f, m_GameObject.GetTransform().Position.y + m_Height / 2f); }
+    public void SetHeight(float height) { m_Height = height; }
+    public PVector GetCenter() { return new PVector(transform().Position.x + m_Width / 2f, transform().Position.y + m_Height / 2f); }
 
     public BoxCollider()
     {
@@ -17,21 +19,33 @@ public class BoxCollider extends Collider
     @Override
     public boolean PointInCollider(PVector point)
     {
-        return (    point.x > m_GameObject.GetTransform().Position.x && point.x < m_GameObject.GetTransform().Position.x + m_Width &&
-                    point.y > m_GameObject.GetTransform().Position.y && point.y < m_GameObject.GetTransform().Position.y + m_Height);
+        return (    point.x > transform().Position.x && point.x < transform().Position.x + m_Width &&
+                    point.y > transform().Position.y && point.y < transform().Position.y + m_Height);
     }
 
     @Override
     public void CollideAgainstCircle(CircleCollider collider)
     {
+        
+        PVector checkPosition = collider.transform().Position;
 
+        PVector circleToBoxDir = PVector.sub(GetCenter(), checkPosition).normalize();
+
+        // Get outer point on circle in the direction of the box to test
+        PVector outerPoint = PVector.add(checkPosition, circleToBoxDir.mult(collider.GetRadius()));
+
+        fill(255,0,0);
+        circle(outerPoint.x, outerPoint.y, 5);
+        fill(255);
+        
+        println(PointInCollider(outerPoint));
     }
 
     @Override
     public void CollideAgainstBox(BoxCollider collider)
     {
-        PVector ourPosition = m_GameObject.GetTransform().Position;
-        PVector checkPosition = collider.GetGameObject().GetTransform().Position;
+        PVector ourPosition = transform().Position;
+        PVector checkPosition = collider.transform().Position;
         float checkWidth = collider.GetWidth();
         float checkHeight = collider.GetHeight();
 
@@ -47,6 +61,7 @@ public class BoxCollider extends Collider
     @Override
     public void DrawCollider()
     {
-        rect(m_GameObject.GetTransform().Position.x, m_GameObject.GetTransform().Position.y, m_Width, m_Height);
+        println("drawing rect at " + transform().Position + " with width: " + m_Width + " and height: " + m_Height);
+        rect(transform().Position.x, transform().Position.y, m_Width, m_Height);
     }
 }

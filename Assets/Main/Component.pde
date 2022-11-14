@@ -8,6 +8,7 @@ public abstract class Component
     public String GetName() { return m_Name; }
     public void SetGameObject(GameObject go) { m_GameObject = go; }
     public GameObject GetGameObject() { return m_GameObject; }
+    public Transform transform() { return GetGameObject().GetTransform(); } // Get Transform shortcut
     
     /* Methods. */
     public void Start() {}

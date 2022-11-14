@@ -73,14 +73,26 @@ public class GameScene extends Scene
     
     public void CreateScene()
     {
-        GameObject prey1 = AddGameObject(new Prey("Prey"));
-        prey1.AddComponent(new PreyMover(5f));
-        prey1.AddComponent(new CircleCollider());
-
-        GameObject prey2 = AddGameObject(new Prey("Prey2"));
+        
+        GameObject prey2 = AddGameObject(new Prey("Prey1"));
         prey2.GetTransform().Position = new PVector(width/2, height/2);
         prey2.AddComponent(new BoxCollider());
+        prey2.AddComponent(new PreyMover(5f));
 
+        
+        for (int i = 0; i < 5; i++)
+        {
+            GameObject prey = AddGameObject(new Prey("Prey" + i));
+            prey.GetTransform().Position = new PVector(random(0, width), random(0, height));
+            prey.AddComponent(new BoxCollider());
+        }
+
+        for (int i = 0; i < 5; i++)
+        {
+            GameObject prey = AddGameObject(new Prey("Prey" + (i+4)));
+            prey.GetTransform().Position = new PVector(random(0, width), random(0, height));
+            prey.AddComponent(new CircleCollider());
+        }
         /*
         GameObject pred1 = AddGameObject(new Predator("Pred1"));
         pred1.GetTransform().Position = new PVector(width/2, 25);

@@ -57,9 +57,25 @@ public class PreyMover extends AnimalMover
         // radius resize
         CircleCollider collider = GetGameObject().GetComponent(CircleCollider.class);
         //println(InputManager.GetInstance().GetMap());
-        if (InputManager.GetInstance().GetKey(38)) // up arrow
-            collider.SetRadius(collider.GetRadius() + 0.5);
-        else if (InputManager.GetInstance().GetKey(40)) // dwn arrow
-            collider.SetRadius(collider.GetRadius() - 0.5);
+        if (collider != null)
+        {
+            if (InputManager.GetInstance().GetKey(38)) // up arrow
+                collider.SetRadius(collider.GetRadius() + 0.5);
+            else if (InputManager.GetInstance().GetKey(40)) // dwn arrow
+                collider.SetRadius(collider.GetRadius() - 0.5);
+        }
+
+        BoxCollider box = GetGameObject().GetComponent(BoxCollider.class);
+        if (box != null)
+        {
+            if (InputManager.GetInstance().GetKey(38))
+                box.SetHeight(box.GetHeight() + 0.5);
+            else if (InputManager.GetInstance().GetKey(40))
+                box.SetHeight(box.GetHeight() - 0.5);
+            else if (InputManager.GetInstance().GetKey(39))
+                box.SetWidth(box.GetWidth() + 0.5);
+            else if (InputManager.GetInstance().GetKey(37))
+                box.SetWidth(box.GetWidth() - 0.5);
+        }
     }
 }

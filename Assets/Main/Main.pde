@@ -4,7 +4,8 @@ InputManager g_InputManager = new InputManager();
 
 void setup()
 {
-    size(640, 480);
+    //size(640, 480);
+    size(1920, 1080);
 
     g_SceneManager.AddScene(new GameScene());
     g_SceneManager.LoadScene("Game Scene");
