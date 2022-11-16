@@ -14,6 +14,9 @@ void setup()
 void draw()
 {
     background(200);
+
+    Time.Tick(millis());
+    
     g_SceneManager.UpdateScene();
 }
 

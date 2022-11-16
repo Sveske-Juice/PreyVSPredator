@@ -6,12 +6,15 @@ public abstract class Scene
     protected String m_SceneName = "New Scene";
     protected ArrayList<GameObject> m_GameObjects = new ArrayList<GameObject>();
     protected CollissionSystem m_CollissionSystem = new CollissionSystem();
+
+    protected PhysicsSystem m_PhysicsSystem = new PhysicsSystem();
     
     /* Getters/Setters. */
     public String GetSceneName() { return m_SceneName; }
     public ArrayList<GameObject> GetGameObjects() { return m_GameObjects; }
     public void SetGameObjects(ArrayList<GameObject> objects) { m_GameObjects = objects; }
     public CollissionSystem GetCollissionSystem() { return m_CollissionSystem; }
+    public PhysicsSystem GetPhysicsSystem() { return m_PhysicsSystem; }
     
     public Scene(String sceneName)
     {
@@ -36,6 +39,8 @@ public abstract class Scene
         {
             m_GameObjects.get(i).UpdateObject();
         }
+
+        m_PhysicsSystem.Step(Time.dt());
     }
     
     public void ExitObjects()
@@ -74,23 +79,21 @@ public class GameScene extends Scene
     public void CreateScene()
     {
         
-        GameObject prey2 = AddGameObject(new Prey("Prey1"));
-        prey2.GetTransform().Position = new PVector(width/2, height/2);
-        prey2.AddComponent(new BoxCollider());
-        prey2.AddComponent(new PreyMover(5f));
+        GameObject prey1 = AddGameObject(new Prey("Prey1"));
+        prey1.GetTransform().Position = new PVector(width/2, height/2);
+        prey1.AddComponent(new PreyMover(5f));
 
         
         for (int i = 0; i < 1; i++)
         {
             GameObject prey = AddGameObject(new Prey("Prey" + i));
-            prey.GetTransform().Position = new PVector(random(0, width), random(0, height));
-            prey.AddComponent(new BoxCollider());
+            prey.GetTransform().Position = new PVector(random(0, width-150), random(0, height-150));
         }
 
         for (int i = 0; i < 0; i++)
         {
             GameObject prey = AddGameObject(new Prey("Prey" + (i+4)));
-            prey.GetTransform().Position = new PVector(random(0, width), random(0, height));
+            prey.GetTransform().Position = new PVector(random(0, width-150), random(0, height-150));
             prey.AddComponent(new CircleCollider());
         }
         /*

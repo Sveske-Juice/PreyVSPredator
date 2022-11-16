@@ -18,47 +18,6 @@ public class CircleCollider extends Collider
     /* Default constructor. */
     public CircleCollider() { super("Circle Collider"); }
 
-
-
-    @Override
-    public boolean PointInCollider(PVector point)
-    {
-        return false;
-    }
-
-    @Override
-    public void CollideAgainstCircle(CircleCollider collider)
-    {
-        PVector checkPosition = collider.transform().Position;
-        float checkRadius = collider.GetRadius();
-
-        float dist = checkPosition.dist(transform().Position);
-        if (dist < (m_Radius + checkRadius))
-        {
-            fill(m_OnCollisionColor);
-        }
-        fill(255);
-    }
-
-    @Override
-    public void CollideAgainstBox(BoxCollider collider)
-    {
-        PVector checkPosition = collider.GetCenter();
-
-        PVector circleToBoxDir = PVector.sub(checkPosition, transform().Position).normalize();
-
-        // Get outer point on circle in the direction of the box to test
-        PVector outerPoint = PVector.add(transform().Position, circleToBoxDir.mult(m_Radius));
-
-        circle(outerPoint.x, outerPoint.y, 5);
-
-        // If the outer point in inside the box there is a collision
-        if (collider.PointInCollider(outerPoint))
-        {
-            RaiseOnCollisionEnterEvent(new CollisionInfo(new PVector(), collider));
-        }
-    }
-
     @Override
     public void DrawCollider()
     {
@@ -66,15 +25,37 @@ public class CircleCollider extends Collider
     }
 
     @Override
-    public void ResolveCollision(CollisionInfo collisionInfo)
+    public CollisionPoint TestCollision(Collider collider)
     {
-        if (m_IsStatic)
-        {
+        // Seecond dispatch to reveal concrete class (CircleCollider)
+        return collider.TestCollision(this);
+    }
 
-        }
-        else
+    @Override
+    public CollisionPoint TestCollision(CircleCollider collider)
+    {
+        PVector checkPosition = collider.transform().Position;
+        float checkRadius = collider.GetRadius();
+
+        float dist = checkPosition.dist(transform().Position); // Dist between centers
+        if (dist < m_Radius + checkRadius)
         {
-            println("Resolving collsion for " + collisionInfo.Collider.GetName());
+            // They're colliding
+            // A is this collider and B is the collider to check
+            PVector Normal = PVector.sub(checkPosition, transform().Position).normalize();
+            PVector A = PVector.add(transform().Position, PVector.mult(Normal, m_Radius)); // Furthest point of A into B
+            PVector B = PVector.add(checkPosition, Normal.copy().rotate(PI).mult(checkRadius));
+            return new CollisionPoint(A, B, Normal, true);
         }
+
+        // No collision happened set HasCollision flag to false.
+        return new CollisionPoint(null, null, null, false);
+    }
+
+    @Override
+    public CollisionPoint TestCollision(BoxCollider collider)
+    {
+        // No collision happened set HasCollision flag to false.
+        return new CollisionPoint(null, null, null, false);
     }
 }

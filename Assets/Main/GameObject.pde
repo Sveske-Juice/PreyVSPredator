@@ -20,7 +20,6 @@ public class GameObject
     {
         m_Name = name;
 
-        println("Setting transform");
         // Always add a transform to a Game Object
         m_Transform = new Transform();
         AddComponent(m_Transform);

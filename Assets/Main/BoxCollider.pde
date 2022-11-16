@@ -17,70 +17,29 @@ public class BoxCollider extends Collider
     }
 
     @Override
-    public boolean PointInCollider(PVector point)
-    {
-        return (    point.x > transform().Position.x && point.x < transform().Position.x + m_Width &&
-                    point.y > transform().Position.y && point.y < transform().Position.y + m_Height);
-    }
-
-    @Override
-    public void CollideAgainstCircle(CircleCollider collider)
-    {
-        
-        PVector checkPosition = collider.transform().Position;
-
-        PVector circleToBoxDir = PVector.sub(GetCenter(), checkPosition).normalize();
-
-        // Get outer point on circle in the direction of the box to test
-        PVector outerPoint = PVector.add(checkPosition, circleToBoxDir.mult(collider.GetRadius()));
-
-        fill(255,0,0);
-        circle(outerPoint.x, outerPoint.y, 5);
-        fill(255);
-        
-        // If the outer point in inside the box there is a collision
-        if (PointInCollider(outerPoint))
-        {
-            RaiseOnCollisionEnterEvent(new CollisionInfo(new PVector(), collider));
-        }
-    }
-
-    @Override
-    public void CollideAgainstBox(BoxCollider collider)
-    {
-        PVector ourPosition = transform().Position;
-        PVector checkPosition = collider.transform().Position;
-        float checkWidth = collider.GetWidth();
-        float checkHeight = collider.GetHeight();
-
-        if (    ourPosition.x < checkPosition.x + checkWidth && ourPosition.x + m_Width > checkPosition.x &&
-                ourPosition.y < checkPosition.y + checkHeight && ourPosition.y + m_Height > checkPosition.y)
-        {
-            PVector revert = new PVector(ourPosition.x + m_Width - checkPosition.x, ourPosition.y - checkPosition.y - checkHeight);
-            RaiseOnCollisionEnterEvent(new CollisionInfo(revert, collider));
-        }
-    }
-
-    @Override
     public void DrawCollider()
     {
-        //println("drawing rect at " + transform().Position + " with width: " + m_Width + " and height: " + m_Height);
         rect(transform().Position.x, transform().Position.y, m_Width, m_Height);
     }
 
     @Override
-    public void ResolveCollision(CollisionInfo collisionInfo)
+    public CollisionPoint TestCollision(Collider collider)
     {
-        if (m_IsStatic)
-        {
-            println("Resolving collsion for " + collisionInfo.Collider.GetGameObject().GetName() + " revert: " + collisionInfo.RevertVector);
-            transform().Position.sub(collisionInfo.RevertVector);
-        }
-        else
-        {
-            
-        }
+        // Seecond dispatch to reveal concrete class (CircleCollider)
+        return collider.TestCollision(this);
     }
 
+    @Override
+    public CollisionPoint TestCollision(CircleCollider collider)
+    {
+        // No collision happened set HasCollision flag to false.
+        return new CollisionPoint(null, null, null, false);
+    }
 
+    @Override
+    public CollisionPoint TestCollision(BoxCollider collider)
+    {
+        // No collision happened set HasCollision flag to false.
+        return new CollisionPoint(null, null, null, false);
+    }
 }

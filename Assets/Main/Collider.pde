@@ -1,9 +1,16 @@
-public abstract class Collider extends Component implements OnCollisionEnterListener
+public abstract class Collider extends Component
 {
     /* Members. */
     protected color m_OnCollisionColor = color(255, 0, 0);
-    protected boolean m_IsStatic = true;
-    private ArrayList<OnCollisionEnterListener> m_OnCollisionEnterListeners = new ArrayList<OnCollisionEnterListener>();
+
+    protected boolean m_IsTrigger = false;
+    protected boolean m_IsDynamic = true;
+
+    /* Getters/Setters. */
+    public boolean IsTrigger() { return m_IsTrigger; }
+    public boolean IsDynamic() { return m_IsDynamic; }
+
+    /* Constructors. */
 
     public Collider(String name)
     {
@@ -14,46 +21,23 @@ public abstract class Collider extends Component implements OnCollisionEnterList
     @Override
     public void Start()
     {
-        m_GameObject.GetBelongingToScene().GetCollissionSystem().RegisterCollider(this);
-        AddOnCollisionEnterListener(this);
+        //m_GameObject.GetBelongingToScene().GetCollissionSystem().RegisterCollider(this);
+        m_GameObject.GetBelongingToScene().GetPhysicsSystem().RegisterCollider(this);
     }
 
     @Override
     public void Update()
     {
+        fill(150, 0, 0, 75);
         DrawCollider();
-        //println(m_OnCollisionEnterListeners.size());
+        fill(255);
     }
 
-    public abstract boolean PointInCollider(PVector point);
-    public abstract void CollideAgainstCircle(CircleCollider collider);
-    public abstract void CollideAgainstBox(BoxCollider collider);
     public abstract void DrawCollider();
-    public abstract void ResolveCollision(CollisionInfo collisionInfo);
 
-    /// Adds a event listener to the listener pool
-    public void AddOnCollisionEnterListener(OnCollisionEnterListener listener)
-    {
-        if (listener == null)
-            return;
-        
-        m_OnCollisionEnterListeners.add(listener);
-    }
+    // Double dispatch runtime check of collider type to concrete class
+    public abstract CollisionPoint TestCollision(Collider collider);
 
-    /// Loops thorugh all On Collision Enter listeneres
-    /// and invokes them with the collider collided with
-    protected void RaiseOnCollisionEnterEvent(CollisionInfo collisionInfo)
-    {
-        println("Raising On Collision Enter event... " + m_OnCollisionEnterListeners.size());
-        for (int i = 0; i < m_OnCollisionEnterListeners.size(); i++)
-        {
-            m_OnCollisionEnterListeners.get(i).OnCollisionEnter(collisionInfo);
-        }
-    }
-
-    public void OnCollisionEnter(CollisionInfo collisionInfo)
-    {
-        println("COLLISION DETECTED");
-        ResolveCollision(collisionInfo);
-    }
+    public abstract CollisionPoint TestCollision(BoxCollider collider);
+    public abstract CollisionPoint TestCollision(CircleCollider collider);
 }
