@@ -38,7 +38,11 @@ public class BoxCollider extends Collider
         circle(outerPoint.x, outerPoint.y, 5);
         fill(255);
         
-        println(PointInCollider(outerPoint));
+        // If the outer point in inside the box there is a collision
+        if (PointInCollider(outerPoint))
+        {
+            RaiseOnCollisionEnterEvent(new CollisionInfo(new PVector(), collider));
+        }
     }
 
     @Override
@@ -52,16 +56,31 @@ public class BoxCollider extends Collider
         if (    ourPosition.x < checkPosition.x + checkWidth && ourPosition.x + m_Width > checkPosition.x &&
                 ourPosition.y < checkPosition.y + checkHeight && ourPosition.y + m_Height > checkPosition.y)
         {
-            println("Collision!!");
-            fill(255, 0, 0);
+            PVector revert = new PVector(ourPosition.x + m_Width - checkPosition.x, ourPosition.y - checkPosition.y - checkHeight);
+            RaiseOnCollisionEnterEvent(new CollisionInfo(revert, collider));
         }
-        fill(255);
     }
 
     @Override
     public void DrawCollider()
     {
-        println("drawing rect at " + transform().Position + " with width: " + m_Width + " and height: " + m_Height);
+        //println("drawing rect at " + transform().Position + " with width: " + m_Width + " and height: " + m_Height);
         rect(transform().Position.x, transform().Position.y, m_Width, m_Height);
     }
+
+    @Override
+    public void ResolveCollision(CollisionInfo collisionInfo)
+    {
+        if (m_IsStatic)
+        {
+            println("Resolving collsion for " + collisionInfo.Collider.GetGameObject().GetName() + " revert: " + collisionInfo.RevertVector);
+            transform().Position.sub(collisionInfo.RevertVector);
+        }
+        else
+        {
+            
+        }
+    }
+
+
 }

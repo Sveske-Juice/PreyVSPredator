@@ -31,5 +31,6 @@ public class MoveController extends Component
     {
         m_GameObject.m_Transform.Position.add(m_Velocity);
         m_Acceleration.mult(0);
+        
     }
 }

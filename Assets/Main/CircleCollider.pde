@@ -18,6 +18,8 @@ public class CircleCollider extends Collider
     /* Default constructor. */
     public CircleCollider() { super("Circle Collider"); }
 
+
+
     @Override
     public boolean PointInCollider(PVector point)
     {
@@ -31,11 +33,9 @@ public class CircleCollider extends Collider
         float checkRadius = collider.GetRadius();
 
         float dist = checkPosition.dist(transform().Position);
-        //println("dist: " + dist + " radius: " + m_Radius);
         if (dist < (m_Radius + checkRadius))
         {
-            //println("Collision!!!");
-            fill(255, 0, 0);
+            fill(m_OnCollisionColor);
         }
         fill(255);
     }
@@ -52,13 +52,29 @@ public class CircleCollider extends Collider
 
         circle(outerPoint.x, outerPoint.y, 5);
 
-        // If the outer point in inside the circle there is a collision
-        println(collider.PointInCollider(outerPoint));
+        // If the outer point in inside the box there is a collision
+        if (collider.PointInCollider(outerPoint))
+        {
+            RaiseOnCollisionEnterEvent(new CollisionInfo(new PVector(), collider));
+        }
     }
 
     @Override
     public void DrawCollider()
     {
         circle(transform().Position.x, transform().Position.y, m_Radius*2);
+    }
+
+    @Override
+    public void ResolveCollision(CollisionInfo collisionInfo)
+    {
+        if (m_IsStatic)
+        {
+
+        }
+        else
+        {
+            println("Resolving collsion for " + collisionInfo.Collider.GetName());
+        }
     }
 }

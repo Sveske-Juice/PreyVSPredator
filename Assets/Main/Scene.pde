@@ -80,14 +80,14 @@ public class GameScene extends Scene
         prey2.AddComponent(new PreyMover(5f));
 
         
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 1; i++)
         {
             GameObject prey = AddGameObject(new Prey("Prey" + i));
             prey.GetTransform().Position = new PVector(random(0, width), random(0, height));
             prey.AddComponent(new BoxCollider());
         }
 
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 0; i++)
         {
             GameObject prey = AddGameObject(new Prey("Prey" + (i+4)));
             prey.GetTransform().Position = new PVector(random(0, width), random(0, height));

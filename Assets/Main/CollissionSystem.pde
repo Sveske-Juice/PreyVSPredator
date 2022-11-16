@@ -35,8 +35,6 @@ public class CollissionSystem
                 }
             }
         }
-
-        println("-- New Frame --");
         
     }
 
