@@ -10,7 +10,7 @@ public abstract class Animal extends GameObject
     {
         super.CreateComponents();
         //AddComponent(new MoveController());
-        AddComponent(new RigidBody());
+        
 
         AddComponent(new Polygon(createShape(RECT, 2, 2, 10, 10)));
         AddComponent(new CircleCollider());

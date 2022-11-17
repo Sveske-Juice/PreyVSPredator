@@ -10,6 +10,7 @@ public class Prey extends Animal
     {
         super.CreateComponents();
         //AddComponent(new PreyMover(5f));
+        
     }
 }
 

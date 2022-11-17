@@ -24,7 +24,7 @@ public class CollisionWorld
                 if (i == j) break;
                 Collider colA = m_Colliders.get(i);
                 Collider colB = m_Colliders.get(j);
-                println("Checking for collision between " + colA.GetName() + " on " + colA.GetGameObject().GetName() + " and " +  colB.GetName() + " on " + colB.GetGameObject().GetName());
+                //println("Checking for collision between " + colA.GetName() + " on " + colA.GetGameObject().GetName() + " and " +  colB.GetName() + " on " + colB.GetGameObject().GetName());
 
                 if (colA == null || colB == null)
                     continue;
@@ -45,24 +45,24 @@ public class CollisionWorld
         for (int i = 0; i < collisions.size(); i++)
         {
             Collision collision = collisions.get(i);
-            println("Collision happened between " + collision.ColA.GetGameObject().GetName() + " and " + collision.ColB.GetGameObject().GetName());
+            //println("Collision happened between " + collision.ColA.GetGameObject().GetName() + " and " + collision.ColB.GetGameObject().GetName());
             
             RigidBody A = collision.A.GetComponent(RigidBody.class);
             RigidBody B = collision.B.GetComponent(RigidBody.class);
 
             PVector normal = collision.Points.Normal;
-            PVector tangent = PVector.mult(normal, -1f);
+            PVector tangent = new PVector(-normal.y, normal.x);
 
             // Push back objects
             PVector BA = PVector.sub(collision.Points.B, collision.Points.A);
             float depth = BA.mag();
-            println("depth: " + depth);
+            //println("depth: " + depth);
 
             int aStatic = (A.IsStatic() == true) ? 0 : 1;
             int bStatic = (B.IsStatic() == true) ? 0 : 1;
 
-            println("A static?: " + aStatic);
-            println("B static?: " + bStatic);
+            //println("A static?: " + aStatic);
+            //println("B static?: " + bStatic);
 
             // Cut pusb back in two if both objects are dynamic (each object move half of the push back vector)
             int divider = max(1, aStatic + bStatic);
@@ -77,14 +77,15 @@ public class CollisionWorld
             circle(tmp.x, tmp.y, 10);
             fill(255);
 
-            
-
-            
+        
             float Avn = PVector.dot(normal, A.GetVelocity());
             float Avt = PVector.dot(tangent, A.GetVelocity());
+            println("Avt: " + Avt);
             
             float Bvn = PVector.dot(normal, B.GetVelocity());
             float Bvt = PVector.dot(tangent, B.GetVelocity());
+            println("Bvt: " + Bvt);
+            
 
             float newAvnScalar = (Avn * (A.GetMass() - B.GetMass()) + 2 * B.GetMass() * Bvn)/(A.GetMass() + B.GetMass());
             float newBvnScalar = (Bvn * (B.GetMass() - A.GetMass()) + 2 * A.GetMass() * Avn)/(A.GetMass() + B.GetMass());
@@ -95,12 +96,9 @@ public class CollisionWorld
             PVector newBvn = PVector.mult(normal, newBvnScalar);
             PVector newBvt = PVector.mult(tangent, Bvt);
             
-            //PVector.mult(PVector.div(PVector.add(PVector.mult(Avn, A.GetMass() + B.GetMass()),  PVector.mult(PVector.mult(Bvn, B.GetMass()))), A.GetMass() + b.GetMass()), normal);
-            PVector newAVel = PVector.add(newAvn, new PVector());
-            PVector newBVel = PVector.add(newBvn, new PVector());
+            PVector newAVel = PVector.add(newAvn, newAvt);
+            PVector newBVel = PVector.add(newBvn, newBvt);
 
-            println("A vel: " + newAVel);
-            println("B vel: " + newBVel);
             A.SetVelocity(newAVel);
             B.SetVelocity(newBVel);
 
@@ -108,11 +106,12 @@ public class CollisionWorld
             //B.transform().Position.sub(PVector.mult(BRes, bStatic));
 
             fill(255, 0, 0);
-            //circle(collision.Points.A.x, collision.Points.A.y, 10);
-            //circle(collision.Points.B.x, collision.Points.B.y, 10);
+            circle(collision.Points.A.x, collision.Points.A.y, 10);
+            circle(collision.Points.B.x, collision.Points.B.y, 10);
             fill(255);
         }
 
+        println(1 / Time.dt());
         println("-- new frame --");
     }
 }

@@ -28,10 +28,10 @@ public class GameObject
     /* Methods. */
     public void CreateComponents() { }
 
-    public void AddComponent(Component component)
+    public Component AddComponent(Component component)
     {
         if (component == null)
-            return;
+            return null;
         
         print("Adding component: " + component.GetName() + " on object: " + m_Name + "\n");
         m_Components.add(component);
@@ -42,6 +42,8 @@ public class GameObject
 
         if (m_ObjectStarted)
             component.Start();
+        
+        return component;
     }
     
     /// Gets a component of type T on this GameObject.

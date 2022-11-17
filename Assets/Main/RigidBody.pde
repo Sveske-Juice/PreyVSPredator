@@ -21,6 +21,7 @@ public class RigidBody extends Component
     public PVector GetVelocity() { return m_Velocity; }
     public void SetVelocity(PVector velocity) { m_Velocity = velocity; }
     public float GetMass() { return m_Mass; }
+    public void SetMass(float mass) { m_Mass = mass; }
     public boolean IsStatic() { return m_IsStatic; }
 
     /* Constructors. */
