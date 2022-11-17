@@ -83,6 +83,7 @@ public class GameScene extends Scene
         prey1.GetTransform().Position = new PVector(50, height/2);
         prey1.AddComponent(new PreyMover(5f));
         RigidBody body = (RigidBody) prey1.AddComponent(new RigidBody());
+        body.SetStatic(false);
         //body.SetMass(1.5f);
 
         
@@ -91,7 +92,8 @@ public class GameScene extends Scene
             PVector rand = new PVector(random(0, width-150), random(0, height-150));
             GameObject prey = AddGameObject(new Prey("Prey" + i));
             prey.GetTransform().Position = rand;
-            prey.AddComponent(new RigidBody());
+            RigidBody ibody = (RigidBody) prey.AddComponent(new RigidBody());
+            ibody.SetStatic(false);
         }
 
         for (int i = 0; i < 0; i++)

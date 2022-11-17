@@ -23,6 +23,7 @@ public class RigidBody extends Component
     public float GetMass() { return m_Mass; }
     public void SetMass(float mass) { m_Mass = mass; }
     public boolean IsStatic() { return m_IsStatic; }
+    public void SetStatic(boolean isStatic) { m_IsStatic = isStatic; }
 
     /* Constructors. */
     public RigidBody()

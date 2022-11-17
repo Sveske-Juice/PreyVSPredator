@@ -19,6 +19,18 @@ public class CircleCollider extends Collider
     public CircleCollider() { super("Circle Collider"); }
 
     @Override
+    public void Start()
+    {
+        super.Start();
+
+        // Blue color for static bodies
+        if (m_GameObject.GetComponent(RigidBody.class).IsStatic() == true)
+        {
+            m_ColliderColor = color(0f, 0f, 150f, 75f);
+        }
+    }
+
+    @Override
     public void DrawCollider()
     {
         circle(transform().Position.x, transform().Position.y, m_Radius*2);

@@ -1,7 +1,7 @@
 public abstract class Collider extends Component
 {
     /* Members. */
-    protected color m_OnCollisionColor = color(255, 0, 0);
+    protected color m_ColliderColor = color(150, 0, 0, 75);
 
     protected boolean m_IsTrigger = false;
     protected boolean m_IsDynamic = true;
@@ -28,7 +28,7 @@ public abstract class Collider extends Component
     @Override
     public void Update()
     {
-        fill(150, 0, 0, 75);
+        fill(m_ColliderColor);
         DrawCollider();
         fill(255);
     }
