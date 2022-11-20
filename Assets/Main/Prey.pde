@@ -55,7 +55,7 @@ public class PreyMover extends AnimalMover
 
         //m_MoveController.SetVelocity(m_Movement.mult(m_MovementSpeed));
         //m_MoveController.Move();
-        PVector force = m_Movement.mult(5);
+        PVector force = m_Movement.mult(2.5);
         m_RB.ApplyForce(force);
 
         // radius resize

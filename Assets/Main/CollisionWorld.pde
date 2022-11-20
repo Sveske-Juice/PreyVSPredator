@@ -60,44 +60,45 @@ public class CollisionWorld
 
             int aStatic = (A.IsStatic() == false) ? 0 : 1;
             int bStatic = (B.IsStatic() == false) ? 0 : 1;
-
-            println("A static?: " + aStatic);
-            println("B static?: " + bStatic);
+            //println("a stat: " + aStatic);
+            //println("b stat: " + bStatic);
 
             // Cut pusb back in two if both objects are dynamic (each object move half of the push back vector)
             int divider = max(1, aStatic + bStatic);
 
             PVector resolution = PVector.div(PVector.mult(normal, depth), divider);
 
-            PVector ARes = PVector.mult(resolution, bStatic);
-            PVector BRes = PVector.mult(resolution, aStatic);
+            PVector ARes = resolution;
+            PVector BRes = resolution;
+
+            //println("Ares: " + ARes);
+            //println("Bres: " + BRes);
+
+            // If any of the bodies are static do not make them respond to collision
             if (aStatic == 1)
             {
-                println("Pusging B: " + BRes);
                 B.transform().Position.sub(BRes);
                 return;
             }
             else if (bStatic == 1)
             {
-                println("Pusging A: " + ARes);
                 A.transform().Position.add(ARes);
                 return;
             }
             
+            /* debug
             fill(0, 255, 0);
             PVector tmp = PVector.add(A.transform().Position, ARes);
             circle(tmp.x, tmp.y, 10);
             fill(255);
+            */
 
         
             float Avn = PVector.dot(normal, A.GetVelocity());
             float Avt = PVector.dot(tangent, A.GetVelocity());
-            //println("Avt: " + Avt);
             
             float Bvn = PVector.dot(normal, B.GetVelocity());
-            float Bvt = PVector.dot(tangent, B.GetVelocity());
-            //println("Bvt: " + Bvt);
-            
+            float Bvt = PVector.dot(tangent, B.GetVelocity());            
 
             float newAvnScalar = (Avn * (A.GetMass() - B.GetMass()) + 2 * B.GetMass() * Bvn)/(A.GetMass() + B.GetMass());
             float newBvnScalar = (Bvn * (B.GetMass() - A.GetMass()) + 2 * A.GetMass() * Avn)/(A.GetMass() + B.GetMass());
@@ -114,16 +115,15 @@ public class CollisionWorld
             A.SetVelocity(newAVel);
             B.SetVelocity(newBVel);
 
-            //
-            //
-
+            /* debug
             fill(255, 0, 0);
             circle(collision.Points.A.x, collision.Points.A.y, 10);
             circle(collision.Points.B.x, collision.Points.B.y, 10);
             fill(255);
+            */
         }
 
-        println(1 / Time.dt());
+        //println(1 / Time.dt());
         println("-- new frame --");
     }
 }

@@ -80,17 +80,25 @@ public class GameScene extends Scene
     {
         
         GameObject prey1 = AddGameObject(new Prey("Prey1"));
-        prey1.GetTransform().Position = new PVector(50, height/2);
+        prey1.GetTransform().Position = new PVector(50, height - 50);
         prey1.AddComponent(new PreyMover(5f));
+        
+        prey1.AddComponent(new CircleCollider());
         RigidBody body = (RigidBody) prey1.AddComponent(new RigidBody());
         body.SetStatic(false);
-        //body.SetMass(1.5f);
+        body.SetMass(1f);
 
         
-        for (int i = 0; i < 5; i++)
+        GameObject topborder = AddGameObject(new GameObject("Top Border"));
+        topborder.AddComponent(new RigidBody());
+        topborder.AddComponent(new BoxCollider(width, 50f));
+        topborder.GetTransform().Position = new PVector(0, height/2);
+
+        for (int i = 0; i < 0; i++)
         {
             PVector rand = new PVector(random(0, width-150), random(0, height-150));
             GameObject prey = AddGameObject(new Prey("Prey" + i));
+            prey.AddComponent(new BoxCollider());
             prey.GetTransform().Position = rand;
             RigidBody ibody = (RigidBody) prey.AddComponent(new RigidBody());
             ibody.SetStatic(false);
@@ -98,32 +106,13 @@ public class GameScene extends Scene
 
         for (int i = 0; i < 0; i++)
         {
-            GameObject prey = AddGameObject(new Prey("Prey" + (i+4)));
-            prey.GetTransform().Position = new PVector(random(0, width-150), random(0, height-150));
+            PVector rand = new PVector(random(0, width-150), random(0, height-150));
+            GameObject prey = AddGameObject(new Prey("Prey" + i));
             prey.AddComponent(new CircleCollider());
+            prey.GetTransform().Position = rand;
+            RigidBody ibody = (RigidBody) prey.AddComponent(new RigidBody());
+            ibody.SetStatic(false);
         }
-        /*
-        GameObject pred1 = AddGameObject(new Predator("Pred1"));
-        pred1.GetTransform().Position = new PVector(width/2, 25);
-        prey1.AddComponent(new BoxCollider());
-
-        
-        GameObject prey3 = AddGameObject(new Prey("Prey3"));
-        prey3.GetTransform().Position = new PVector(width/2, height/2);
-
-        GameObject prey4 = AddGameObject(new Prey("Prey4"));
-        prey4.GetTransform().Position = new PVector(width/2, height/2);
-        
-        GameObject prey5 = AddGameObject(new Prey("Prey5"));
-        
-        prey4.GetTransform().Position = new PVector(width/2, height/2);
-        GameObject prey6 = AddGameObject(new Prey("Prey6"));
-
-        prey4.GetTransform().Position = new PVector(width/2, height/2);
-        GameObject prey7 = AddGameObject(new Prey("Prey7"));
-        prey7.GetTransform().Position = new PVector(width/2, height/2);
-        //AddGameObject(new Predator("Predator"));
-        */
         
     }
 }
