@@ -4,11 +4,9 @@ public abstract class Collider extends Component
     protected color m_ColliderColor = color(150, 0, 0, 75);
 
     protected boolean m_IsTrigger = false;
-    protected boolean m_IsDynamic = true;
 
     /* Getters/Setters. */
     public boolean IsTrigger() { return m_IsTrigger; }
-    public boolean IsDynamic() { return m_IsDynamic; }
 
     /* Constructors. */
 
@@ -40,4 +38,10 @@ public abstract class Collider extends Component
 
     public abstract CollisionPoint TestCollision(BoxCollider collider);
     public abstract CollisionPoint TestCollision(CircleCollider collider);
+
+    // Clamps a value between a range
+    protected float Clamp(float value, float min, float max)
+    {
+        return max(min, min(max, value));
+    }
 }

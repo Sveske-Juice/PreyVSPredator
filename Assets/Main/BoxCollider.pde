@@ -36,6 +36,7 @@ public class BoxCollider extends Collider
     public void DrawCollider()
     {
         rect(transform().Position.x, transform().Position.y, m_Width, m_Height);
+
     }
 
     public boolean PointInRect(PVector point)
@@ -64,148 +65,120 @@ public class BoxCollider extends Collider
     @Override
     public CollisionPoint TestCollision(BoxCollider collider)
     {
-
-        PVector Ap = transform().Position; // Position of collider A
-        PVector Bp = collider.transform().Position; // Position of collider B
-
-        PVector Av = m_RigidBody.GetVelocity(); // Velocity of rigidbody of collider A
-
-        float xInvEntry = 0f;
-        float xInvExit = 0f;
-        
-        float yInvEntry = 0f;
-        float yInvExit = 0f;
-
-        if (Av.x > 0f)
+        PVector pos = transform().Position; // cache pos
+        float epsilon = 1e-8;
+        PVector colVel = collider.GetGameObject().GetComponent(RigidBody.class).GetVelocity();
+        PVector boxPos = collider.transform().Position; // Cache pos
+        PVector deltaPos = PVector.sub(pos, PVector.add(pos, colVel));
+        Hit hit = IntersectSegment(boxPos, deltaPos, new PVector(collider.GetWidth() / 2f, collider.GetHeight() / 2f));
+        if (hit != null)
         {
-            xInvEntry = Bp.x - (Ap.x + m_Width);
-            xInvExit = (Bp.x + collider.GetWidth()) - Ap.x;
-        }
-        else
-        {
-            xInvEntry = (Bp.x + collider.GetWidth()) - Ap.x;
-            xInvExit = Bp.x - (Ap.x + m_Width);
-        }
+            float sweepTime = Clamp(hit.hitTime - epsilon, 0, 1);
 
-        if (Av.y > 0f)
-        {
-            yInvEntry = Bp.y - (Ap.y + m_Height);
-            yInvExit = (Bp.y + collider.GetHeight()) - Ap.y;
-        }
-        else
-        {
-            yInvEntry = (Bp.y + collider.GetHeight()) - Ap.y;
-            yInvExit = Bp.y - (Ap.y + m_Height);
-        }
+            // println("sweep time: " + sweepTime);
+            // println("hit time: " + hit.hitTime);
 
-        // Find interpolated time where the collision and time of leaving for each axis
-        float xEntry = 0f;
-        float xExit = 0f;
+            PVector sweepPos = new PVector();
+            sweepPos.x = (boxPos.x + deltaPos.x) * sweepTime;
+            sweepPos.y = (boxPos.y + deltaPos.y) * sweepTime;
 
-        float yEntry = 0f;
-        float yExit = 0f;
+            PVector dir = deltaPos.copy().normalize();
+            // fill(255, 0, 0);
+            // circle(hit.hitPoint.x, hit.hitPoint.y, 15);
+            //hit.hitPoint.x = Clamp(hit.hitPoint.x + dir.x * collider.GetWidth() / 2f, pos.x - m_Width, pos.x + m_Width);
+            //hit.hitPoint.y = Clamp(hit.hitPoint.y + dir.y * collider.GetHeight() / 2f, pos.y - m_Height, pos.y + m_Height);
 
-        if (Av.x == 0f) // Prevent divison by 0
-        {
-            xEntry = 9999f;
-            xExit = -9999f;
-        }
-        else
-        {
-            xEntry = xInvEntry / Av.x;
-            xExit = xInvExit / Av.x;
+            // println("dir: " + dir);
+            // println("sweep pos: " + sweepPos);
+
+            // fill(255, 0, 0);
+            // circle(hit.hitPoint.x, hit.hitPoint.y, 15);
+            // circle(sweepPos.x, sweepPos.y, 15);
+            // fill(255);
+
+            // Resolve collision inside detection function
+            // TODO move this to resovle func
+            m_RigidBody.SetVelocity(sweepPos);
         }
 
-        if (Av.y == 0f) // Prevent division by 0
-        {
-            yEntry = 9999f;
-            yExit = -9999f;
-        }
-        else
-        {
-            yEntry = yInvEntry / Av.y;
-            yExit = yInvExit / Av.y;
-        }
-
-        // Find what axis collided first
-        float entryTime = max(xEntry, yEntry);
-        float exitTime = min(xExit, yExit);
-
-        println("A Vel: " + Av);
-        println("entry: " + entryTime);
-        println("exit: " + exitTime);
-        // If there was no collision
-        
-        /*
-        if (entryTime > exitTime || xEntry < 0f && yEntry < 0f || xEntry > 1f || yEntry > 1f)
-        {
-            // No collision happened set HasCollision flag to false.
-            return new CollisionPoint(null, null, null, false);
-        }
-        */
-
-
-        // Double check collision with AABB collision check
-        if ((   Ap.x + m_Width > Bp.x && Ap.x < Bp.x + collider.GetWidth() &&
-                Ap.y + m_Height > Bp.y && Ap.y < Bp.y + collider.GetHeight()) == false)
-        {
-            println("No collision");
-            return new CollisionPoint(null, null, null, false);
-        }
-
-        // Collision happened
-        println("Collision!!!");
-
-        // Calculate normal of the collision surface
-        PVector normal = new PVector();
-
-        if (xEntry > yEntry) 
-        { 
-            if (xInvEntry < 0f) 
-            { 
-                normal.x = 1f; 
-                normal.y = 0f; 
-            } 
-            else 
-            { 
-                normal.x = -1f; 
-                normal.y = 0f;
-            } 
-        } 
-        else 
-        { 
-            if (yInvEntry < 0f) 
-            { 
-                normal.x = 0f; 
-                normal.y = 1f; 
-            } 
-            else 
-            { 
-                normal.x = 0f; 
-                normal.y = -1f; 
-            } 
-        }
-
-        RigidBody Bbody = collider.GetGameObject().GetComponent(RigidBody.class);
-
-        println("normal: " + normal);
-
-
-        PVector impulse = PVector.mult(normal, PVector.dot(Av, normal) * -1f);
-        //PVector ARes = PVector.mult(normal.copy().rotate(PI), m_RigidBody.GetVelocity().mag() / 2f);
-        //PVector BRes = PVector.mult(normal, Bbody.GetVelocity().mag() / 2f);
-
-        m_RigidBody.SetVelocity(PVector.add(m_RigidBody.GetVelocity(), impulse));
-        //Bbody.SetVelocity(BRes);
-        //PVector resolution = PVector.mult(m_RigidBody.GetVelocity(), entryTime);
-        //PVector resolution = PVector.mult(normal, 0.5f);
-        //collider.transform().Position = (PVector.mult(resolution, -1f));
-        //transform().Position = (resolution);
-        
-
-        //transform().Position.add(PVector.div(resolution, 2f));
-        //collider.transform().Position.add(PVector.div(PVector.mult(resolution, -1f), 2f));
 
         return new CollisionPoint(null, null, null, false);
+    }
+
+    public Hit IntersectSegment(PVector startPt, PVector deltaPos, PVector padding)
+    {
+        PVector pos = transform().Position; // Cache pos
+
+        float scaleX = 1f / deltaPos.x;
+        float scaleY = 1f / deltaPos.y;
+
+        int signX = Sign(scaleX);
+        int signY = Sign(scaleY);
+ 
+
+        float nearTimeX = (pos.x - signX * (m_Width / 2f + padding.x) - startPt.x) * scaleX;
+        float nearTimeY = (pos.y - signY * (m_Height / 2f + padding.y) - startPt.y) * scaleY;
+
+        float farTimeX = (pos.x + signX * (m_Width / 2f + padding.x) - startPt.x) * scaleX;
+        float farTimeY = (pos.y + signY * (m_Height / 2f + padding.y) - startPt.y) * scaleY;
+
+        if (nearTimeX > farTimeY || nearTimeY > farTimeX)
+        {
+            return null;
+        }
+
+        float nearTime = nearTimeX > nearTimeY ? nearTimeX : nearTimeY;
+        float farTime = farTimeX < farTimeY ? farTimeX : farTimeY;
+
+        if (nearTime >= 1 || farTime <= 0)
+        {
+            return null;
+        }
+        // println("delta pos: " + deltaPos);
+        // println("near x: " + nearTimeX);
+        // println("near y: " + nearTimeY);
+        // println("sign x: " + signX);
+        // println("sign y: " + signY);
+        float hitTime = Clamp(nearTime, 0, 1);
+        PVector normal = new PVector();
+        if (nearTimeX > nearTimeY)
+        {
+            normal.x = -signX;
+        }
+        else
+        {
+            normal.y = -signY;
+        }
+
+        
+
+        PVector penetration = new PVector();
+
+        penetration.x = (1f - hitTime) * -deltaPos.x;
+        penetration.y = (1f - hitTime) * -deltaPos.y;
+
+        PVector hitPoint = new PVector();
+
+        hitPoint.x = startPt.x + deltaPos.x * hitTime;
+        hitPoint.y = startPt.y + deltaPos.y * hitTime;
+
+        // Create hit structure
+        Hit hit = new Hit(this);
+        hit.hitPoint = hitPoint;
+        hit.penetration = penetration;
+        hit.normal = normal;
+        hit.hitTime = hitTime;
+
+        // println("normal: " + normal);
+        // println("hit point: " + hitPoint);
+        // println("penetration: " + penetration);
+        return hit;
+    }
+
+    private int Sign(float x)
+    {
+        if (x < 0) return -1;
+        else if (x > 0) return 1;
+        return 0;
     }
 }

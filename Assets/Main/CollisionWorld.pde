@@ -52,47 +52,6 @@ public class CollisionWorld
 
             PVector normal = collision.Points.Normal;
             PVector tangent = new PVector(-normal.y, normal.x);
-
-            // Push back objects
-            PVector BA = PVector.sub(collision.Points.B, collision.Points.A);
-            float depth = BA.mag();
-            //println("depth: " + depth);
-
-            int aStatic = (A.IsStatic() == false) ? 0 : 1;
-            int bStatic = (B.IsStatic() == false) ? 0 : 1;
-            //println("a stat: " + aStatic);
-            //println("b stat: " + bStatic);
-
-            // Cut pusb back in two if both objects are dynamic (each object move half of the push back vector)
-            int divider = max(1, aStatic + bStatic);
-
-            PVector resolution = PVector.div(PVector.mult(normal, depth), divider);
-
-            PVector ARes = resolution;
-            PVector BRes = resolution;
-
-            //println("Ares: " + ARes);
-            //println("Bres: " + BRes);
-
-            // If any of the bodies are static do not make them respond to collision
-            if (aStatic == 1)
-            {
-                B.transform().Position.sub(BRes);
-                return;
-            }
-            else if (bStatic == 1)
-            {
-                A.transform().Position.add(ARes);
-                return;
-            }
-            
-            /* debug
-            fill(0, 255, 0);
-            PVector tmp = PVector.add(A.transform().Position, ARes);
-            circle(tmp.x, tmp.y, 10);
-            fill(255);
-            */
-
         
             float Avn = PVector.dot(normal, A.GetVelocity());
             float Avt = PVector.dot(tangent, A.GetVelocity());
@@ -112,6 +71,9 @@ public class CollisionWorld
             PVector newAVel = PVector.add(newAvn, newAvt);
             PVector newBVel = PVector.add(newBvn, newBvt);
 
+            // println(newAVel);
+            // println(newBVel);
+            
             A.SetVelocity(newAVel);
             B.SetVelocity(newBVel);
 

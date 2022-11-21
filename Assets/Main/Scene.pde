@@ -78,40 +78,57 @@ public class GameScene extends Scene
     
     public void CreateScene()
     {
+        // Camera handler
+        GameObject camHandler = AddGameObject(new GameObject("Camera Handler"));
+        camHandler.AddComponent(new CameraHandler());
         
         GameObject prey1 = AddGameObject(new Prey("Prey1"));
-        prey1.GetTransform().Position = new PVector(50, height - 50);
+        prey1.GetTransform().Position = new PVector(50, height - 100);
         prey1.AddComponent(new PreyMover(5f));
         
-        prey1.AddComponent(new CircleCollider());
+        prey1.AddComponent(new BoxCollider());
         RigidBody body = (RigidBody) prey1.AddComponent(new RigidBody());
-        body.SetStatic(false);
         body.SetMass(1f);
 
-        
+        /*
         GameObject topborder = AddGameObject(new GameObject("Top Border"));
-        topborder.AddComponent(new RigidBody());
-        topborder.AddComponent(new BoxCollider(width, 50f));
-        topborder.GetTransform().Position = new PVector(0, height/2);
+        RigidBody tbrb = (RigidBody) topborder.AddComponent(new RigidBody());
+        topborder.AddComponent(new BoxCollider(width, 10f));
+        topborder.GetTransform().Position = new PVector(0, 0);
+        
+        GameObject leftborder = AddGameObject(new GameObject("Left Border"));
+        RigidBody lbrb = (RigidBody) leftborder.AddComponent(new RigidBody());
+        leftborder.AddComponent(new BoxCollider(10f, height));
+        leftborder.GetTransform().Position = new PVector(0, 0);
 
-        for (int i = 0; i < 0; i++)
+        
+        GameObject rightborder = AddGameObject(new GameObject("Right Border"));
+        RigidBody rbrb = (RigidBody) rightborder.AddComponent(new RigidBody());
+        rightborder.AddComponent(new BoxCollider(10f, height));
+        rightborder.GetTransform().Position = new PVector(width-10, 0);
+        
+        GameObject bottomborder = AddGameObject(new GameObject("Bottom Border"));
+        RigidBody bbrb = (RigidBody) bottomborder.AddComponent(new RigidBody());
+        bottomborder.AddComponent(new BoxCollider(width, 10f));
+        bottomborder.GetTransform().Position = new PVector(0, height-30);
+        */
+
+        for (int i = 0; i < 1; i++)
         {
             PVector rand = new PVector(random(0, width-150), random(0, height-150));
             GameObject prey = AddGameObject(new Prey("Prey" + i));
             prey.AddComponent(new BoxCollider());
             prey.GetTransform().Position = rand;
             RigidBody ibody = (RigidBody) prey.AddComponent(new RigidBody());
-            ibody.SetStatic(false);
         }
 
-        for (int i = 0; i < 0; i++)
+        for (int i = 0; i < 1; i++)
         {
             PVector rand = new PVector(random(0, width-150), random(0, height-150));
             GameObject prey = AddGameObject(new Prey("Prey" + i));
             prey.AddComponent(new CircleCollider());
             prey.GetTransform().Position = rand;
             RigidBody ibody = (RigidBody) prey.AddComponent(new RigidBody());
-            ibody.SetStatic(false);
         }
         
     }

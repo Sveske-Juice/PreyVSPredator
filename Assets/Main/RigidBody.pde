@@ -11,19 +11,14 @@ public class RigidBody extends Component
     private float m_DynamicFriction = 0.99f; // Dynamic friction coefficient
 
     private boolean m_TakesGravity = true; // If the rigidbody will simulate gravity
-    private boolean m_IsSimulated = true; // If the rigidbody gets simulated. Still participates with collisions, but is unaffected.
-    private boolean m_IsStatic = false;
 
-    private Transform m_LastTrans; // Where the rigidbody was last step
-    private Transform m_NextTrans; // Where the rigidbody will be next step if there is no interference
 
     /* Getters/Setters. */
     public PVector GetVelocity() { return m_Velocity; }
     public void SetVelocity(PVector velocity) { m_Velocity = velocity; }
     public float GetMass() { return m_Mass; }
     public void SetMass(float mass) { m_Mass = mass; }
-    public boolean IsStatic() { return m_IsStatic; }
-    public void SetStatic(boolean isStatic) { m_IsStatic = isStatic; }
+
 
     /* Constructors. */
     public RigidBody()

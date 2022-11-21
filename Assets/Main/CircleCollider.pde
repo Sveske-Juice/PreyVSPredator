@@ -18,17 +18,6 @@ public class CircleCollider extends Collider
     /* Default constructor. */
     public CircleCollider() { super("Circle Collider"); }
 
-    @Override
-    public void Start()
-    {
-        super.Start();
-
-        // Blue color for static bodies
-        if (m_GameObject.GetComponent(RigidBody.class).IsStatic() == true)
-        {
-            m_ColliderColor = color(0f, 0f, 150f, 75f);
-        }
-    }
 
     @Override
     public void DrawCollider()
@@ -57,6 +46,7 @@ public class CircleCollider extends Collider
             PVector Normal = PVector.sub(checkPosition, transform().Position).normalize();
             PVector A = PVector.add(transform().Position, PVector.mult(Normal, m_Radius)); // Furthest point of A into B
             PVector B = PVector.add(checkPosition, Normal.copy().rotate(PI).mult(checkRadius));
+
             return new CollisionPoint(A, B, Normal, true);
         }
 
@@ -67,55 +57,45 @@ public class CircleCollider extends Collider
     @Override
     public CollisionPoint TestCollision(BoxCollider collider)
     {
-        PVector checkPosition = collider.transform().Position;
-        PVector checkCenter = collider.GetCenter();
-        float checkWidth = collider.GetWidth();
-        float checkHeight = collider.GetHeight();
+        PVector boxCenter = collider.GetCenter();
+        PVector boxHalfExtents = new PVector(collider.GetWidth() / 2f, collider.GetHeight() / 2f);
 
-        PVector ABNorm = PVector.sub(checkCenter, transform().Position).normalize();
-        //PVector outerPoint = PVector.add(transform().Position, PVector.mult(ABNorm, m_Radius));
-        PVector outerPoint = PVector.add(transform().Position, PVector.mult(((RigidBody) m_GameObject.GetComponent(RigidBody.class)).GetVelocity().copy().normalize(), m_Radius));
-        println("norm: " + ABNorm);
-        println("outerpoint: " + outerPoint);
-        fill(255, 0, 0);
-        circle(outerPoint.x, outerPoint.y, 10);
-        fill(255);
-        
-        // Check if outerpoint of circle is inside the AABB
-        boolean inAABB = collider.PointInRect(outerPoint);
-        
-        // No collision happened, set HasCollision flag to false.
-        if (!inAABB)
+        PVector diff = PVector.sub(transform().Position, boxCenter);
+        PVector clamped = Clamp(diff, PVector.mult(boxHalfExtents, -1f), boxHalfExtents);
+
+        PVector closestPoint = PVector.add(boxCenter, clamped);
+
+        PVector circleToPoint = PVector.sub(closestPoint, transform().Position);
+        float ctpMag = circleToPoint.mag();
+
+        if (ctpMag > m_Radius) // No collision happened
             return new CollisionPoint(null, null, null, false);
 
-        println("COOLL");
-        PVector A = outerPoint;
-        PVector B = new PVector();
+        //println("Closest point: " + closestPoint);
 
-        if (ABNorm.x >= 0) // Circle collided from left
-        {
-            B.x = checkPosition.x;
-        }
-        else // Circle collided from right
-        {
-            B.x = checkPosition.x + checkWidth;
-        }
+        // Calculate the collision points of the collision
+        PVector A = PVector.add(transform().Position, PVector.mult(circleToPoint.copy().normalize(), m_Radius)); // Furthest point of circle penetrated ino AABB
+
+        // if circle completely inside use the point on the circles outline in the dir of the aabb
+        if (circleToPoint.x == 0f && circleToPoint.y == 0f)
+            A = PVector.add(transform().Position, PVector.mult(PVector.sub(boxCenter, transform().Position).normalize(), m_Radius));
         
-        if (ABNorm.y >= 0) // Circle collided from top
-        {
-            B.y = checkPosition.y;
-        }
-        else // Circle collided from bottom
-        {
-            B.y = checkPosition.y + checkHeight;
-        }
 
-        fill(255, 0, 0);
-        circle(A.x, A.y, 10);
-        fill(0, 255, 0);
-        circle(B.x, B.y, 10);
+        fill(255,0,0);
+        circle(closestPoint.x, closestPoint.y, 15);
+        circle(A.x, A.y, 15);
         fill(255);
 
-        return new CollisionPoint(A, B, ABNorm, true);
+        return new CollisionPoint(A, closestPoint, PVector.sub(closestPoint, A).normalize(), true);
+        
+    }
+
+    /// Clamps a vector between a min and max vector
+    private PVector Clamp(PVector value, PVector min, PVector max)
+    {
+        PVector out = value.copy();
+        out.x = Clamp(out.x, min.x, max.x);
+        out.y = Clamp(out.y, min.y, max.y);
+        return out;
     }
 }
