@@ -50,7 +50,7 @@ public class PreyMover extends AnimalMover
         else if (InputManager.GetInstance().GetKey('d'))
             m_Movement.x = 1;
         
-        PVector force = m_Movement.mult(2.5);
+        PVector force = m_Movement.mult(200.5);
         m_RB.ApplyForce(force);
 
         // radius resize

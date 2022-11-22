@@ -36,9 +36,12 @@ public class CircleCollider extends Collider
     public CollisionPoint TestCollision(CircleCollider collider)
     {
         PVector checkPosition = collider.transform().Position;
+        PVector pos = transform().Position;
+
         float checkRadius = collider.GetRadius();
 
-        float dist = checkPosition.dist(transform().Position); // Dist between centers
+        // Don't use processing default dist() function, because it's sloow        
+        float dist = sqrt(pow(pos.x - checkPosition.x, 2) + pow(pos.y - checkPosition.y, 2));
         if (dist < m_Radius + checkRadius)
         {
             // They're colliding
@@ -46,7 +49,6 @@ public class CircleCollider extends Collider
             PVector Normal = PVector.sub(checkPosition, transform().Position).normalize();
             PVector A = PVector.add(transform().Position, PVector.mult(Normal, m_Radius)); // Furthest point of A into B
             PVector B = PVector.add(checkPosition, Normal.copy().rotate(PI).mult(checkRadius));
-
             return new CollisionPoint(A, B, Normal, true);
         }
 
