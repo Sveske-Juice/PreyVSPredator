@@ -1,6 +1,8 @@
 public class CameraHandler extends Component
 {
     private PVector m_MoveTranslation = new PVector();
+    private float m_MinZoom = 0.05f;
+    private float m_MaxZoom = 10f;
     private float m_ScaleFactor = 1f;
     private float m_ScaleMultiplier = 0.05f;
 
@@ -29,16 +31,14 @@ public class CameraHandler extends Component
 
         float mouseAccel = g_InputManager.GetInstance().GetWheelAcceleration();
         
-
         m_ScaleFactor += mouseAccel * m_ScaleMultiplier * -1;
 
-        
-        
+        // Clamp scale factor to min and max allowed zoom scales
+        if (m_ScaleFactor < m_MinZoom) m_ScaleFactor = m_MinZoom;
+        if (m_ScaleFactor > m_MaxZoom) m_ScaleFactor = m_MaxZoom;
+
         translate(width/2, height/2);
         scale(m_ScaleFactor);
-        translate(-m_MoveTranslation.x, -m_MoveTranslation.y);
-        //translate(-panX, -panY);
-        println(m_ScaleFactor);
-        
+        translate(-m_MoveTranslation.x, -m_MoveTranslation.y);        
     }
 }

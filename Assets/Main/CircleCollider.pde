@@ -71,8 +71,6 @@ public class CircleCollider extends Collider
         if (ctpMag > m_Radius) // No collision happened
             return new CollisionPoint(null, null, null, false);
 
-        //println("Closest point: " + closestPoint);
-
         // Calculate the collision points of the collision
         PVector A = PVector.add(transform().Position, PVector.mult(circleToPoint.copy().normalize(), m_Radius)); // Furthest point of circle penetrated ino AABB
 

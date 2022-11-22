@@ -16,7 +16,6 @@ public class Prey extends Animal
 
 public class PreyMover extends AnimalMover
 {
-    private MoveController m_MoveController;
     private RigidBody m_RB;
 
     public PreyMover()
@@ -33,7 +32,6 @@ public class PreyMover extends AnimalMover
     @Override
     public void Start()
     {
-        m_MoveController = m_GameObject.GetComponent(MoveController.class);
         m_RB = m_GameObject.GetComponent(RigidBody.class);
     }
 
@@ -52,9 +50,6 @@ public class PreyMover extends AnimalMover
         else if (InputManager.GetInstance().GetKey('d'))
             m_Movement.x = 1;
         
-
-        //m_MoveController.SetVelocity(m_Movement.mult(m_MovementSpeed));
-        //m_MoveController.Move();
         PVector force = m_Movement.mult(2.5);
         m_RB.ApplyForce(force);
 
