@@ -44,4 +44,7 @@ public abstract class Collider extends Component
     {
         return max(min, min(max, value));
     }
+
+    public abstract PVector GetMinExtents();
+    public abstract PVector GetMaxExtents();
 }

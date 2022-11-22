@@ -1,3 +1,6 @@
+import java.util.Collections;
+import java.util.Comparator;
+
 public class CollisionWorld
 {
     /* Members. */
@@ -8,29 +11,53 @@ public class CollisionWorld
     /* Constructors. */
 
     /* Methods. */
+    private Comparator<Collider> m_CompareAABBMinExtent = new Comparator<Collider>()
+    {
+        // Custom comparator for comparing by min extent
+        // to sort in descending order
+        public int compare(Collider a, Collider b)
+        {
+            if (a.GetMinExtents().x > b.GetMinExtents().x)
+                return 1;
+            else
+                return -1;
+        }
+    };
 
     public void RegisterCollider(Collider collider) { if (collider == null) return; m_Colliders.add(collider); }
 
     protected void ResolveCollisions(float dt)
     {
-        // Store collisions in this step
+        // Store collisions in this physics step
         ArrayList<Collision> collisions = new ArrayList<Collision>();
+        int collisionChecks = 0;
+
+        // Sort collider list based on min extent in x-axis
+        Collections.sort(m_Colliders, m_CompareAABBMinExtent);
         
-        // Detect collisions and create collision containers
+        // Detect collisions and create collision objects with sweep and prune algorithm
         for (int i = 0; i < m_Colliders.size(); i++)
         {
-            for (int j = 0; j < m_Colliders.size(); j++)
-            {
-                if (i == j) break;
-                Collider colA = m_Colliders.get(i);
-                Collider colB = m_Colliders.get(j);
-                //println("Checking for collision between " + colA.GetName() + " on " + colA.GetGameObject().GetName() + " and " +  colB.GetName() + " on " + colB.GetGameObject().GetName());
+            Collider colA = m_Colliders.get(i);
+            float colAMaxExtent = colA.GetMaxExtents().x;
 
+            for (int j = i + 1; j < m_Colliders.size(); j++)
+            {
+
+                Collider colB = m_Colliders.get(j);
+
+                // If the colliders are not overlaping on the axis we can safely break
+                if (colB.GetMinExtents().x > colAMaxExtent)
+                    break;
+            
+                //println("Checking for collision between " + colA.GetName() + " on " + colA.GetGameObject().GetName() + " and " +  colB.GetName() + " on " + colB.GetGameObject().GetName());
                 if (colA == null || colB == null)
                     continue;
                 
                 // Check collision between the two colliders
                 CollisionPoint points = colA.TestCollision(colB);
+
+                collisionChecks++;
 
                 if (points.HasCollision)
                 {
@@ -38,8 +65,12 @@ public class CollisionWorld
                     Collision collision = new Collision(colA, colB, colA.GetGameObject(), colB.GetGameObject(), points);
                     collisions.add(collision);
                 }
+                
             }
         }
+
+
+        println("Collision checks this step: " + collisionChecks);
 
         // Resolve collisions for this frame
         for (int i = 0; i < collisions.size(); i++)
@@ -110,6 +141,6 @@ public class CollisionWorld
         }
 
         println("fps: " + 1 / Time.dt());
-        println("-- new frame --");
+        println("------------- new frame ------------");
     }
 }

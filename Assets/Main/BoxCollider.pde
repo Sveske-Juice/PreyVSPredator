@@ -4,12 +4,13 @@ public class BoxCollider extends Collider
     private RigidBody m_RigidBody = null;
     private float m_Width = 50f;
     private float m_Height = 50f;
+    private PVector m_Extents = new PVector(m_Width, m_Height);
 
     /* Getters/Setters. */
     public float GetWidth() { return m_Width; }
-    public void SetWidth(float width) { m_Width = width; }
+    public void SetWidth(float width) { m_Width = width; m_Extents = new PVector(m_Width, m_Height); }
     public float GetHeight() { return m_Height; }
-    public void SetHeight(float height) { m_Height = height; }
+    public void SetHeight(float height) { m_Height = height; m_Extents = new PVector(m_Width, m_Height); }
     public PVector GetCenter() { return new PVector(transform().Position.x + m_Width / 2f, transform().Position.y + m_Height / 2f); }
 
     public BoxCollider(float width, float height)
@@ -17,6 +18,7 @@ public class BoxCollider extends Collider
         super("Box Collider");
         m_Width = width;
         m_Height = height;
+        m_Extents = new PVector(width, height);
     }
 
     public BoxCollider()
@@ -173,6 +175,20 @@ public class BoxCollider extends Collider
         // println("hit point: " + hitPoint);
         // println("penetration: " + penetration);
         return hit;
+    }
+
+    @Override
+    public PVector GetMinExtents()
+    {
+        // TODO take offset into account here
+        return transform().Position;
+    }
+
+    @Override
+    public PVector GetMaxExtents()
+    {
+        // TODO take offset into account here
+        return PVector.add(transform().Position, m_Extents);
     }
 
     private int Sign(float x)

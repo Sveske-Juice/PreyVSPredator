@@ -4,10 +4,11 @@ public class CircleCollider extends Collider
     private PVector m_CenterOffset = new PVector();
     private PVector m_OurPosition;
     private float m_Radius = 30f;
+    private PVector m_LocalExtentOffset = new PVector(m_Radius, m_Radius);
 
     /* Getters/Setters. */
     public float GetRadius() { return m_Radius; }
-    public void SetRadius(float radius) { m_Radius = radius; }
+    public void SetRadius(float radius) { m_Radius = radius; m_LocalExtentOffset = new PVector(m_Radius, m_Radius); }
 
     /* Pass name with initialization. */
     public CircleCollider(String name)
@@ -88,6 +89,20 @@ public class CircleCollider extends Collider
 
         return new CollisionPoint(A, closestPoint, PVector.sub(closestPoint, A).normalize(), true);
         
+    }
+
+    @Override
+    public PVector GetMinExtents()
+    {
+        // TODO take offset into account here
+        return PVector.sub(transform().Position, m_LocalExtentOffset);
+    }
+
+    @Override
+    public PVector GetMaxExtents()
+    {
+        // TODO take offset into account here
+        return PVector.add(transform().Position, m_LocalExtentOffset);
     }
 
     /// Clamps a vector between a min and max vector

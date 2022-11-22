@@ -114,7 +114,7 @@ public class GameScene extends Scene
         bottomborder.GetTransform().Position = new PVector(0, height-30);
         */
 
-        for (int i = 0; i < 1; i++)
+        for (int i = 0; i < 0; i++)
         {
             PVector rand = new PVector(random(0, width), random(0, height-150));
             GameObject prey = AddGameObject(new Prey("Prey" + i));
@@ -123,12 +123,12 @@ public class GameScene extends Scene
             RigidBody ibody = (RigidBody) prey.AddComponent(new RigidBody());
         }
 
-        for (int i = 0; i < 2000; i++)
+        for (int i = 0; i < 5000; i++)
         {
             PVector rand = new PVector(random(-m_Dimensions.x, m_Dimensions.x-150), random(-m_Dimensions.y, m_Dimensions.y-150));
             GameObject prey = AddGameObject(new Prey("Prey" + i));
             prey.AddComponent(new CircleCollider());
-            prey.GetTransform().Position = rand; //PVector.sub(prey1.GetTransform().Position, new PVector(10, 10));
+            prey.GetTransform().Position = rand; //PVector.sub(prey1.GetTransform().Position, new PVector(500, 500));
             RigidBody ibody = (RigidBody) prey.AddComponent(new RigidBody());
         }
         
