@@ -5,8 +5,9 @@ public abstract class Scene
     /* Members. */
     protected String m_SceneName = "New Scene";
     protected ArrayList<GameObject> m_GameObjects = new ArrayList<GameObject>();
-    protected CollissionSystem m_CollissionSystem = new CollissionSystem();
     protected PVector m_Dimensions = new PVector(5000f, 5000f);
+    private PVector m_MoveTranslation = new PVector();
+    private float m_ScaleFactor = 1f;
 
     protected PhysicsSystem m_PhysicsSystem = new PhysicsSystem();
     
@@ -14,9 +15,12 @@ public abstract class Scene
     public String GetSceneName() { return m_SceneName; }
     public ArrayList<GameObject> GetGameObjects() { return m_GameObjects; }
     public void SetGameObjects(ArrayList<GameObject> objects) { m_GameObjects = objects; }
-    public CollissionSystem GetCollissionSystem() { return m_CollissionSystem; }
     public PhysicsSystem GetPhysicsSystem() { return m_PhysicsSystem; }
     public PVector GetDimensions() { return m_Dimensions; }
+    public PVector GetMoveTranslation() { return m_MoveTranslation; }
+    public void SetMoveTranslation(PVector translation) { m_MoveTranslation = translation; }
+    public void SetScaleFactor(float factor) { m_ScaleFactor = factor; }
+    public float GetScaleFactor() { return m_ScaleFactor; }
     
     public Scene(String sceneName)
     {
@@ -35,13 +39,20 @@ public abstract class Scene
         }
     }
     
-    public void UpdateObjects()
+    public void UpdateScene()
     {
+        // Translate and scale
+        translate(width/2, height/2);
+        scale(m_ScaleFactor);
+        translate(-m_MoveTranslation.x - width / 2f, -m_MoveTranslation.y - height / 2f); 
+        
+        // Update all components on every GameObject in the scene
         for (int i = 0; i < m_GameObjects.size(); i++)
         {
             m_GameObjects.get(i).UpdateObject();
         }
 
+        // Tick physics system
         m_PhysicsSystem.Step(Time.dt());
     }
     
@@ -125,7 +136,7 @@ public class GameScene extends Scene
             RigidBody ibody = (RigidBody) prey.AddComponent(new RigidBody());
         }
 
-        for (int i = 0; i < 5000; i++)
+        for (int i = 0; i < 1000; i++)
         {
             PVector rand = new PVector(random(-m_Dimensions.x, m_Dimensions.x-150), random(-m_Dimensions.y, m_Dimensions.y-150));
             GameObject prey = AddGameObject(new Prey("Prey" + i));

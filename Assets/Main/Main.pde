@@ -18,7 +18,7 @@ void draw()
 
     Time.Tick(millis());
 
-    g_SceneManager.UpdateScene();
+    g_SceneManager.UpdateActiveScene();
 
     g_InputManager.GetInstance().Update();
 }

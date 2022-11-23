@@ -18,7 +18,7 @@ public class PhysicsSystem extends CollisionWorld
         ResolveCollisions(dt);
         MoveObjects(dt);
 
-        println("E_kin: " + m_KineticEnergy);
+        // println("E_kin: " + m_KineticEnergy);
         m_KineticEnergy = 0f;
     }
 

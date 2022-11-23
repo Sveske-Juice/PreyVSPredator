@@ -3,7 +3,7 @@ public class CircleCollider extends Collider
     /* Members. */
     private PVector m_CenterOffset = new PVector();
     private PVector m_OurPosition;
-    private float m_Radius = 30f;
+    private float m_Radius = 75f;
     private PVector m_LocalExtentOffset = new PVector(m_Radius, m_Radius);
 
     /* Getters/Setters. */
@@ -96,9 +96,6 @@ public class CircleCollider extends Collider
     {
         PVector pos = transform().Position;
 
-
-        
-
         // TODO take offset into account here
         PVector originToCircle = PVector.sub(pos, ray.GetOrigin());
         float radiusSq = m_Radius * m_Radius;
@@ -145,9 +142,11 @@ public class CircleCollider extends Collider
     public boolean PointInCollider(PVector point)
     {
         // TODO take offset into account here
-        float dist = transform().Position.dist(point);
+        PVector pos = transform().Position; // cache pos
+        PVector screenPosition = new PVector(screenX(pos.x, pos.y), screenY(pos.x, pos.y));
+        float dist = screenPosition.dist(point);
 
-        if (dist < m_Radius)
+        if (dist < m_Radius * m_GameObject.GetBelongingToScene().GetScaleFactor())
             return true;
 
         return false;

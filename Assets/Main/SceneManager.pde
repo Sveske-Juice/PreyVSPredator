@@ -63,14 +63,11 @@ public class SceneManager
         }
     }
     
-    public void UpdateScene()
+    public void UpdateActiveScene()
     {
          if (m_ActiveScene == null)
              return;
         
-        m_ActiveScene.UpdateObjects();
-
-        // Check for collissions
-        m_ActiveScene.GetCollissionSystem().CheckCollisions();
+        m_ActiveScene.UpdateScene();
     }
 }

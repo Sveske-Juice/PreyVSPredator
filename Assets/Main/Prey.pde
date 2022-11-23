@@ -38,6 +38,7 @@ public class PreyMover extends AnimalMover implements ITriggerEventHandler
     @Override
     public void Update()
     {
+        // println("pos: " + transform().Position);
         PVector m_Movement = new PVector();
         
         if (InputManager.GetInstance().GetKey('w'))

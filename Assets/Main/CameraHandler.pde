@@ -1,21 +1,17 @@
 public class CameraHandler extends Component
 {
-    private PVector m_MoveTranslation = new PVector();
+    private PhysicsSystem m_PhysicsSystem;
+    private Scene m_Scene;
     private float m_MinZoom = 0.05f;
-    private float m_MaxZoom = 10f;
-    private float m_ScaleFactor = 1f;
+    private float m_MaxZoom = 10f;    
     private float m_ScaleMultiplier = 0.05f;
-
-    private float panX = 0f;
-    private float panY = 0f;
-
     private PVector m_PreviousMouseCords = new PVector();
 
     @Override
     public void Start()
     {
-        panX = width / 2;
-        panY = width / 2;
+        m_PhysicsSystem = m_GameObject.GetBelongingToScene().GetPhysicsSystem();
+        m_Scene = m_GameObject.GetBelongingToScene();        
     }
 
     @Override
@@ -25,20 +21,25 @@ public class CameraHandler extends Component
         PVector mouseCords = new PVector(mouseX, mouseY);
         PVector diff = PVector.sub(m_PreviousMouseCords, mouseCords);
         m_PreviousMouseCords = mouseCords;
-        
-        if (mouseClicked)
-            m_MoveTranslation.add(PVector.mult(diff, 1/m_ScaleFactor));
 
         float mouseAccel = g_InputManager.GetInstance().GetWheelAcceleration();
         
-        m_ScaleFactor += mouseAccel * m_ScaleMultiplier * -1;
+        float newScaleFactor = m_Scene.GetScaleFactor() + mouseAccel * m_ScaleMultiplier * -1;
 
         // Clamp scale factor to min and max allowed zoom scales
-        if (m_ScaleFactor < m_MinZoom) m_ScaleFactor = m_MinZoom;
-        if (m_ScaleFactor > m_MaxZoom) m_ScaleFactor = m_MaxZoom;
+        if (newScaleFactor < m_MinZoom) newScaleFactor = m_MinZoom;
+        if (newScaleFactor > m_MaxZoom) newScaleFactor = m_MaxZoom;
+        m_Scene.SetScaleFactor(newScaleFactor);
 
-        translate(width/2, height/2);
-        scale(m_ScaleFactor);
-        translate(-m_MoveTranslation.x, -m_MoveTranslation.y);        
+        if (mouseClicked)
+        {
+            // If an animal was clicked on, then chase the animal with the camera
+            Collider hitCollider = m_PhysicsSystem.PointOverlap(mouseCords);
+            if (hitCollider != null)
+                println("HIT!");
+
+            m_Scene.GetMoveTranslation().add(PVector.mult(diff, 1 / m_Scene.GetScaleFactor()));
+        }
+            
     }
 }
