@@ -36,11 +36,13 @@ public abstract class Collider extends Component
 
     public abstract void DrawCollider();
 
-    // Double dispatch runtime check of collider type to concrete class
+    // Double dispatch runtime check of collider type to concrete collider class
     public abstract CollisionPoint TestCollision(Collider collider);
 
     public abstract CollisionPoint TestCollision(BoxCollider collider);
     public abstract CollisionPoint TestCollision(CircleCollider collider);
+
+    public abstract boolean PointInCollider(PVector point);
 
     // Clamps a value between a range
     protected float Clamp(float value, float min, float max)

@@ -41,14 +41,6 @@ public class BoxCollider extends Collider
 
     }
 
-    public boolean PointInRect(PVector point)
-    {
-        if (point == null) return false;
-
-        PVector pos = transform().Position; // Cache pos
-        return (    point.x > pos.x && point.x < pos.x + m_Width &&
-                    point.y > pos.y && point.y < pos.y + m_Height);
-    }
 
     @Override
     public CollisionPoint TestCollision(Collider collider)
@@ -181,6 +173,16 @@ public class BoxCollider extends Collider
     public RaycastHit TestRaycast(Ray ray)
     {
         return new RaycastHit(null, null, -1f, false);
+    }
+
+    @Override
+    public boolean PointInCollider(PVector point)
+    {
+        if (point == null) return false;
+
+        PVector pos = transform().Position; // Cache pos
+        return (    point.x > pos.x && point.x < pos.x + m_Width &&
+                    point.y > pos.y && point.y < pos.y + m_Height);
     }
     
 

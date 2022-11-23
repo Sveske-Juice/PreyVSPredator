@@ -30,6 +30,7 @@ public class PhysicsSystem extends CollisionWorld
         }
     }
 
+    // Moves all rigidbodies in the scene and calculates the total kinetic energy
     private void MoveObjects(float dt)
     {
         for (int i = 0; i < m_Bodies.size(); i++)
@@ -44,6 +45,8 @@ public class PhysicsSystem extends CollisionWorld
         }
     }
 
+    // Casts a ray cast against every collider in the scene
+    // and returns a RaycastHit object.
     public RaycastHit Raycast(Ray ray)
     {
         for (int i = 0; i < m_Colliders.size(); i++)
@@ -55,5 +58,18 @@ public class PhysicsSystem extends CollisionWorld
         }
 
         return new RaycastHit(null, null, -1f, false);
+    }
+
+    // Checks if a point is intersected by any collider in the scene
+    // returns the collider the point overlapped with or null.
+    public Collider PointOverlap(PVector point)
+    {
+        for (int i = 0; i < m_Colliders.size(); i++)
+        {
+            if (m_Colliders.get(i).PointInCollider(point))
+                return m_Colliders.get(i);
+        }
+        
+        return null;
     }
 }

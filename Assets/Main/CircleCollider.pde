@@ -141,6 +141,18 @@ public class CircleCollider extends Collider
         return new RaycastHit(normal, point, t, true);
     }
 
+    @Override
+    public boolean PointInCollider(PVector point)
+    {
+        // TODO take offset into account here
+        float dist = transform().Position.dist(point);
+
+        if (dist < m_Radius)
+            return true;
+
+        return false;
+    }
+
 
     @Override
     public PVector GetMinExtents()
