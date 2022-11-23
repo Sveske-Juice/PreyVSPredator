@@ -5,7 +5,7 @@ public abstract class Scene
     /* Members. */
     protected String m_SceneName = "New Scene";
     protected ArrayList<GameObject> m_GameObjects = new ArrayList<GameObject>();
-    protected PVector m_Dimensions = new PVector(5000f, 5000f);
+    protected PVector m_Dimensions = new PVector(10000f, 10000f);
     private PVector m_MoveTranslation = new PVector();
     private float m_ScaleFactor = 1f;
 
@@ -136,7 +136,7 @@ public class GameScene extends Scene
             RigidBody ibody = (RigidBody) prey.AddComponent(new RigidBody());
         }
 
-        for (int i = 0; i < 1000; i++)
+        for (int i = 0; i < 5; i++)
         {
             PVector rand = new PVector(random(-m_Dimensions.x, m_Dimensions.x-150), random(-m_Dimensions.y, m_Dimensions.y-150));
             GameObject prey = AddGameObject(new Prey("Prey" + i));
