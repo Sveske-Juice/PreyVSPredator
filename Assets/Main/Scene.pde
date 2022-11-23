@@ -6,6 +6,7 @@ public abstract class Scene
     protected String m_SceneName = "New Scene";
     protected ArrayList<GameObject> m_GameObjects = new ArrayList<GameObject>();
     protected CollissionSystem m_CollissionSystem = new CollissionSystem();
+    protected PVector m_Dimensions = new PVector(5000f, 5000f);
 
     protected PhysicsSystem m_PhysicsSystem = new PhysicsSystem();
     
@@ -15,6 +16,7 @@ public abstract class Scene
     public void SetGameObjects(ArrayList<GameObject> objects) { m_GameObjects = objects; }
     public CollissionSystem GetCollissionSystem() { return m_CollissionSystem; }
     public PhysicsSystem GetPhysicsSystem() { return m_PhysicsSystem; }
+    public PVector GetDimensions() { return m_Dimensions; }
     
     public Scene(String sceneName)
     {
@@ -66,7 +68,6 @@ public abstract class Scene
 
 public class GameScene extends Scene
 {
-    private PVector m_Dimensions = new PVector(500f, 500f);
     public GameScene(String sceneName)
     {
         super(sceneName);
@@ -124,12 +125,12 @@ public class GameScene extends Scene
             RigidBody ibody = (RigidBody) prey.AddComponent(new RigidBody());
         }
 
-        for (int i = 0; i < 1; i++)
+        for (int i = 0; i < 5000; i++)
         {
             PVector rand = new PVector(random(-m_Dimensions.x, m_Dimensions.x-150), random(-m_Dimensions.y, m_Dimensions.y-150));
             GameObject prey = AddGameObject(new Prey("Prey" + i));
             CircleCollider col = (CircleCollider) prey.AddComponent(new CircleCollider());
-            col.SetTrigger(true);
+            col.SetTrigger(false);
             prey.GetTransform().Position = rand; //PVector.sub(prey1.GetTransform().Position, new PVector(500, 500));
             RigidBody ibody = (RigidBody) prey.AddComponent(new RigidBody());
         }

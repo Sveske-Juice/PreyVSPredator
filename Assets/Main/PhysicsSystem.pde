@@ -36,7 +36,7 @@ public class PhysicsSystem extends CollisionWorld
         for (int i = 0; i < m_Bodies.size(); i++)
         {
             RigidBody body = m_Bodies.get(i);
-
+            KeepTransformInsideDimensions(body.transform());
             m_KineticEnergy += body.CalcEKin();
             
             if (body == null) continue;
@@ -71,5 +71,23 @@ public class PhysicsSystem extends CollisionWorld
         }
         
         return null;
+    }
+
+    private void KeepTransformInsideDimensions(Transform transform)
+    {
+        PVector pos = transform.Position;
+        PVector dimensions = transform.GetGameObject().GetBelongingToScene().GetDimensions();
+
+        if (pos.x < -dimensions.x)
+            pos.x = dimensions.x;
+        else if (pos.x > dimensions.x)
+            pos.x = -dimensions.x;
+        
+        if (pos.y < -dimensions.y)
+            pos.y = dimensions.y;
+        else if (pos.y > dimensions.y)
+            pos.y = -dimensions.y;
+        
+    
     }
 }
