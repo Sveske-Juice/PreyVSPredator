@@ -7,6 +7,9 @@ public abstract class Collider extends Component
 
     /* Getters/Setters. */
     public boolean IsTrigger() { return m_IsTrigger; }
+    public void SetTrigger(boolean value) { m_IsTrigger = value; }
+
+    public void SetColor(color _color) { m_ColliderColor = _color; }
 
     /* Constructors. */
 

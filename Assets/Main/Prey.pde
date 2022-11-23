@@ -14,7 +14,7 @@ public class Prey extends Animal
     }
 }
 
-public class PreyMover extends AnimalMover
+public class PreyMover extends AnimalMover implements ITriggerEventHandler
 {
     private RigidBody m_RB;
 
@@ -76,5 +76,11 @@ public class PreyMover extends AnimalMover
             else if (InputManager.GetInstance().GetKey(37))
                 box.SetWidth(box.GetWidth() - 0.5);
         }
+    }
+
+    public void OnCollisionTrigger(Collider collider)
+    {
+        println("On Collision Trigger event raised! with gameObject: " + collider.GetGameObject().GetName());
+        m_GameObject.GetComponent(Collider.class).SetColor(color(0, 200, 0, 75));
     }
 }

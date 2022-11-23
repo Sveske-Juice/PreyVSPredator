@@ -11,6 +11,7 @@ public class GameObject
     /* Getters/Setters. */
     public Scene GetBelongingToScene() { return m_BelongingToScene; }
     public void SetBelongingToScene(Scene scene) { m_BelongingToScene = scene; }
+    public ArrayList<Component> GetComponents() { return m_Components; }
     public String GetName() { return m_Name; }
     public Transform GetTransform() { return m_Transform; }
 

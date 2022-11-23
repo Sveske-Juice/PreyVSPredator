@@ -51,20 +51,26 @@ public class CollisionWorld
                     break;
             
                 //println("Checking for collision between " + colA.GetName() + " on " + colA.GetGameObject().GetName() + " and " +  colB.GetName() + " on " + colB.GetGameObject().GetName());
-                if (colA == null || colB == null)
-                    continue;
-                
+
                 // Check collision between the two colliders
                 CollisionPoint points = colA.TestCollision(colB);
-
                 collisionChecks++;
 
-                if (points.HasCollision)
+                if (!points.HasCollision)
+                    continue;
+
+
+                if (colB.IsTrigger() || colA.IsTrigger())
                 {
-                    // Construct collision container
-                    Collision collision = new Collision(colA, colB, colA.GetGameObject(), colB.GetGameObject(), points);
-                    collisions.add(collision);
+                    RaiseCollisionTriggerEvent(colB, colA);
+                    RaiseCollisionTriggerEvent(colA, colB);
+                    continue;
                 }
+
+                // Construct collision container
+                Collision collision = new Collision(colA, colB, colA.GetGameObject(), colB.GetGameObject(), points);
+                collisions.add(collision);
+
                 
             }
         }
@@ -136,5 +142,25 @@ public class CollisionWorld
 
         println("fps: " + 1 / Time.dt());
         println("------------- new frame ------------");
+    }
+
+    // Triggers the OnCollisionTrigger method on all components on the collider specified by argument "collider"
+    private void RaiseCollisionTriggerEvent(Collider collider, Collider triggeredWithCollider)
+    {
+        ArrayList<Component> components = collider.GetGameObject().GetComponents();
+
+        // println("Raising event on collider: " + collider.GetName() + " on obj: " + collider.GetGameObject().GetName());
+        for (int i = 0; i < components.size(); i++)
+        {
+            Component component = components.get(i); // Cache component
+
+            // Check if component is implementing a collision trigger event handler
+            if (component instanceof ITriggerEventHandler)
+            {
+                ITriggerEventHandler eventHandler = (ITriggerEventHandler) component;
+                eventHandler.OnCollisionTrigger(triggeredWithCollider);
+            }
+
+        }
     }
 }

@@ -66,7 +66,7 @@ public abstract class Scene
 
 public class GameScene extends Scene
 {
-    private PVector m_Dimensions = new PVector(5000f, 5000f);
+    private PVector m_Dimensions = new PVector(500f, 500f);
     public GameScene(String sceneName)
     {
         super(sceneName);
@@ -87,7 +87,8 @@ public class GameScene extends Scene
         prey1.GetTransform().Position = new PVector(200f, 100f);
         prey1.AddComponent(new PreyMover(5f));
         
-        prey1.AddComponent(new CircleCollider());
+        CircleCollider collider = (CircleCollider) prey1.AddComponent(new CircleCollider());
+        collider.SetTrigger(false);
         RigidBody body = (RigidBody) prey1.AddComponent(new RigidBody());
         body.SetMass(20f);
 
@@ -123,11 +124,12 @@ public class GameScene extends Scene
             RigidBody ibody = (RigidBody) prey.AddComponent(new RigidBody());
         }
 
-        for (int i = 0; i < 0; i++)
+        for (int i = 0; i < 1; i++)
         {
             PVector rand = new PVector(random(-m_Dimensions.x, m_Dimensions.x-150), random(-m_Dimensions.y, m_Dimensions.y-150));
             GameObject prey = AddGameObject(new Prey("Prey" + i));
-            prey.AddComponent(new CircleCollider());
+            CircleCollider col = (CircleCollider) prey.AddComponent(new CircleCollider());
+            col.SetTrigger(true);
             prey.GetTransform().Position = rand; //PVector.sub(prey1.GetTransform().Position, new PVector(500, 500));
             RigidBody ibody = (RigidBody) prey.AddComponent(new RigidBody());
         }
