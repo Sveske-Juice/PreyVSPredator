@@ -176,6 +176,13 @@ public class BoxCollider extends Collider
         // println("penetration: " + penetration);
         return hit;
     }
+    
+    @Override
+    public RaycastHit TestRaycast(Ray ray)
+    {
+        return new RaycastHit(null, null, -1f, false);
+    }
+    
 
     @Override
     public PVector GetMinExtents()

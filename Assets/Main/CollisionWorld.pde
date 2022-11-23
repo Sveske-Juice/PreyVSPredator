@@ -4,7 +4,7 @@ import java.util.Comparator;
 public class CollisionWorld
 {
     /* Members. */
-    private ArrayList<Collider> m_Colliders = new ArrayList<Collider>();
+    protected ArrayList<Collider> m_Colliders = new ArrayList<Collider>();
 
     /* Getters/Setters. */
 
@@ -82,28 +82,22 @@ public class CollisionWorld
             RigidBody B = collision.B.GetComponent(RigidBody.class);
 
             PVector normal = collision.Points.Normal;
-        
-            // If the objects are stationary inside of each other, then push them out
-            if (A.GetVelocity().x == 0f && A.GetVelocity().y == 0f && B.GetVelocity().x == 0f && B.GetVelocity().y == 0f)
-            {
-                // Push back objects
-                PVector BA = PVector.sub(collision.Points.B, collision.Points.A);
 
-                // The depth of the penetration vector with a little offset so they don't collide again
-                float depth = BA.mag() + 0.0005f;
-                int divider = 2;
+            // Push back objects
+            PVector BA = PVector.sub(collision.Points.B, collision.Points.A);
 
-                PVector resolution = PVector.div(PVector.mult(normal, depth), divider);
+            // The depth of the penetration vector with a little offset so they don't collide again
+            float depth = BA.mag() + 0.005f;
+            int divider = 2;
 
-                PVector ARes = resolution;
-                PVector BRes = resolution;
+            PVector resolution = PVector.div(PVector.mult(normal, depth), divider);
 
-                A.transform().Position.add(resolution);
-                B.transform().Position.sub(resolution);
+            PVector ARes = resolution;
+            PVector BRes = resolution;
 
-                //println("static collision resoved!");
-                continue;
-            }
+            A.transform().Position.add(resolution);
+            B.transform().Position.sub(resolution);
+            
 
             PVector tangent = new PVector(-normal.y, normal.x);
 

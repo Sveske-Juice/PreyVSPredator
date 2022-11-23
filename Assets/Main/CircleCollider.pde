@@ -92,6 +92,57 @@ public class CircleCollider extends Collider
     }
 
     @Override
+    public RaycastHit TestRaycast(Ray ray)
+    {
+        PVector pos = transform().Position;
+
+
+        
+
+        // TODO take offset into account here
+        PVector originToCircle = PVector.sub(pos, ray.GetOrigin());
+        float radiusSq = m_Radius * m_Radius;
+        float originToCircleMagSq = originToCircle.mag() * originToCircle.mag();
+
+        // Project origin>ToCircle vector (E) onto ray direction axis
+        float a = originToCircle.dot(ray.GetDir());
+        float bSq = originToCircleMagSq - (a * a);
+
+        if (radiusSq - bSq < 0f)
+        {
+            // No intersection
+            return new RaycastHit(null, null, -1f, false);
+        }
+
+        float f = sqrt(radiusSq - bSq);
+        float t = 0f;
+
+        if (originToCircleMagSq < radiusSq) // Ray's origin is inside of the circle
+        {
+            t = a + f;
+        }
+        else
+        {
+            t = a - f;
+        }
+
+
+        PVector point = PVector.add(ray.GetOrigin(), PVector.mult(ray.GetDir(), t));
+        PVector normal = PVector.sub(point, pos).normalize();
+        
+        /* debug
+        println("Ray cast hit!!!");
+        fill(255, 0, 0);
+        circle(ray.GetOrigin().x, ray.GetOrigin().y, 15);
+        circle(point.x, point.y, 15);
+        fill(255);
+        */
+        
+        return new RaycastHit(normal, point, t, true);
+    }
+
+
+    @Override
     public PVector GetMinExtents()
     {
         // TODO take offset into account here

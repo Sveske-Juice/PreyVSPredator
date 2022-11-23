@@ -84,7 +84,7 @@ public class GameScene extends Scene
         camHandler.AddComponent(new CameraHandler());
         
         GameObject prey1 = AddGameObject(new Prey("Prey1"));
-        prey1.GetTransform().Position = new PVector(50, height - 100);
+        prey1.GetTransform().Position = new PVector(200f, 100f);
         prey1.AddComponent(new PreyMover(5f));
         
         prey1.AddComponent(new CircleCollider());
@@ -123,7 +123,7 @@ public class GameScene extends Scene
             RigidBody ibody = (RigidBody) prey.AddComponent(new RigidBody());
         }
 
-        for (int i = 0; i < 5000; i++)
+        for (int i = 0; i < 0; i++)
         {
             PVector rand = new PVector(random(-m_Dimensions.x, m_Dimensions.x-150), random(-m_Dimensions.y, m_Dimensions.y-150));
             GameObject prey = AddGameObject(new Prey("Prey" + i));

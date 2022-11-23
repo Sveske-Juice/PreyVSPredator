@@ -47,4 +47,6 @@ public abstract class Collider extends Component
 
     public abstract PVector GetMinExtents();
     public abstract PVector GetMaxExtents();
+
+    public abstract RaycastHit TestRaycast(Ray ray);
 }

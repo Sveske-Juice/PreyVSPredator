@@ -59,4 +59,9 @@ public class RigidBody extends Component
     {
         ApplyForce(PVector.mult(m_Gravity, m_Mass));
     }
+
+    public float CalcEKin()
+    {
+        return 0.5f * m_Mass * pow(m_Velocity.mag(), 2);
+    }
 }
