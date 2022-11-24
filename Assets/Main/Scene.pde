@@ -8,8 +8,8 @@ public abstract class Scene
     protected PVector m_Dimensions = new PVector(10000f, 10000f);
     private PVector m_MoveTranslation = new PVector();
     private float m_ScaleFactor = 1f;
-
     protected PhysicsSystem m_PhysicsSystem = new PhysicsSystem();
+    private BitField m_MouseCollisionMask = new BitField();
     
     /* Getters/Setters. */
     public String GetSceneName() { return m_SceneName; }
@@ -21,10 +21,15 @@ public abstract class Scene
     public void SetMoveTranslation(PVector translation) { m_MoveTranslation = translation; }
     public void SetScaleFactor(float factor) { m_ScaleFactor = factor; }
     public float GetScaleFactor() { return m_ScaleFactor; }
+    public BitField GetMouseCollisionMask() { return m_MouseCollisionMask; }
     
     public Scene(String sceneName)
     {
         m_SceneName = sceneName;
+
+        // Setup mouse collision mask
+        m_MouseCollisionMask.SetBit(CollisionLayer.ANIMAL_MAIN_COLLIDER.ordinal());
+        m_MouseCollisionMask.SetBit(CollisionLayer.UI_ELEMENT.ordinal());
     }
     
     /* Methods. */
@@ -42,7 +47,7 @@ public abstract class Scene
     public void UpdateScene()
     {
         // Translate and scale
-        translate(width/2, height/2);
+        translate(width / 2f, height / 2f);
         scale(m_ScaleFactor);
         translate(-m_MoveTranslation.x - width / 2f, -m_MoveTranslation.y - height / 2f); 
         
@@ -97,12 +102,10 @@ public class GameScene extends Scene
         
         GameObject prey1 = AddGameObject(new Prey("Prey1"));
         prey1.GetTransform().Position = new PVector(200f, 100f);
-        prey1.AddComponent(new PreyMover(5f));
+        prey1.AddComponent(new AnimalInputController());
         
-        CircleCollider collider = (CircleCollider) prey1.AddComponent(new CircleCollider());
-        collider.SetTrigger(false);
         RigidBody body = (RigidBody) prey1.AddComponent(new RigidBody());
-        body.SetMass(20f);
+        body.SetMass(200f);
 
         /*
         GameObject topborder = AddGameObject(new GameObject("Top Border"));
@@ -136,7 +139,7 @@ public class GameScene extends Scene
             RigidBody ibody = (RigidBody) prey.AddComponent(new RigidBody());
         }
 
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 0; i++)
         {
             PVector rand = new PVector(random(-m_Dimensions.x, m_Dimensions.x-150), random(-m_Dimensions.y, m_Dimensions.y-150));
             GameObject prey = AddGameObject(new Prey("Prey" + i));

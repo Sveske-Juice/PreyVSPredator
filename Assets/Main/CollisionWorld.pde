@@ -141,7 +141,7 @@ public class CollisionWorld
         }
 
         // println("fps: " + 1 / Time.dt());
-        println("------------- new frame ------------");
+        // println("------------- new frame ------------");
     }
 
     // Triggers the OnCollisionTrigger method on all components on the collider specified by argument "collider"

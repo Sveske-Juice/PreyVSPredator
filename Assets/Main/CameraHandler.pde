@@ -2,7 +2,7 @@ public class CameraHandler extends Component
 {
     private PhysicsSystem m_PhysicsSystem;
     private Scene m_Scene;
-    private float m_MinZoom = 0.05f;
+    private float m_MinZoom = 0.005f;
     private float m_MaxZoom = 10f;    
     private float m_ScaleMultiplier = 0.05f;
     private PVector m_PreviousMouseCords = new PVector();
@@ -36,18 +36,23 @@ public class CameraHandler extends Component
         if (newScaleFactor > m_MaxZoom) newScaleFactor = m_MaxZoom;
         m_Scene.SetScaleFactor(newScaleFactor);
 
-        if (mouseClicked)
+        if (mouseClicked && !m_MouseClickedLastFrame) // single mouse click
         {
             // If an animal was clicked on, then chase the animal with the camera
-            Collider hitCollider = m_PhysicsSystem.PointOverlap(mouseCords);
+            Collider hitCollider = m_PhysicsSystem.PointOverlap(mouseCords, true);
             if (hitCollider != null)
             {
+                println("\nHit collider: " + hitCollider.GetName() + "\n");
                 if (hitCollider == m_ChasingCollider)
                     return;
                 
-                m_IsChasingColldier = true;
-                m_CanSelectNewCollider = false;
-                ChaseCollider(hitCollider);
+                // Clicked on an animal
+                if (hitCollider.GetGameObject() instanceof Animal)
+                {
+                    m_IsChasingColldier = true;
+                    m_CanSelectNewCollider = false;
+                    ChaseCollider(hitCollider);
+                }
             }
             else
             {
@@ -59,7 +64,6 @@ public class CameraHandler extends Component
                     m_IsChasingColldier = false;
                 }
             }
-
         }
 
         if (mouseClicked && m_MouseClickedLastFrame) // Dragging mouse
@@ -72,7 +76,6 @@ public class CameraHandler extends Component
             ChaseCollider(m_ChasingCollider);
 
         m_MouseClickedLastFrame = mouseClicked;
-            
     }
 
     // Makes the camera chase a collider so its always centered

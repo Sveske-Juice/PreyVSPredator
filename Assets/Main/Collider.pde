@@ -3,12 +3,18 @@ public abstract class Collider extends Component
     /* Members. */
     protected color m_ColliderColor = color(150, 0, 0, 75);
 
+    // The layers this collider interacts with
+    protected BitField m_CollisionMask = new BitField();
+
+    // The layer this collider is on
+    protected int m_CollisionLayer = CollisionLayer.ANIMAL_MAIN_COLLIDER.ordinal(); // Default to being the main collider of an Animal
     protected boolean m_IsTrigger = false;
 
     /* Getters/Setters. */
     public boolean IsTrigger() { return m_IsTrigger; }
     public void SetTrigger(boolean value) { m_IsTrigger = value; }
-
+    public void SetCollisionLayer(int layer) { m_CollisionLayer = layer; }
+    public int GetCollisionLayer() { return m_CollisionLayer; }
     public void SetColor(color _color) { m_ColliderColor = _color; }
 
     /* Constructors. */
@@ -22,8 +28,11 @@ public abstract class Collider extends Component
     @Override
     public void Start()
     {
-        //m_GameObject.GetBelongingToScene().GetCollissionSystem().RegisterCollider(this);
         m_GameObject.GetBelongingToScene().GetPhysicsSystem().RegisterCollider(this);
+
+        // Setup default collider mask
+        m_CollisionMask.SetBit(CollisionLayer.ANIMAL_MAIN_COLLIDER.ordinal()); // collide against other animals
+        m_CollisionMask.SetBit(CollisionLayer.ANIMAL_PEREMITER_COLLIDER.ordinal()); // collide against animal's perimeter
     }
 
     @Override

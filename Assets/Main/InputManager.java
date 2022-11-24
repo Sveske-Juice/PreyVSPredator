@@ -20,7 +20,7 @@ public class InputManager
     public void SetMouseBeingDragged(boolean value) { m_MouseBeingDragged = value; }
 
     
-    private BitField m_KeyMap = new BitField();
+    private BitField m_KeyMap = new BitField(8);
 
     public InputManager()
     {

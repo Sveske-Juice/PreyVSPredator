@@ -12,8 +12,14 @@ public class BitField
 
     public BitField()
     {
-        // Default bit field to hold 255 flags (8 * sizeof(int))
-        bits = new int[8];
+        // Default bit field to hold 32 flags (1 * sizeof(int))
+        bits = new int[1];
+    }
+
+    public BitField(int size)
+    {
+        // Default bit field to hold (size * sizeof(int)) flags
+        bits = new int[size];
     }
 
     /// Check if the bit at the index specified is 1

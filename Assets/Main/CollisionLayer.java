@@ -1,0 +1,6 @@
+public enum CollisionLayer
+{
+    ANIMAL_MAIN_COLLIDER,
+    ANIMAL_PEREMITER_COLLIDER,
+    UI_ELEMENT,
+}

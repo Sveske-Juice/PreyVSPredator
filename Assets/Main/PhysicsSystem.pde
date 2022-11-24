@@ -62,12 +62,29 @@ public class PhysicsSystem extends CollisionWorld
 
     // Checks if a point is intersected by any collider in the scene
     // returns the collider the point overlapped with or null.
-    public Collider PointOverlap(PVector point)
+    public Collider PointOverlap(PVector point, boolean checkingForMouse)
     {
         for (int i = 0; i < m_Colliders.size(); i++)
         {
             if (m_Colliders.get(i).PointInCollider(point))
-                return m_Colliders.get(i);
+            {
+                Collider collider = m_Colliders.get(i);
+                if (!checkingForMouse) // All collision layers accepted if not mouse
+                    return collider;
+                
+                // Check collider layer against mouse collision mask
+                int layer = collider.GetCollisionLayer();
+                println("Testing layer: " + layer);
+                Scene colliderScene = collider.GetGameObject().GetBelongingToScene(); // Scene connected to collider
+                if (colliderScene.GetMouseCollisionMask().IsSet(layer))
+                {
+                    // Mouse is allowed to collider with layer
+                    return collider;
+                }
+
+                // Mouse is not allowed to collider with layer
+                return null;
+            }
         }
         
         return null;

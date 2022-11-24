@@ -1,5 +1,15 @@
 public class Prey extends Animal
 {
+    /* Members. */
+    private float m_ViewRadius = 200f;
+    private float m_ColliderRadius = 25f;
+    private color m_ColliderColor = color(0, 180, 0, 60);
+    private color m_ViewPerimeterColliderColor = color(50, 50, 50, 20);
+
+    private Collider m_PeremiterCollider;
+    private Collider m_Collider;
+
+
     public Prey(String name)
     {
         super(name);
@@ -9,25 +19,44 @@ public class Prey extends Animal
     public void CreateComponents()
     {
         super.CreateComponents();
-        //AddComponent(new PreyMover(5f));
-        
+
+        // Create and set main collider color
+        m_Collider = (Collider) AddComponent(new CircleCollider("Prey Collider", m_ColliderRadius));
+        m_Collider.SetCollisionLayer(CollisionLayer.ANIMAL_MAIN_COLLIDER.ordinal());
+        m_Collider.SetColor(m_ColliderColor);
+
+        // Create and set view perimeter collider color
+        m_PeremiterCollider = (Collider) AddComponent(new CircleCollider("Prey Detect Perimeter", m_ViewRadius));
+        m_PeremiterCollider.SetCollisionLayer(CollisionLayer.ANIMAL_PEREMITER_COLLIDER.ordinal());
+        m_PeremiterCollider.SetTrigger(true);
+        m_PeremiterCollider.SetColor(m_ViewPerimeterColliderColor);
+
+        // Prey Movement behaviour
+        AddComponent(new PreyMover());
     }
 }
 
 public class PreyMover extends AnimalMover implements ITriggerEventHandler
 {
+    /* Members. */
     private RigidBody m_RB;
 
+    /* Constructors. */
+
+    // Default constructor, use default movement speed
     public PreyMover()
     {
         m_Name = "Prey Mover";
     }
 
+    // Specify movement speed
     public PreyMover(float moveSpeed)
     {
         m_MovementSpeed = moveSpeed;
         m_Name = "Prey Mover";
     }
+
+    /* Methods. */
 
     @Override
     public void Start()
@@ -38,50 +67,12 @@ public class PreyMover extends AnimalMover implements ITriggerEventHandler
     @Override
     public void Update()
     {
-        // println("pos: " + transform().Position);
-        PVector m_Movement = new PVector();
-        
-        if (InputManager.GetInstance().GetKey('w'))
-            m_Movement.y = -1;
-        else if (InputManager.GetInstance().GetKey('s'))
-            m_Movement.y = 1;
-        
-        if (InputManager.GetInstance().GetKey('a'))
-            m_Movement.x = -1;
-        else if (InputManager.GetInstance().GetKey('d'))
-            m_Movement.x = 1;
-        
-        PVector force = m_Movement.mult(200.5);
-        m_RB.ApplyForce(force);
 
-        // radius resize
-        CircleCollider collider = GetGameObject().GetComponent(CircleCollider.class);
-        //println(InputManager.GetInstance().GetMap());
-        if (collider != null)
-        {
-            if (InputManager.GetInstance().GetKey(38)) // up arrow
-                collider.SetRadius(collider.GetRadius() + 0.5);
-            else if (InputManager.GetInstance().GetKey(40)) // dwn arrow
-                collider.SetRadius(collider.GetRadius() - 0.5);
-        }
-
-        BoxCollider box = GetGameObject().GetComponent(BoxCollider.class);
-        if (box != null)
-        {
-            if (InputManager.GetInstance().GetKey(38))
-                box.SetHeight(box.GetHeight() + 0.5);
-            else if (InputManager.GetInstance().GetKey(40))
-                box.SetHeight(box.GetHeight() - 0.5);
-            else if (InputManager.GetInstance().GetKey(39))
-                box.SetWidth(box.GetWidth() + 0.5);
-            else if (InputManager.GetInstance().GetKey(37))
-                box.SetWidth(box.GetWidth() - 0.5);
-        }
     }
 
     public void OnCollisionTrigger(Collider collider)
     {
         println("On Collision Trigger event raised! with gameObject: " + collider.GetGameObject().GetName());
-        m_GameObject.GetComponent(Collider.class).SetColor(color(0, 200, 0, 75));
+        // m_GameObject.GetComponent(Collider.class).SetColor(color(0, 200, 0, 75));
     }
 }

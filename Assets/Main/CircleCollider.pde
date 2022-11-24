@@ -16,6 +16,13 @@ public class CircleCollider extends Collider
         super(name);
     }
 
+    /* Initialize with specified radius. */
+    public CircleCollider(String name, float radius)
+    {
+        super(name);
+        m_Radius = radius;
+    }
+
     /* Default constructor. */
     public CircleCollider() { super("Circle Collider"); }
 
