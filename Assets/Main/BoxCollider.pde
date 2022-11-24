@@ -95,8 +95,8 @@ public class BoxCollider extends Collider
             m_RigidBody.SetVelocity(sweepPos);
         }
 
-
-        return new CollisionPoint(null, null, null, false);
+        // No collision happened
+        return null;
     }
 
     public Hit IntersectSegment(PVector startPt, PVector deltaPos, PVector padding)

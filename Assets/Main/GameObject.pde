@@ -41,6 +41,16 @@ public class GameObject
         // so it can reference it later.
         component.SetGameObject(this);
 
+        // Add id to every other component than transform
+        if (!(component instanceof Transform))
+        {
+            // Set unique component id
+            component.SetId(m_BelongingToScene.GetComponentIdCounter());
+
+            // Increment global component id counter
+            m_BelongingToScene.SetComponentIdCounter(m_BelongingToScene.GetComponentIdCounter() + 1);
+        }
+
         if (m_ObjectStarted)
             component.Start();
         

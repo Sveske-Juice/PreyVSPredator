@@ -40,6 +40,7 @@ public class CollisionWorld
         {
             Collider colA = m_Colliders.get(i);
             float colAMaxExtent = colA.GetMaxExtents().x;
+            BitField colACollisionMask = colA.GetCollisionMask();
 
             for (int j = i + 1; j < m_Colliders.size(); j++)
             {
@@ -56,15 +57,23 @@ public class CollisionWorld
                 CollisionPoint points = colA.TestCollision(colB);
                 collisionChecks++;
 
-                if (!points.HasCollision)
+                if (points == null)
                     continue;
 
+                // Check for collision layer
+                int colBLayer = colB.GetCollisionLayer();
+                if (!colACollisionMask.IsSet(colBLayer))
+                {
+                    // Collision is not allowed between theese colliders
+                    continue;
+                }
 
+                // If any of the colliders are triggers then don't resolve collision
                 if (colB.IsTrigger() || colA.IsTrigger())
                 {
                     RaiseCollisionTriggerEvent(colB, colA);
                     RaiseCollisionTriggerEvent(colA, colB);
-                    continue;
+                    continue; // Continue without resolving the physically resolving the collision
                 }
 
                 // Construct collision container
@@ -158,7 +167,7 @@ public class CollisionWorld
             if (component instanceof ITriggerEventHandler)
             {
                 ITriggerEventHandler eventHandler = (ITriggerEventHandler) component;
-                eventHandler.OnCollisionTrigger(triggeredWithCollider);
+                eventHandler.OnCollisionTrigger(triggeredWithCollider, collider);
             }
 
         }

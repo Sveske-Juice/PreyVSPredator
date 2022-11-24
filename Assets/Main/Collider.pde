@@ -15,6 +15,7 @@ public abstract class Collider extends Component
     public void SetTrigger(boolean value) { m_IsTrigger = value; }
     public void SetCollisionLayer(int layer) { m_CollisionLayer = layer; }
     public int GetCollisionLayer() { return m_CollisionLayer; }
+    public BitField GetCollisionMask() { return m_CollisionMask; }
     public void SetColor(color _color) { m_ColliderColor = _color; }
 
     /* Constructors. */

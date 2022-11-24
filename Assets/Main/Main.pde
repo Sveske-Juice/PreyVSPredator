@@ -33,7 +33,6 @@ void exit()
 }
 
 /* Input Events. */
-
 void keyPressed()
 {
     // Check its a special character

@@ -60,8 +60,8 @@ public class CircleCollider extends Collider
             return new CollisionPoint(A, B, Normal, true);
         }
 
-        // No collision happened set HasCollision flag to false.
-        return new CollisionPoint(null, null, null, false);
+        // No collision happened
+        return null;
     }
 
     @Override
@@ -79,7 +79,7 @@ public class CircleCollider extends Collider
         float ctpMag = circleToPoint.mag();
 
         if (ctpMag > m_Radius) // No collision happened
-            return new CollisionPoint(null, null, null, false);
+            return null;
 
         // Calculate the collision points of the collision
         PVector A = PVector.add(transform().Position, PVector.mult(circleToPoint.copy().normalize(), m_Radius)); // Furthest point of circle penetrated ino AABB

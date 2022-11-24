@@ -10,6 +10,7 @@ public abstract class Scene
     private float m_ScaleFactor = 1f;
     protected PhysicsSystem m_PhysicsSystem = new PhysicsSystem();
     private BitField m_MouseCollisionMask = new BitField();
+    private int m_ComponentIdCounter = 0;
     
     /* Getters/Setters. */
     public String GetSceneName() { return m_SceneName; }
@@ -22,6 +23,8 @@ public abstract class Scene
     public void SetScaleFactor(float factor) { m_ScaleFactor = factor; }
     public float GetScaleFactor() { return m_ScaleFactor; }
     public BitField GetMouseCollisionMask() { return m_MouseCollisionMask; }
+    public int GetComponentIdCounter() { return m_ComponentIdCounter; }
+    public void SetComponentIdCounter(int value) { m_ComponentIdCounter = value; }
     
     public Scene(String sceneName)
     {
@@ -139,14 +142,11 @@ public class GameScene extends Scene
             RigidBody ibody = (RigidBody) prey.AddComponent(new RigidBody());
         }
 
-        for (int i = 0; i < 0; i++)
+        for (int i = 0; i < 1; i++)
         {
             PVector rand = new PVector(random(-m_Dimensions.x, m_Dimensions.x-150), random(-m_Dimensions.y, m_Dimensions.y-150));
             GameObject prey = AddGameObject(new Prey("Prey" + i));
-            CircleCollider col = (CircleCollider) prey.AddComponent(new CircleCollider());
-            col.SetTrigger(false);
             prey.GetTransform().Position = rand; //PVector.sub(prey1.GetTransform().Position, new PVector(500, 500));
-            RigidBody ibody = (RigidBody) prey.AddComponent(new RigidBody());
         }
         
     }

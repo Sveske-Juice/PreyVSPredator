@@ -3,12 +3,8 @@ public class Prey extends Animal
     /* Members. */
     private float m_ViewRadius = 200f;
     private float m_ColliderRadius = 25f;
-    private color m_ColliderColor = color(0, 180, 0, 60);
-    private color m_ViewPerimeterColliderColor = color(50, 50, 50, 20);
 
-    private Collider m_PeremiterCollider;
-    private Collider m_Collider;
-
+    /* Getters/Setters. */
 
     public Prey(String name)
     {
@@ -20,40 +16,47 @@ public class Prey extends Animal
     {
         super.CreateComponents();
 
-        // Create and set main collider color
-        m_Collider = (Collider) AddComponent(new CircleCollider("Prey Collider", m_ColliderRadius));
-        m_Collider.SetCollisionLayer(CollisionLayer.ANIMAL_MAIN_COLLIDER.ordinal());
-        m_Collider.SetColor(m_ColliderColor);
-
-        // Create and set view perimeter collider color
-        m_PeremiterCollider = (Collider) AddComponent(new CircleCollider("Prey Detect Perimeter", m_ViewRadius));
-        m_PeremiterCollider.SetCollisionLayer(CollisionLayer.ANIMAL_PEREMITER_COLLIDER.ordinal());
-        m_PeremiterCollider.SetTrigger(true);
-        m_PeremiterCollider.SetColor(m_ViewPerimeterColliderColor);
+        // Colliders
+        Collider collider = (Collider) AddComponent(new CircleCollider("Prey Collider", m_ColliderRadius));
+        Collider perimeterCollider = (Collider) AddComponent(new CircleCollider("Prey Detect Perimeter", m_ViewRadius));
 
         // Prey Movement behaviour
-        AddComponent(new PreyMover());
+        AddComponent(new PreyController(collider, perimeterCollider));
+
+        // Rigidbody for physics
+        AddComponent(new RigidBody());
     }
 }
 
-public class PreyMover extends AnimalMover implements ITriggerEventHandler
+public class PreyController extends AnimalMover implements ITriggerEventHandler
 {
     /* Members. */
-    private RigidBody m_RB;
+    private color m_ColliderColor = color(0, 180, 0, 60);
+    private color m_ViewPerimeterColliderColor = color(50, 50, 50, 20);
+
+    private Collider m_PerimeterCollider;
+    private Collider m_Collider;
+    private RigidBody m_RigidBody;
 
     /* Constructors. */
 
     // Default constructor, use default movement speed
-    public PreyMover()
+    public PreyController()
     {
         m_Name = "Prey Mover";
     }
 
     // Specify movement speed
-    public PreyMover(float moveSpeed)
+    public PreyController(float moveSpeed)
     {
         m_MovementSpeed = moveSpeed;
         m_Name = "Prey Mover";
+    }
+
+    public PreyController(Collider mainCollider, Collider perimeterCollider)
+    {
+        m_Collider = mainCollider;
+        m_PerimeterCollider = perimeterCollider;
     }
 
     /* Methods. */
@@ -61,7 +64,16 @@ public class PreyMover extends AnimalMover implements ITriggerEventHandler
     @Override
     public void Start()
     {
-        m_RB = m_GameObject.GetComponent(RigidBody.class);
+        m_RigidBody = m_GameObject.GetComponent(RigidBody.class);
+
+        // Set main collider color and collision layer
+        m_Collider.SetCollisionLayer(CollisionLayer.ANIMAL_MAIN_COLLIDER.ordinal());
+        m_Collider.SetColor(m_ColliderColor);
+
+        // Set view perimeter collider color and collision layer
+        m_PerimeterCollider.SetCollisionLayer(CollisionLayer.ANIMAL_PEREMITER_COLLIDER.ordinal());
+        m_PerimeterCollider.SetTrigger(true);
+        m_PerimeterCollider.SetColor(m_ViewPerimeterColliderColor);
     }
 
     @Override
@@ -70,9 +82,22 @@ public class PreyMover extends AnimalMover implements ITriggerEventHandler
 
     }
 
-    public void OnCollisionTrigger(Collider collider)
+    public void OnCollisionTrigger(Collider collider, Collider colliderCalledFrom)
     {
-        println("On Collision Trigger event raised! with gameObject: " + collider.GetGameObject().GetName());
+        // If we hit our own perimeter collider, then just skip
+        // NOTE: not ideal but cry about it
+        if (collider.GetId() == m_PerimeterCollider.GetId() || collider.GetId() == m_Collider.GetId())
+            return;
+        
+        // Check if the event is for the perimeter collider on this object or if its for the main collider
+        if (colliderCalledFrom.GetId() == m_PerimeterCollider.GetId())
+        {
+            println("On Collision Trigger event raised on permmmm! with collider: " + collider.GetName());
+        }
+        else
+        {
+        
+        }
         // m_GameObject.GetComponent(Collider.class).SetColor(color(0, 200, 0, 75));
     }
 }
