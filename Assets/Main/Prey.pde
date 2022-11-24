@@ -96,8 +96,8 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
         }
         else
         {
+            println("On Collision Trigger event raised on main! with collider: " + collider.GetName());
         
         }
-        // m_GameObject.GetComponent(Collider.class).SetColor(color(0, 200, 0, 75));
     }
 }

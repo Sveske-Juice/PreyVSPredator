@@ -13,7 +13,6 @@ public class AnimalInputController extends Component
     @Override
     public void Update()
     {
-
         // println("Components: " + m_GameObject.GetComponents());
         PVector m_Movement = new PVector();
         
@@ -27,6 +26,12 @@ public class AnimalInputController extends Component
         else if (InputManager.GetInstance().GetKey('d'))
             m_Movement.x = 1;
         
+
+        if (InputManager.GetInstance().GetKey('g'))
+        {
+            m_Movement = new PVector();
+            m_RigidBody.SetVelocity(new PVector());
+        }
         PVector force = m_Movement.mult(m_AnimalMover.GetMovementSpeed());
         m_RigidBody.ApplyForce(force);
         // println(force);

@@ -30,6 +30,9 @@ public class CircleCollider extends Collider
     @Override
     public void DrawCollider()
     {
+        // println("radius on " + GetName() + " : " + m_Radius);
+        // println("min extent: " + GetMinExtents().x);
+        // println("max extent: " + GetMaxExtents().x);
         circle(transform().Position.x, transform().Position.y, m_Radius*2);
     }
 
@@ -164,14 +167,14 @@ public class CircleCollider extends Collider
     public PVector GetMinExtents()
     {
         // TODO take offset into account here
-        return PVector.sub(transform().Position, m_LocalExtentOffset);
+        return PVector.sub(transform().Position, new PVector(m_Radius, m_Radius));
     }
 
     @Override
     public PVector GetMaxExtents()
     {
         // TODO take offset into account here
-        return PVector.add(transform().Position, m_LocalExtentOffset);
+        return PVector.add(transform().Position, new PVector(m_Radius, m_Radius));
     }
 
     /// Clamps a vector between a min and max vector

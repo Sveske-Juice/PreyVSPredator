@@ -44,15 +44,24 @@ public class CollisionWorld
 
             for (int j = i + 1; j < m_Colliders.size(); j++)
             {
-
                 Collider colB = m_Colliders.get(j);
 
-                // If the colliders are not overlaping on the axis we can safely break
+                // If the colliders are not overlaping on the axis we can safely break since it's sorted
                 if (colB.GetMinExtents().x > colAMaxExtent)
                     break;
             
-                //println("Checking for collision between " + colA.GetName() + " on " + colA.GetGameObject().GetName() + " and " +  colB.GetName() + " on " + colB.GetGameObject().GetName());
 
+                // Check for collision layer
+                int colBLayer = colB.GetCollisionLayer();
+                // println("Collision layer b: " + colBLayer + " on obj: " + colB.GetName());
+                if (!colACollisionMask.IsSet(colBLayer))
+                {
+                    // Collision is not allowed between theese colliders
+                    println("continuing");
+                    continue;
+                }
+
+                //println("Checking for collision between " + colA.GetName() + " on " + colA.GetGameObject().GetName() + " and " +  colB.GetName() + " on " + colB.GetGameObject().GetName());
                 // Check collision between the two colliders
                 CollisionPoint points = colA.TestCollision(colB);
                 collisionChecks++;
@@ -60,13 +69,6 @@ public class CollisionWorld
                 if (points == null)
                     continue;
 
-                // Check for collision layer
-                int colBLayer = colB.GetCollisionLayer();
-                if (!colACollisionMask.IsSet(colBLayer))
-                {
-                    // Collision is not allowed between theese colliders
-                    continue;
-                }
 
                 // If any of the colliders are triggers then don't resolve collision
                 if (colB.IsTrigger() || colA.IsTrigger())
@@ -150,7 +152,7 @@ public class CollisionWorld
         }
 
         // println("fps: " + 1 / Time.dt());
-        // println("------------- new frame ------------");
+        
     }
 
     // Triggers the OnCollisionTrigger method on all components on the collider specified by argument "collider"

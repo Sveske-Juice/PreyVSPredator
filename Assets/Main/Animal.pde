@@ -17,7 +17,7 @@ public abstract class Animal extends GameObject
 public class AnimalMover extends Component
 {
     /* Members. */
-    protected float m_MovementSpeed = 5f;
+    protected float m_MovementSpeed = 25f;
 
     /* Getters/Setters. */
     public float GetMovementSpeed() { return m_MovementSpeed; }

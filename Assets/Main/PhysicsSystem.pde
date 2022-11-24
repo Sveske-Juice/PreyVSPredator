@@ -74,7 +74,7 @@ public class PhysicsSystem extends CollisionWorld
                 
                 // Check collider layer against mouse collision mask
                 int layer = collider.GetCollisionLayer();
-                // println("Testing layer: " + layer);
+                println("Testing layer: " + layer + " on collider: " + collider.GetName());
                 Scene colliderScene = collider.GetGameObject().GetBelongingToScene(); // Scene connected to collider
                 if (colliderScene.GetMouseCollisionMask().IsSet(layer))
                 {
@@ -83,7 +83,8 @@ public class PhysicsSystem extends CollisionWorld
                 }
 
                 // Mouse is not allowed to collider with layer
-                return null;
+                // continue to next collider
+                continue;
             }
         }
         

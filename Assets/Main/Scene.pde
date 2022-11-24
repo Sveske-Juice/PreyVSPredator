@@ -62,6 +62,8 @@ public abstract class Scene
 
         // Tick physics system
         m_PhysicsSystem.Step(Time.dt());
+
+        // println("------------- new frame ------------");
     }
     
     public void ExitObjects()
@@ -108,7 +110,6 @@ public class GameScene extends Scene
         prey1.AddComponent(new AnimalInputController());
         
         RigidBody body = (RigidBody) prey1.AddComponent(new RigidBody());
-        body.SetMass(200f);
 
         /*
         GameObject topborder = AddGameObject(new GameObject("Top Border"));
