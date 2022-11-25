@@ -36,7 +36,14 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
     private int m_ClosePreysCount = 0;
 
     private Collider m_Collider;
+    private Collider m_PerimeterCollider;
     private RigidBody m_RigidBody;
+
+    private int m_NearbyPreys = 0;
+
+    /* Getters/Setters. */
+    public void SetNearbyPrey(int value) { m_NearbyPreys = value; }
+    public int GetNearbyPrey() { return m_NearbyPreys; }
 
     /* Constructors. */
 
@@ -58,38 +65,36 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
     @Override
     public void Start()
     {
-        m_Collider = m_GameObject.GetComponent(CircleCollider.class);
+        // Get the perimeter collider from the child GameObject
+        m_PerimeterCollider = transform().GetChild(0).GetGameObject().GetComponent(Collider.class);
+
+        m_Collider = m_GameObject.GetComponent(Collider.class);
         m_RigidBody = m_GameObject.GetComponent(RigidBody.class);
 
         // Set main collider color and collision layer
         m_Collider.SetCollisionLayer(CollisionLayer.ANIMAL_MAIN_COLLIDER.ordinal());
         m_Collider.GetCollisionMask().SetBit(CollisionLayer.ANIMAL_MAIN_COLLIDER.ordinal()); // collide against other animals
         m_Collider.GetCollisionMask().SetBit(CollisionLayer.ANIMAL_PEREMITER_COLLIDER.ordinal()); // collide against animal's perimeter
+        m_Collider.SetTag("Prey");
         m_Collider.SetColor(m_ColliderColor);
     }
 
     @Override
     public void Update()
     {
+        println("nearby preys: " + m_NearbyPreys);
 
+        // Physics system is updated later than components so no more
+        // preys will be spotted this frame and its safe to reset for next frame
+        m_NearbyPreys = 0;
     }
 
-    public void OnCollisionTrigger(Collider collider, Collider colliderCalledFrom)
+    public void OnCollisionTrigger(Collider collider)
     {
-        // If we hit our own perimeter collider, then just skip
-        // NOTE: not ideal but cry about it
-        // if (collider.GetId() == m_PerimeterCollider.GetId() || collider.GetId() == m_Collider.GetId())
-        //     return;
+        // Ignore if we hit the prey's perimeter collider
+        if (collider.GetId() == m_PerimeterCollider.GetId())
+            return;
         
-        // // Check if the event is for the perimeter collider on this object or if its for the main collider
-        // if (colliderCalledFrom.GetId() == m_PerimeterCollider.GetId())
-        // {
-        //     println("On Collision Trigger event raised on permmmm! with collider: " + collider.GetName());
-        // }
-        // else
-        // {
-        //     println("On Collision Trigger event raised on main! with collider: " + collider.GetName());
-        
-        // }
+        println("Prey main collider triggered with: " + collider.GetName());
     }
 }

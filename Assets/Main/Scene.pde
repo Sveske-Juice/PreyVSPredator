@@ -5,7 +5,7 @@ public abstract class Scene
     /* Members. */
     protected String m_SceneName = "New Scene";
     protected ArrayList<GameObject> m_GameObjects = new ArrayList<GameObject>();
-    protected PVector m_Dimensions = new PVector(1000f, 1000f);
+    protected PVector m_Dimensions = new PVector(3000f, 3000f);
     private PVector m_MoveTranslation = new PVector();
     private float m_ScaleFactor = 1f;
     protected PhysicsSystem m_PhysicsSystem = new PhysicsSystem();

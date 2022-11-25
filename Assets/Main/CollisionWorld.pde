@@ -60,7 +60,7 @@ public class CollisionWorld
                     continue;
                 }
 
-                //println("Checking for collision between " + colA.GetName() + " on " + colA.GetGameObject().GetName() + " and " +  colB.GetName() + " on " + colB.GetGameObject().GetName());
+                // println("Checking for collision between " + colA.GetName() + " on " + colA.GetGameObject().GetName() + " and " +  colB.GetName() + " on " + colB.GetGameObject().GetName());
                 // Check collision between the two colliders
                 CollisionPoint points = colA.TestCollision(colB);
                 collisionChecks++;
@@ -68,20 +68,17 @@ public class CollisionWorld
                 if (points == null)
                     continue;
 
-
                 // If any of the colliders are triggers then don't resolve collision
                 if (colB.IsTrigger() || colA.IsTrigger())
                 {
-                    RaiseCollisionTriggerEvent(colB, colA);
                     RaiseCollisionTriggerEvent(colA, colB);
+                    RaiseCollisionTriggerEvent(colB, colA);
                     continue; // Continue without resolving the physically resolving the collision
                 }
 
                 // Construct collision container
                 Collision collision = new Collision(colA, colB, colA.GetGameObject(), colB.GetGameObject(), points);
                 collisions.add(collision);
-
-                
             }
         }
 
@@ -155,7 +152,7 @@ public class CollisionWorld
     }
 
     // Triggers the OnCollisionTrigger method on all components on the collider specified by argument "collider"
-    private void RaiseCollisionTriggerEvent(Collider collider, Collider triggeredWithCollider)
+    private void RaiseCollisionTriggerEvent(Collider collider, Collider triggeredWith)
     {
         ArrayList<Component> components = collider.GetGameObject().GetComponents();
 
@@ -168,7 +165,7 @@ public class CollisionWorld
             if (component instanceof ITriggerEventHandler)
             {
                 ITriggerEventHandler eventHandler = (ITriggerEventHandler) component;
-                eventHandler.OnCollisionTrigger(triggeredWithCollider, collider);
+                eventHandler.OnCollisionTrigger(triggeredWith);
             }
 
         }
