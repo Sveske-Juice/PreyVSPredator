@@ -1,34 +1,29 @@
-public class CameraHandler extends Component
+public class CameraHandler extends Component implements IMouseEventListener
 {
     private PhysicsSystem m_PhysicsSystem;
     private Scene m_Scene;
     private float m_MinZoom = 0.005f;
     private float m_MaxZoom = 10f;    
     private float m_ScaleMultiplier = 0.05f;
-    private PVector m_PreviousMouseCords = new PVector();
 
     private Collider m_ChasingCollider;
     private boolean m_IsChasingColldier = false;
-    private boolean m_MouseClickedLastFrame = false;
     private boolean m_CanSelectNewCollider = true;
 
     @Override
     public void Start()
     {
         m_PhysicsSystem = m_GameObject.GetBelongingToScene().GetPhysicsSystem();
-        m_Scene = m_GameObject.GetBelongingToScene();        
+        m_Scene = m_GameObject.GetBelongingToScene();
+
+        // Register this class to get animal click events
+        m_Scene.FindGameObject("Mouse Event Initiator Handler").GetComponent(MouseEventInitiator.class).AddMouseEventListener(this);
     }
 
     @Override
     public void Update()
     {
-        boolean mouseClicked = InputManager.GetInstance().IsLeftMousePressed();
-        PVector mouseCords = new PVector(mouseX, mouseY);
-        PVector diff = PVector.sub(m_PreviousMouseCords, mouseCords);
-        m_PreviousMouseCords = mouseCords;
-
         float mouseAccel = g_InputManager.GetInstance().GetWheelAcceleration();
-        
         float newScaleFactor = m_Scene.GetScaleFactor() + mouseAccel * m_ScaleMultiplier * -1;
 
         // Clamp scale factor to min and max allowed zoom scales
@@ -36,46 +31,8 @@ public class CameraHandler extends Component
         if (newScaleFactor > m_MaxZoom) newScaleFactor = m_MaxZoom;
         m_Scene.SetScaleFactor(newScaleFactor);
 
-        if (mouseClicked && !m_MouseClickedLastFrame) // single mouse click
-        {
-            // If an animal was clicked on, then chase the animal with the camera
-            Collider hitCollider = m_PhysicsSystem.PointOverlap(mouseCords, true);
-            if (hitCollider != null)
-            {
-                println("\nHit collider: " + hitCollider.GetName() + "\n");
-                if (hitCollider == m_ChasingCollider)
-                    return;
-                
-                // Clicked on an animal
-                if (hitCollider.GetGameObject() instanceof Animal)
-                {
-                    m_IsChasingColldier = true;
-                    m_CanSelectNewCollider = false;
-                    ChaseCollider(hitCollider);
-                }
-            }
-            else
-            {
-                // If the mouse was released between selecting a new collider to chase
-                // and the mouse was clicked somewhere else, then stop chasing
-                if (m_CanSelectNewCollider) 
-                {
-                    m_ChasingCollider = null;
-                    m_IsChasingColldier = false;
-                }
-            }
-        }
-
-        if (mouseClicked && m_MouseClickedLastFrame) // Dragging mouse
-            m_Scene.GetMoveTranslation().add(PVector.mult(diff, 1 / m_Scene.GetScaleFactor()));
-        
-        if (!mouseClicked && m_MouseClickedLastFrame) // Mouse button released
-            m_CanSelectNewCollider = true;
-
         if (m_IsChasingColldier)
             ChaseCollider(m_ChasingCollider);
-
-        m_MouseClickedLastFrame = mouseClicked;
     }
 
     // Makes the camera chase a collider so its always centered
@@ -89,4 +46,44 @@ public class CameraHandler extends Component
 
         m_Scene.SetMoveTranslation(newMoveTranslation);
     }
+
+    public void OnColliderClick(Collider collider)
+    {
+        // If an animal was clicked on, then chase the animal with the camera
+        if (collider == null)
+            return;
+        
+        // Return if it's not an animal that was clicked on
+        if (collider.GetGameObject() instanceof Animal)
+        {
+            m_IsChasingColldier = true;
+            m_CanSelectNewCollider = false;
+            ChaseCollider(collider);
+        }
+        else
+        {
+            m_ChasingCollider = null;
+            m_IsChasingColldier = false;
+        }
+    }
+
+    public void OnMouseDrag(PVector position)
+    {
+        if (m_CanSelectNewCollider)
+        {
+            m_IsChasingColldier = false;
+            m_ChasingCollider = null;
+        }
+        PVector mouseCords = new PVector(mouseX, mouseY);
+        PVector diff = PVector.sub(new PVector(pmouseX, pmouseY), mouseCords);
+        m_Scene.GetMoveTranslation().add(PVector.mult(diff, 1 / m_Scene.GetScaleFactor()));
+    }
+
+    public void OnMouseRelease(PVector position)
+    {
+        // Mouse released, can now select new collider to focus on
+        m_CanSelectNewCollider = true;
+    }
+
+    public void OnMouseClick(PVector position) { }
 }

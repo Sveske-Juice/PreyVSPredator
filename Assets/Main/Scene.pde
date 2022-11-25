@@ -100,6 +100,19 @@ public abstract class Scene
         m_GameObjects.add(go);
         return go;
     }
+
+    public GameObject FindGameObject(String name)
+    {
+        for (int i = 0; i < m_GameObjects.size(); i++)
+        {
+            if (m_GameObjects.get(i).GetName() == name)
+            {
+                return m_GameObjects.get(i);
+            }
+        }
+
+        return null;
+    }
 }
 
 public class GameScene extends Scene
@@ -116,6 +129,9 @@ public class GameScene extends Scene
     
     public void CreateScene()
     {
+        // Mouse click event handler
+        AddGameObject(new MouseEventInitiatorObject());
+
         // Camera handler
         GameObject camHandler = AddGameObject(new GameObject("Camera Handler"));
         camHandler.AddComponent(new CameraHandler());

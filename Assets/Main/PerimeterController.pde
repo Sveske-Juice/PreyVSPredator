@@ -57,7 +57,6 @@ public class PerimeterController extends Component implements ITriggerEventHandl
             else if (InputManager.GetInstance().GetKey(40)) // dwn arrow
                 collider.SetRadius(collider.GetRadius() - 0.5);
         }
-        
     }
 
     public void OnCollisionTrigger(Collider collider)
