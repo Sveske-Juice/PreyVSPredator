@@ -32,8 +32,8 @@ public class CircleCollider extends Collider
     {
         // println("radius on " + GetName() + " : " + m_Radius);
         // println("min extent: " + GetMinExtents().x);
-        // println("max extent: " + GetMaxExtents().x);
-        circle(transform().Position.x, transform().Position.y, m_Radius*2);
+        // println("max extent: " + GetMaxExtents().x);'
+        circle(transform().GetPosition().x, transform().GetPosition().y, m_Radius*2);
     }
 
     @Override
@@ -46,8 +46,8 @@ public class CircleCollider extends Collider
     @Override
     public CollisionPoint TestCollision(CircleCollider collider)
     {
-        PVector checkPosition = collider.transform().Position;
-        PVector pos = transform().Position;
+        PVector checkPosition = collider.transform().GetPosition();
+        PVector pos = transform().GetPosition();
 
         float checkRadius = collider.GetRadius();
 
@@ -57,8 +57,8 @@ public class CircleCollider extends Collider
         {
             // They're colliding
             // A is this collider and B is the collider to check
-            PVector Normal = PVector.sub(checkPosition, transform().Position).normalize();
-            PVector A = PVector.add(transform().Position, PVector.mult(Normal, m_Radius)); // Furthest point of A into B
+            PVector Normal = PVector.sub(checkPosition, transform().GetPosition()).normalize();
+            PVector A = PVector.add(transform().GetPosition(), PVector.mult(Normal, m_Radius)); // Furthest point of A into B
             PVector B = PVector.add(checkPosition, Normal.copy().rotate(PI).mult(checkRadius));
             return new CollisionPoint(A, B, Normal, true);
         }
@@ -73,23 +73,23 @@ public class CircleCollider extends Collider
         PVector boxCenter = collider.GetCenter();
         PVector boxHalfExtents = new PVector(collider.GetWidth() / 2f, collider.GetHeight() / 2f);
 
-        PVector diff = PVector.sub(transform().Position, boxCenter);
+        PVector diff = PVector.sub(transform().GetPosition(), boxCenter);
         PVector clamped = Clamp(diff, PVector.mult(boxHalfExtents, -1f), boxHalfExtents);
 
         PVector closestPoint = PVector.add(boxCenter, clamped);
 
-        PVector circleToPoint = PVector.sub(closestPoint, transform().Position);
+        PVector circleToPoint = PVector.sub(closestPoint, transform().GetPosition());
         float ctpMag = circleToPoint.mag();
 
         if (ctpMag > m_Radius) // No collision happened
             return null;
 
         // Calculate the collision points of the collision
-        PVector A = PVector.add(transform().Position, PVector.mult(circleToPoint.copy().normalize(), m_Radius)); // Furthest point of circle penetrated ino AABB
+        PVector A = PVector.add(transform().GetPosition(), PVector.mult(circleToPoint.copy().normalize(), m_Radius)); // Furthest point of circle penetrated ino AABB
 
         // if circle completely inside use the point on the circles outline in the dir of the aabb
         if (circleToPoint.x == 0f && circleToPoint.y == 0f)
-            A = PVector.add(transform().Position, PVector.mult(PVector.sub(boxCenter, transform().Position).normalize(), m_Radius));
+            A = PVector.add(transform().GetPosition(), PVector.mult(PVector.sub(boxCenter, transform().GetPosition()).normalize(), m_Radius));
         
 
         fill(255,0,0);
@@ -104,7 +104,7 @@ public class CircleCollider extends Collider
     @Override
     public RaycastHit TestRaycast(Ray ray)
     {
-        PVector pos = transform().Position;
+        PVector pos = transform().GetPosition();
 
         // TODO take offset into account here
         PVector originToCircle = PVector.sub(pos, ray.GetOrigin());
@@ -152,7 +152,7 @@ public class CircleCollider extends Collider
     public boolean PointInCollider(PVector point)
     {
         // TODO take offset into account here
-        PVector pos = transform().Position; // cache pos
+        PVector pos = transform().GetPosition(); // cache pos
         PVector screenPosition = new PVector(screenX(pos.x, pos.y), screenY(pos.x, pos.y));
         float dist = screenPosition.dist(point);
 
@@ -167,14 +167,14 @@ public class CircleCollider extends Collider
     public PVector GetMinExtents()
     {
         // TODO take offset into account here
-        return PVector.sub(transform().Position, new PVector(m_Radius, m_Radius));
+        return PVector.sub(transform().GetPosition(), new PVector(m_Radius, m_Radius));
     }
 
     @Override
     public PVector GetMaxExtents()
     {
         // TODO take offset into account here
-        return PVector.add(transform().Position, new PVector(m_Radius, m_Radius));
+        return PVector.add(transform().GetPosition(), new PVector(m_Radius, m_Radius));
     }
 
     /// Clamps a vector between a min and max vector

@@ -82,7 +82,7 @@ public class CameraHandler extends Component
     private void ChaseCollider(Collider collider)
     {
         m_ChasingCollider = collider;
-        PVector colliderPos = collider.transform().Position;
+        PVector colliderPos = collider.transform().GetPosition();
         
         // Offset the collider position so it's centered on the screen
         PVector newMoveTranslation = PVector.sub(colliderPos, new PVector(width / 2f, height / 2f));

@@ -51,7 +51,7 @@ public class RigidBody extends Component
         m_Acceleration.mult(0);
         m_NetForce.mult(0);
 
-        transform().Position.add(PVector.mult(m_Velocity, Time.dt()));
+        transform().AddToPosition(PVector.mult(m_Velocity, Time.dt()));
 
     }
 

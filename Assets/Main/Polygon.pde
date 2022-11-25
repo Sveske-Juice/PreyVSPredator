@@ -32,7 +32,7 @@ public class Polygon extends Component
 
     private void Display()
     {
-        PVector pos = m_GameObject.GetTransform().Position;
+        PVector pos = transform().GetPosition();
         
         // Create new transformation matrix for displaying the polygon
         pushMatrix();

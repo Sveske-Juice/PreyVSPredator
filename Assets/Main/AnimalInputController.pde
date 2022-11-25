@@ -37,7 +37,7 @@ public class AnimalInputController extends Component
         // println(force);
 
         // Resize colliders (debug)
-        CircleCollider collider = GetGameObject().GetComponent(CircleCollider.class);
+        CircleCollider collider = (CircleCollider) m_GameObject.GetComponent(CircleCollider.class);
         
         if (collider != null)
         {
@@ -47,7 +47,7 @@ public class AnimalInputController extends Component
                 collider.SetRadius(collider.GetRadius() - 0.5);
         }
 
-        BoxCollider box = GetGameObject().GetComponent(BoxCollider.class);
+        BoxCollider box = m_GameObject.GetComponent(BoxCollider.class);
         if (box != null)
         {
             if (InputManager.GetInstance().GetKey(38))

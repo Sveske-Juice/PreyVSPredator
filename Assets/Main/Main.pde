@@ -42,6 +42,7 @@ void keyPressed()
         InputManager.GetInstance().RegisterKey(key);
         return;
     }
+
     InputManager.GetInstance().RegisterKey((char) keyCode);
 }
 
@@ -53,6 +54,7 @@ void keyReleased()
         InputManager.GetInstance().UnregisterKey(key);
         return;
     }
+    
     InputManager.GetInstance().UnregisterKey((char) keyCode);  
 }
 

@@ -57,7 +57,6 @@ public class CollisionWorld
                 if (!colACollisionMask.IsSet(colBLayer))
                 {
                     // Collision is not allowed between theese colliders
-                    println("continuing");
                     continue;
                 }
 
@@ -112,8 +111,8 @@ public class CollisionWorld
             PVector ARes = resolution;
             PVector BRes = resolution;
 
-            A.transform().Position.add(resolution);
-            B.transform().Position.sub(resolution);
+            A.transform().AddToPosition(resolution);
+            B.transform().SubFromPosition(resolution);
             
 
             PVector tangent = new PVector(-normal.y, normal.x);

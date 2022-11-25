@@ -93,7 +93,7 @@ public class PhysicsSystem extends CollisionWorld
 
     private void KeepTransformInsideDimensions(Transform transform)
     {
-        PVector pos = transform.Position;
+        PVector pos = transform.GetPosition();
         PVector dimensions = transform.GetGameObject().GetBelongingToScene().GetDimensions();
 
         if (pos.x < -dimensions.x)

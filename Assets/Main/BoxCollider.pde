@@ -11,7 +11,7 @@ public class BoxCollider extends Collider
     public void SetWidth(float width) { m_Width = width; m_Extents = new PVector(m_Width, m_Height); }
     public float GetHeight() { return m_Height; }
     public void SetHeight(float height) { m_Height = height; m_Extents = new PVector(m_Width, m_Height); }
-    public PVector GetCenter() { return new PVector(transform().Position.x + m_Width / 2f, transform().Position.y + m_Height / 2f); }
+    public PVector GetCenter() { return new PVector(transform().GetPosition().x + m_Width / 2f, transform().GetPosition().y + m_Height / 2f); }
 
     public BoxCollider(float width, float height)
     {
@@ -37,7 +37,7 @@ public class BoxCollider extends Collider
     @Override
     public void DrawCollider()
     {
-        rect(transform().Position.x, transform().Position.y, m_Width, m_Height);
+        rect(transform().GetPosition().x, transform().GetPosition().y, m_Width, m_Height);
 
     }
 
@@ -59,10 +59,10 @@ public class BoxCollider extends Collider
     @Override
     public CollisionPoint TestCollision(BoxCollider collider)
     {
-        PVector pos = transform().Position; // cache pos
+        PVector pos = transform().GetPosition(); // cache pos
         float epsilon = 1e-8;
         PVector colVel = collider.GetGameObject().GetComponent(RigidBody.class).GetVelocity();
-        PVector boxPos = collider.transform().Position; // Cache pos
+        PVector boxPos = collider.transform().GetPosition(); // Cache pos
         PVector deltaPos = PVector.sub(pos, PVector.add(pos, colVel));
         Hit hit = IntersectSegment(boxPos, deltaPos, new PVector(collider.GetWidth() / 2f, collider.GetHeight() / 2f));
         if (hit != null)
@@ -101,7 +101,7 @@ public class BoxCollider extends Collider
 
     public Hit IntersectSegment(PVector startPt, PVector deltaPos, PVector padding)
     {
-        PVector pos = transform().Position; // Cache pos
+        PVector pos = transform().GetPosition(); // Cache pos
 
         float scaleX = 1f / deltaPos.x;
         float scaleY = 1f / deltaPos.y;
@@ -180,7 +180,7 @@ public class BoxCollider extends Collider
     {
         if (point == null) return false;
 
-        PVector pos = transform().Position; // Cache pos
+        PVector pos = transform().GetPosition(); // Cache pos
         return (    point.x > pos.x && point.x < pos.x + m_Width &&
                     point.y > pos.y && point.y < pos.y + m_Height);
     }
@@ -190,14 +190,14 @@ public class BoxCollider extends Collider
     public PVector GetMinExtents()
     {
         // TODO take offset into account here
-        return transform().Position;
+        return transform().GetPosition();
     }
 
     @Override
     public PVector GetMaxExtents()
     {
         // TODO take offset into account here
-        return PVector.add(transform().Position, m_Extents);
+        return PVector.add(transform().GetPosition(), m_Extents);
     }
 
     private int Sign(float x)

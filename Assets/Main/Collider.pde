@@ -29,11 +29,7 @@ public abstract class Collider extends Component
     @Override
     public void Start()
     {
-        m_GameObject.GetBelongingToScene().GetPhysicsSystem().RegisterCollider(this);
-
-        // Setup default collider mask
-        m_CollisionMask.SetBit(CollisionLayer.ANIMAL_MAIN_COLLIDER.ordinal()); // collide against other animals
-        m_CollisionMask.SetBit(CollisionLayer.ANIMAL_PEREMITER_COLLIDER.ordinal()); // collide against animal's perimeter
+        m_GameObject.GetBelongingToScene().GetPhysicsSystem().RegisterCollider(this);        
     }
 
     @Override
