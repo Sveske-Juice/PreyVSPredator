@@ -49,15 +49,25 @@ public abstract class Scene
     
     public void UpdateScene()
     {
-        // Translate and scale
-        translate(width / 2f, height / 2f);
-        scale(m_ScaleFactor);
-        translate(-m_MoveTranslation.x - width / 2f, -m_MoveTranslation.y - height / 2f); 
-        
+
         // Update all components on every GameObject in the scene
         for (int i = 0; i < m_GameObjects.size(); i++)
         {
-            m_GameObjects.get(i).UpdateObject();
+            GameObject go = m_GameObjects.get(i); // Cache go
+            
+            pushMatrix();
+
+            // If the GameObject is fixed then do not translate and scale
+            if (!go.IsFixed())
+            {
+                // Translate and scale
+                translate(width / 2f, height / 2f);
+                scale(m_ScaleFactor);
+                translate(-m_MoveTranslation.x - width / 2f, -m_MoveTranslation.y - height / 2f);    
+            }
+            
+            go.UpdateObject();
+            popMatrix();
         }
 
         // Tick physics system
@@ -135,6 +145,11 @@ public class GameScene extends Scene
         // Camera handler
         GameObject camHandler = AddGameObject(new GameObject("Camera Handler"));
         camHandler.AddComponent(new CameraHandler());
+
+        // Prey control display menu
+        GameObject preyCtrlDisplay = AddGameObject(new PreyControlDisplayObject());
+        
+
         
         GameObject prey1 = AddGameObject(new Prey("Prey1"));
         prey1.GetTransform().SetPosition(new PVector(200f, 100f));

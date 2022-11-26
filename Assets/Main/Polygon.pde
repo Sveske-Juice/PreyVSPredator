@@ -8,6 +8,7 @@ public class Polygon extends Component
     public boolean IsDrawingShape() { return m_DrawShape; }
     public void SetDrawingShape(boolean enabled) { m_DrawShape = enabled; }
     public void SetShape(PShape shape) { m_PShape = shape; }
+    public PShape GetShape() { return m_PShape; }
 
     public Polygon()
     {

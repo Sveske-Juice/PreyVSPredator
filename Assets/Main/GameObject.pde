@@ -5,6 +5,7 @@ public class GameObject
     protected boolean m_ObjectStarted = false;
     protected Scene m_BelongingToScene = null;
     protected String m_Tag = "Default";
+    protected boolean m_FixedPosition = false;
 
     protected ArrayList<Component> m_Components = new ArrayList<Component>();
     protected Transform m_Transform;
@@ -17,8 +18,15 @@ public class GameObject
     public Transform GetTransform() { return m_Transform; }
     public void SetTag(String tag) { m_Tag = tag; }
     public String GetTag() { return m_Tag; }
+    public boolean IsFixed() { return m_FixedPosition; }
+    public void SetFixed(boolean value) { m_FixedPosition = value; }
 
-    public GameObject() {}
+    public GameObject()
+    {
+        // Always add a transform to a Game Object
+        m_Transform = new Transform();
+        AddComponent(m_Transform);
+    }
 
     public GameObject(String name)
     {
@@ -97,12 +105,14 @@ public class GameObject
     
     public void StartObject()
     {
-        int size = m_Components.size();
         m_ObjectStarted = true;
-        for (int i = 0; i < size; i++)
+        for (int i = 0; i < m_Components.size(); i++)
         {
             print("Starting component: " + m_Components.get(i).GetName() + " on object: " + m_Name + "\n");
-            m_Components.get(i).Start();
+            Component component = m_Components.get(i);
+
+            if (component.IsEnabled())
+                component.Start();
         }
         
     }
@@ -111,7 +121,10 @@ public class GameObject
     {
         for (int i = 0; i < m_Components.size(); i++)
         {
-            m_Components.get(i).Update();
+            Component component = m_Components.get(i);
+
+            if (component.IsEnabled())
+                component.Update();
         }
     }
     

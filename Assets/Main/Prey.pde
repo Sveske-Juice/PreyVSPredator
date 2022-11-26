@@ -83,7 +83,7 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
     @Override
     public void Update()
     {
-        println("nearby preys: " + m_NearbyPreys);
+        // println("nearby preys: " + m_NearbyPreys);
 
         // Physics system is updated later than components so no more
         // preys will be spotted this frame and its safe to reset for next frame

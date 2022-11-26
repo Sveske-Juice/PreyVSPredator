@@ -16,7 +16,7 @@ public class CameraHandler extends Component implements IMouseEventListener
         m_PhysicsSystem = m_GameObject.GetBelongingToScene().GetPhysicsSystem();
         m_Scene = m_GameObject.GetBelongingToScene();
 
-        // Register this class to get animal click events
+        // Register this class to get mouse events
         m_Scene.FindGameObject("Mouse Event Initiator Handler").GetComponent(MouseEventInitiator.class).AddMouseEventListener(this);
     }
 
@@ -53,7 +53,7 @@ public class CameraHandler extends Component implements IMouseEventListener
         if (collider == null)
             return;
         
-        // Return if it's not an animal that was clicked on
+        // Check if it's an animal that was clicked on
         if (collider.GetGameObject() instanceof Animal)
         {
             m_IsChasingColldier = true;
