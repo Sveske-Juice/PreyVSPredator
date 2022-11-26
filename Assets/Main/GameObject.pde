@@ -21,23 +21,21 @@ public class GameObject
     public boolean IsFixed() { return m_FixedPosition; }
     public void SetFixed(boolean value) { m_FixedPosition = value; }
 
-    public GameObject()
-    {
-        // Always add a transform to a Game Object
-        m_Transform = new Transform();
-        AddComponent(m_Transform);
-    }
+    public GameObject() { }
 
     public GameObject(String name)
     {
         m_Name = name;
+    }
 
+    /* Methods. */
+    public void CreateTransform()
+    {
         // Always add a transform to a Game Object
         m_Transform = new Transform();
         AddComponent(m_Transform);
     }
 
-    /* Methods. */
     public void CreateComponents() { }
 
     public Component AddComponent(Component component)
@@ -52,15 +50,12 @@ public class GameObject
         // so it can reference it later.
         component.SetGameObject(this);
 
-        // Add id to every other component than transform
-        if (!(component instanceof Transform))
-        {
-            // Set unique component id
-            component.SetId(m_BelongingToScene.GetComponentIdCounter());
+        // Set unique component id
+        component.SetId(m_BelongingToScene.GetComponentIdCounter());
 
-            // Increment global component id counter
-            m_BelongingToScene.SetComponentIdCounter(m_BelongingToScene.GetComponentIdCounter() + 1);
-        }
+        // Increment global component id counter
+        m_BelongingToScene.SetComponentIdCounter(m_BelongingToScene.GetComponentIdCounter() + 1);
+        
 
         if (m_ObjectStarted)
             component.Start();

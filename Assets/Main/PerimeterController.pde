@@ -70,7 +70,7 @@ public class PerimeterController extends Component implements ITriggerEventHandl
         if (collider.GetGameObject().GetTag() == "Prey")
         {
             // Update so PreyController knows that there are a prey nearby
-            m_PreyController.SetNearbyPrey(m_PreyController.GetNearbyPrey() + 1);
+            m_PreyController.SetNearbyPreys(m_PreyController.GetNearbyPreys() + 1);
         }
         
         println("Perimeter controller: triggered with: " + collider.GetName() + " on obj: " + collider.GetGameObject().GetName());

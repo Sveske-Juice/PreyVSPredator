@@ -42,8 +42,8 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
     private int m_NearbyPreys = 0;
 
     /* Getters/Setters. */
-    public void SetNearbyPrey(int value) { m_NearbyPreys = value; }
-    public int GetNearbyPrey() { return m_NearbyPreys; }
+    public void SetNearbyPreys(int value) { m_NearbyPreys = value; }
+    public int GetNearbyPreys() { return m_NearbyPreys; }
 
     /* Constructors. */
 
@@ -83,8 +83,6 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
     @Override
     public void Update()
     {
-        // println("nearby preys: " + m_NearbyPreys);
-
         // Physics system is updated later than components so no more
         // preys will be spotted this frame and its safe to reset for next frame
         m_NearbyPreys = 0;

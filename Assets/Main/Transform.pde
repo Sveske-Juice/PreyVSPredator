@@ -19,6 +19,31 @@ public class Transform extends Component
   public void AddChild(Transform child) { m_Children.add(child); child.SetParent(this); }
   public int GetChildCount() { return m_Children.size(); }
 
+  /*  
+      Sets the transforms position relative to its parent(s).
+      Will not set the absolute position but rather an offset from
+      it's parent.
+  */
+  public void SetLocalPosition(PVector pos)
+  {
+    // If it's the root transform
+    if (m_Parent == this)
+    {
+      m_Position = pos;
+      return;
+    }
+
+    // Sum up all the parent positions
+    m_Position = new PVector();
+    Transform currentParent = m_Parent;
+    while (currentParent.GetId() != currentParent.GetParent().GetId())
+    {
+      m_Position.add(currentParent.GetPosition());
+      currentParent = currentParent.GetParent();
+    }
+    m_Position.add(pos);
+  }
+  
   public Transform()
   {
     m_Name = "Transform";

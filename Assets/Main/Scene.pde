@@ -92,6 +92,9 @@ public abstract class Scene
         // Set a reference to this scene so the Game Object can access the scene
         go.SetBelongingToScene(this);
 
+        // Make sure every GameObject have a transform
+        go.CreateTransform();
+
         m_GameObjects.add(go);
         return go;
     }
@@ -104,8 +107,14 @@ public abstract class Scene
         // Set a reference to this scene so the Game Object can access the scene
         go.SetBelongingToScene(this);
 
+        // Make sure every GameObject have a transform
+        go.CreateTransform();
+
         // Set parent - child relationship
         parent.AddChild(go.GetTransform());
+
+        // Set new child's position to parent's
+        go.GetTransform().SetPosition(parent.GetPosition());
 
         m_GameObjects.add(go);
         return go;
