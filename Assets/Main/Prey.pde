@@ -40,10 +40,14 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
     private RigidBody m_RigidBody;
 
     private int m_NearbyPreys = 0;
+    private float m_SplitTime = 60f; // Amount when a prey should split
+    private float m_CurrentSplit = 0f; // Current value counter for split
 
     /* Getters/Setters. */
     public void SetNearbyPreys(int value) { m_NearbyPreys = value; }
     public int GetNearbyPreys() { return m_NearbyPreys; }
+    public float GetSplitTime() { return m_SplitTime; }
+    public float GetCurrentSplitTime() { return m_CurrentSplit; }
 
     /* Constructors. */
 
@@ -83,6 +87,9 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
     @Override
     public void Update()
     {
+        // Increment current split time with dt and the number of preys as a grow factor
+        m_CurrentSplit = Time.dt() * (m_NearbyPreys + 1);
+
         // Physics system is updated later than components so no more
         // preys will be spotted this frame and its safe to reset for next frame
         m_NearbyPreys = 0;
@@ -94,6 +101,6 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
         if (collider.GetId() == m_PerimeterCollider.GetId())
             return;
         
-        println("Prey main collider triggered with: " + collider.GetName());
+        // println("Prey main collider triggered with: " + collider.GetName());
     }
 }

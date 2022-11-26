@@ -34,7 +34,6 @@ public class AnimalControlDisplay extends Component implements IMouseEventListen
 
         // Update values on menu
         m_PositionText.SetText("Animal Position: " + m_ConnectedAnimal.GetTransform().GetPosition());
-        // on prey: m_PreyNearby.SetText("Nearby Preys: " + m_ConnectedAnimal.GetNearbyPreys());
     }
 
     private void ShowMenu()
@@ -53,6 +52,9 @@ public class AnimalControlDisplay extends Component implements IMouseEventListen
 
     protected void CreateMenu()
     {
+        // Set position of menu
+        transform().SetPosition(m_MenuPosition);
+
         /* Create all UI GameObjects that make up the control display. */
         
         // Create background for menu
@@ -61,17 +63,20 @@ public class AnimalControlDisplay extends Component implements IMouseEventListen
         m_MenuBackground = (Polygon) menuBackground.AddComponent(new Polygon(createShape(RECT, 0f, 0f, m_MenuWidth, m_MenuHeight)));
         m_MenuBackground.GetShape().setFill(m_MenuBackgroundColor);
 
+        // Create statistics text element
+        GameObject statTitle = m_Scene.AddGameObject(new UIElement("Statistics Title Object"), menuBackground.GetTransform());
+        statTitle.SetTag("AnimalControlDisplay");
+        Text statTitleTxt = (Text) statTitle.AddComponent(new Text("Statestics Title"));
+        statTitleTxt.SetText("Animal Statistics");
+        statTitleTxt.SetSize(32);
+        statTitleTxt.SetMargin(new PVector(25f, 25f));
+
         // Create position text element
         GameObject positionTextObj = m_Scene.AddGameObject(new UIElement("Position Text Object"), menuBackground.GetTransform());
         positionTextObj.SetTag("AnimalControlDisplay");
         m_PositionText = (Text) positionTextObj.AddComponent(new Text("Position text"));
         m_PositionText.SetMargin(new PVector(25f, 25f));
-
-
-
-
-        // Set position of menu
-        transform().SetPosition(m_MenuPosition);
+        m_PositionText.transform().SetLocalPosition(new PVector(0f, 50f));
     }
 
     // If an animal was clicked on, then show the control display
