@@ -5,7 +5,7 @@ public abstract class Collider extends Component
 
     // The layers this collider interacts with
     protected BitField m_CollisionMask = new BitField();
-    protected String m_Tag = "Default";
+
 
     // The layer this collider is on
     protected int m_CollisionLayer = CollisionLayer.ANIMAL_MAIN_COLLIDER.ordinal(); // Default to being the main collider of an Animal
@@ -18,8 +18,7 @@ public abstract class Collider extends Component
     public int GetCollisionLayer() { return m_CollisionLayer; }
     public BitField GetCollisionMask() { return m_CollisionMask; }
     public void SetColor(color _color) { m_ColliderColor = _color; }
-    public void SetTag(String tag) { m_Tag = tag; }
-    public String GetTag() { return m_Tag; }
+
 
     /* Constructors. */
 

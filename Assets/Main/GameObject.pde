@@ -4,6 +4,7 @@ public class GameObject
     protected String m_Name = "New GameObject";
     protected boolean m_ObjectStarted = false;
     protected Scene m_BelongingToScene = null;
+    protected String m_Tag = "Default";
 
     protected ArrayList<Component> m_Components = new ArrayList<Component>();
     protected Transform m_Transform;
@@ -14,6 +15,8 @@ public class GameObject
     public ArrayList<Component> GetComponents() { return m_Components; }
     public String GetName() { return m_Name; }
     public Transform GetTransform() { return m_Transform; }
+    public void SetTag(String tag) { m_Tag = tag; }
+    public String GetTag() { return m_Tag; }
 
     public GameObject() {}
 

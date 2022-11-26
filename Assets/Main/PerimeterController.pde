@@ -39,8 +39,9 @@ public class PerimeterController extends Component implements ITriggerEventHandl
         m_Collider.SetCollisionLayer(CollisionLayer.ANIMAL_PEREMITER_COLLIDER.ordinal());
         m_Collider.GetCollisionMask().SetBit(CollisionLayer.ANIMAL_MAIN_COLLIDER.ordinal()); // collide against animals
         m_Collider.SetTrigger(true);
-        m_Collider.SetTag("Perimeter");
         m_Collider.SetColor(m_ViewPerimeterColliderColor);
+        
+        m_GameObject.SetTag("Perimeter");
     }
 
     @Override
@@ -66,7 +67,7 @@ public class PerimeterController extends Component implements ITriggerEventHandl
             return;
 
         // If the perimeter triggered with a prey
-        if (collider.GetTag() == "Prey")
+        if (collider.GetGameObject().GetTag() == "Prey")
         {
             // Update so PreyController knows that there are a prey nearby
             m_PreyController.SetNearbyPrey(m_PreyController.GetNearbyPrey() + 1);

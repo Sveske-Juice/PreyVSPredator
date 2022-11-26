@@ -75,8 +75,9 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
         m_Collider.SetCollisionLayer(CollisionLayer.ANIMAL_MAIN_COLLIDER.ordinal());
         m_Collider.GetCollisionMask().SetBit(CollisionLayer.ANIMAL_MAIN_COLLIDER.ordinal()); // collide against other animals
         m_Collider.GetCollisionMask().SetBit(CollisionLayer.ANIMAL_PEREMITER_COLLIDER.ordinal()); // collide against animal's perimeter
-        m_Collider.SetTag("Prey");
         m_Collider.SetColor(m_ColliderColor);
+        
+        m_GameObject.SetTag("Prey");
     }
 
     @Override
