@@ -40,6 +40,13 @@ public class AnimalControlDisplay extends Component implements IMouseEventListen
 
     private void ShowMenu()
     {
+        // If already open then re-open it by destroying and creating it again
+        if (m_MenuBeingShowed)
+        {
+            HideMenu();
+            return;
+        }
+            
         println("Showing menu");
         CreateMenu();
         m_MenuBeingShowed = true;
@@ -48,8 +55,11 @@ public class AnimalControlDisplay extends Component implements IMouseEventListen
     private void HideMenu()
     {
         println("Hiding menu");
-        m_MenuBeingShowed = false;
 
+        m_MenuBackground.GetGameObject().Destroy();
+
+
+        m_MenuBeingShowed = false;
     }
 
     protected void CreateMenu()

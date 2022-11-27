@@ -2,6 +2,7 @@ public class GameObject
 {
     /* Members. */
     protected String m_Name = "New GameObject";
+    protected int m_ObjectId;
     protected boolean m_ObjectStarted = false;
     protected Scene m_BelongingToScene = null;
     protected String m_Tag = "Default";
@@ -20,6 +21,8 @@ public class GameObject
     public String GetTag() { return m_Tag; }
     public boolean IsFixed() { return m_FixedPosition; }
     public void SetFixed(boolean value) { m_FixedPosition = value; }
+    public void SetId(int value) { m_ObjectId = value; }
+    public int GetId() { return m_ObjectId; }
 
     public GameObject() { }
 
@@ -96,6 +99,28 @@ public class GameObject
             }
         }
         return false;
+    }
+
+    public void Destroy()
+    {
+        // Loop through all children and exit and remove the components
+        for (int i = 0; i < m_Transform.GetChildCount(); i++)
+        {
+            m_Transform.GetChild(i).GetGameObject().Destroy();
+        }
+
+        // Exit all components on this GameObject
+        ExitObject();
+
+        // Set all components to null so GC can collect mem
+        for (int i = 0; i < m_Components.size(); i++)
+        {
+            m_Components.get(i);
+        }
+        
+        m_Components.clear();
+
+        m_BelongingToScene.DestroyGameObject(m_ObjectId);
     }
     
     public void StartObject()

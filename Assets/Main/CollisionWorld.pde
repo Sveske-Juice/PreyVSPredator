@@ -83,7 +83,7 @@ public class CollisionWorld
         }
 
 
-        println("Collision checks this step: " + collisionChecks);
+        // println("Collision checks this step: " + collisionChecks);
 
         // Resolve collisions for this frame
         for (int i = 0; i < collisions.size(); i++)
@@ -147,7 +147,7 @@ public class CollisionWorld
              */
         }
 
-        println("fps: " + 1 / Time.dt());
+        // println("fps: " + 1 / Time.dt());
         
     }
 

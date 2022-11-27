@@ -11,6 +11,7 @@ public abstract class Scene
     protected PhysicsSystem m_PhysicsSystem = new PhysicsSystem();
     private BitField m_MouseCollisionMask = new BitField();
     private int m_ComponentIdCounter = 0;
+    private int m_ObjectIdCounter = 0;
     private boolean m_SceneStarted = false;
     
     /* Getters/Setters. */
@@ -52,7 +53,6 @@ public abstract class Scene
     
     public void UpdateScene()
     {
-
         // Update all components on every GameObject in the scene
         for (int i = 0; i < m_GameObjects.size(); i++)
         {
@@ -77,7 +77,7 @@ public abstract class Scene
         // Tick physics system
         m_PhysicsSystem.Step(Time.dt());
 
-        println("------------- new frame ------------");
+        // println("------------- new frame ------------");
     }
     
     public void ExitObjects()
@@ -98,6 +98,9 @@ public abstract class Scene
 
         // Make sure every GameObject have a transform
         go.CreateTransform();
+
+        // Set id
+        go.SetId(m_ObjectIdCounter++);
 
         m_GameObjects.add(go);
 
@@ -127,6 +130,9 @@ public abstract class Scene
         // Set new child's position to parent's
         go.GetTransform().SetPosition(parent.GetPosition());
 
+        // Set id
+        go.SetId(m_ObjectIdCounter++);
+
         if (m_SceneStarted)
         {
             go.CreateComponents();
@@ -135,6 +141,15 @@ public abstract class Scene
 
         m_GameObjects.add(go);
         return go;
+    }
+
+    public void DestroyGameObject(int id)
+    {
+        for (int i = 0; i < m_GameObjects.size(); i++)
+        {
+            if (m_GameObjects.get(i).GetId() == id)
+                m_GameObjects.remove(i);
+        }
     }
 
     public GameObject FindGameObject(String name)
@@ -215,7 +230,7 @@ public class GameScene extends Scene
             RigidBody ibody = (RigidBody) prey.AddComponent(new RigidBody());
         }
 
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 0; i++)
         {
             PVector rand = new PVector(random(-m_Dimensions.x, m_Dimensions.x-150), random(-m_Dimensions.y, m_Dimensions.y-150));
             GameObject prey = AddGameObject(new Prey("Prey" + i));

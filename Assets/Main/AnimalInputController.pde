@@ -3,6 +3,11 @@ public class AnimalInputController extends Component
     private AnimalMover m_AnimalMover;
     private RigidBody m_RigidBody;
 
+    public AnimalInputController()
+    {
+        m_Name = "Animal Input Controller";
+    }
+
     @Override
     public void Start()
     {
