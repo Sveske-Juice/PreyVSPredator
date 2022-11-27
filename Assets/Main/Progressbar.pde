@@ -27,7 +27,6 @@ public class Progressbar extends Component
     public void Update()
     {
         PVector pos = transform().GetPosition();
-        println("pos: " + pos);
 
         // Draw background
         fill(m_BackgroundColor);

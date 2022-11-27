@@ -11,6 +11,7 @@ public abstract class Scene
     protected PhysicsSystem m_PhysicsSystem = new PhysicsSystem();
     private BitField m_MouseCollisionMask = new BitField();
     private int m_ComponentIdCounter = 0;
+    private boolean m_SceneStarted = false;
     
     /* Getters/Setters. */
     public String GetSceneName() { return m_SceneName; }
@@ -45,6 +46,8 @@ public abstract class Scene
         {
             m_GameObjects.get(i).StartObject();
         }
+
+        m_SceneStarted = true;
     }
     
     public void UpdateScene()
@@ -54,10 +57,11 @@ public abstract class Scene
         for (int i = 0; i < m_GameObjects.size(); i++)
         {
             GameObject go = m_GameObjects.get(i); // Cache go
+            // println("Updating: " + go.GetName());
             
             pushMatrix();
 
-            // If the GameObject is fixed then do not translate and scale
+            // If the GameObject is fixed then do not translate and scale (Is fixed on UIElement)
             if (!go.IsFixed())
             {
                 // Translate and scale
@@ -96,6 +100,13 @@ public abstract class Scene
         go.CreateTransform();
 
         m_GameObjects.add(go);
+
+        if (m_SceneStarted)
+        {
+            go.CreateComponents();
+            go.StartObject();
+        }
+        
         return go;
     }
 
@@ -115,6 +126,12 @@ public abstract class Scene
 
         // Set new child's position to parent's
         go.GetTransform().SetPosition(parent.GetPosition());
+
+        if (m_SceneStarted)
+        {
+            go.CreateComponents();
+            go.StartObject();
+        }
 
         m_GameObjects.add(go);
         return go;
@@ -164,7 +181,7 @@ public class GameScene extends Scene
         prey1.GetTransform().SetPosition(new PVector(200f, 100f));
         prey1.AddComponent(new AnimalInputController());
         
-        RigidBody body = (RigidBody) prey1.AddComponent(new RigidBody());
+        // RigidBody body = (RigidBody) prey1.AddComponent(new RigidBody());
 
         /*
         GameObject topborder = AddGameObject(new GameObject("Top Border"));

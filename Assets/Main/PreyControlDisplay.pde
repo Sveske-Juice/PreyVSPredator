@@ -37,7 +37,7 @@ public class PreyControlDisplay extends AnimalControlDisplay
 
         m_ConnectedPreyController = m_ConnectedAnimal.GetComponent(PreyController.class);
         m_PreysNearby.SetText("Nearby Preys: " + m_ConnectedPreyController.GetNearbyPreys());
-        m_SplitBar.SetProgress(m_SplitBar.GetProgress() + m_ConnectedPreyController.GetCurrentSplitTime() / m_ConnectedPreyController.GetSplitTime());
+        m_SplitBar.SetProgress(m_ConnectedPreyController.GetCurrentSplitTime() / m_ConnectedPreyController.GetSplitTime());
     }
 
     /* Prey specific menu attributes. */
@@ -53,12 +53,20 @@ public class PreyControlDisplay extends AnimalControlDisplay
         m_PreysNearby.SetMargin(new PVector(25f, 25f));
         m_PreysNearby.transform().SetLocalPosition(new PVector(0f, 100f));      
 
+        // Create split title
+        GameObject splitTitle = m_Scene.AddGameObject(new UIElement("Split Title Object"), m_MenuBackground.transform());
+        splitTitle.SetTag("AnimalControlDisplay");
+        Text splitTitleTxt = (Text) splitTitle.AddComponent(new Text("Split Title"));
+        splitTitleTxt.SetText("Split Progress:");
+        splitTitleTxt.SetMargin(new PVector(25f, 25f));
+        splitTitleTxt.transform().SetLocalPosition(new PVector(0f, 250f));
+
         // Create Split progress bar
         GameObject splitBar =  m_Scene.AddGameObject(new UIElement("Prey Split Progressbar Object"), m_MenuBackground.transform());
         splitBar.SetTag("AnimalControlDisplay");
         m_SplitBar = (Progressbar) splitBar.AddComponent(new Progressbar("Prey Split Progressbar"));
         m_SplitBar.SetMargin(new PVector(25f, 25f));
         m_SplitBar.SetSize(new PVector(m_MenuWidth - 100f, 50f));
-        m_SplitBar.transform().SetLocalPosition(new PVector(0f, 250f));
+        m_SplitBar.transform().SetLocalPosition(new PVector(0f, 300f));
     }
 }

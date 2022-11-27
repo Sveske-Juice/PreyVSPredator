@@ -16,7 +16,7 @@ public class Prey extends Animal
         super.CreateComponents();
 
         // Main Collider
-        Collider collider = (Collider) AddComponent(new CircleCollider("Prey Collider", m_ColliderRadius));
+        AddComponent(new CircleCollider("Prey Collider", m_ColliderRadius));
 
         // Prey Movement behaviour
         AddComponent(new PreyController());
@@ -40,6 +40,7 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
     private RigidBody m_RigidBody;
 
     private int m_NearbyPreys = 0;
+    private int m_MaxNumOfPreys = 3;
     private float m_SplitTime = 60f; // Amount when a prey should split
     private float m_CurrentSplit = 0f; // Current value counter for split
 
@@ -88,11 +89,26 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
     public void Update()
     {
         // Increment current split time with dt and the number of preys as a grow factor
-        m_CurrentSplit = Time.dt() * (m_NearbyPreys + 1);
+        if (m_NearbyPreys >= m_MaxNumOfPreys) m_NearbyPreys = m_MaxNumOfPreys; // Limit growth factor to avoid explosion in splitting
+
+        m_CurrentSplit += Time.dt() * (m_NearbyPreys + 1);
+
+        // If current counter has reached the time requeried for a split then split the prey
+        if (m_CurrentSplit >= m_SplitTime)
+        {
+            SplitPrey();
+            m_CurrentSplit = 0f;
+        }
 
         // Physics system is updated later than components so no more
         // preys will be spotted this frame and its safe to reset for next frame
         m_NearbyPreys = 0;
+    }
+
+    private void SplitPrey()
+    {
+        Prey newPrey = (Prey) m_GameObject.GetBelongingToScene().AddGameObject(new Prey("Prey (child of " + m_GameObject.GetName() + ")"));
+        newPrey.GetTransform().SetPosition(m_Collider.GetMaxExtents());
     }
 
     public void OnCollisionTrigger(Collider collider)
