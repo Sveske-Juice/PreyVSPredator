@@ -35,5 +35,5 @@ public class Progressbar extends Component
         // Draw progress
         fill(m_ProgressColor);
         rect(pos.x + m_Margin.x, pos.y + m_Margin.y, m_Size.x * m_CurrentProgress, m_Size.y);
-    }    
+    }
 }

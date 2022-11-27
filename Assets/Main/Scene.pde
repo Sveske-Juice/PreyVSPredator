@@ -58,7 +58,7 @@ public abstract class Scene
         {
             GameObject go = m_GameObjects.get(i); // Cache go
             // println("Updating: " + go.GetName());
-            
+
             pushMatrix();
 
             // If the GameObject is fixed then do not translate and scale (Is fixed on UIElement)
@@ -215,7 +215,7 @@ public class GameScene extends Scene
             RigidBody ibody = (RigidBody) prey.AddComponent(new RigidBody());
         }
 
-        for (int i = 0; i < 1; i++)
+        for (int i = 0; i < 4; i++)
         {
             PVector rand = new PVector(random(-m_Dimensions.x, m_Dimensions.x-150), random(-m_Dimensions.y, m_Dimensions.y-150));
             GameObject prey = AddGameObject(new Prey("Prey" + i));

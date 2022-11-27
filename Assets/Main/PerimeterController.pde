@@ -73,6 +73,6 @@ public class PerimeterController extends Component implements ITriggerEventHandl
             m_PreyController.SetNearbyPreys(m_PreyController.GetNearbyPreys() + 1);
         }
         
-        println("Perimeter controller: triggered with: " + collider.GetName() + " on obj: " + collider.GetGameObject().GetName());
+        // println("Perimeter controller: triggered with: " + collider.GetName() + " on obj: " + collider.GetGameObject().GetName());
     }
 }

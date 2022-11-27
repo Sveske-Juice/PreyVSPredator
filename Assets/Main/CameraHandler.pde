@@ -5,10 +5,13 @@ public class CameraHandler extends Component implements IMouseEventListener
     private float m_MinZoom = 0.005f;
     private float m_MaxZoom = 10f;    
     private float m_ScaleMultiplier = 0.05f;
+    private float m_SelectNewCooldown = 0.1f;
+    private float m_SelectNewCurrentCool = 0f;
 
     private Collider m_ChasingCollider;
     private boolean m_IsChasingColldier = false;
     private boolean m_CanSelectNewCollider = true;
+    private boolean m_MouseReleased = false;
 
     @Override
     public void Start()
@@ -31,6 +34,20 @@ public class CameraHandler extends Component implements IMouseEventListener
         if (newScaleFactor > m_MaxZoom) newScaleFactor = m_MaxZoom;
         m_Scene.SetScaleFactor(newScaleFactor);
 
+        if (m_MouseReleased)
+        {
+            m_SelectNewCurrentCool += Time.dt();
+            if (m_SelectNewCurrentCool >= m_SelectNewCooldown)
+            {
+                m_CanSelectNewCollider = true;
+                m_SelectNewCurrentCool = 0f;
+            }
+            else
+            {
+                m_CanSelectNewCollider = false;
+            }
+        }
+
         if (m_IsChasingColldier)
             ChaseCollider(m_ChasingCollider);
     }
@@ -52,6 +69,14 @@ public class CameraHandler extends Component implements IMouseEventListener
         // If an animal was clicked on, then chase the animal with the camera
         if (collider == null)
             return;
+
+        // Ignore if ui element was clicked
+        if (collider.GetCollisionLayer() == CollisionLayer.UI_ELEMENT.ordinal())
+        {
+            println("ignoring camera handle");
+            m_IsChasingColldier = true;
+            return;
+        }
         
         // Check if it's an animal that was clicked on
         if (collider.GetGameObject() instanceof Animal)
@@ -72,7 +97,6 @@ public class CameraHandler extends Component implements IMouseEventListener
         if (m_CanSelectNewCollider)
         {
             m_IsChasingColldier = false;
-            m_ChasingCollider = null;
         }
         PVector mouseCords = new PVector(mouseX, mouseY);
         PVector diff = PVector.sub(new PVector(pmouseX, pmouseY), mouseCords);
@@ -82,7 +106,7 @@ public class CameraHandler extends Component implements IMouseEventListener
     public void OnMouseRelease(PVector position)
     {
         // Mouse released, can now select new collider to focus on
-        m_CanSelectNewCollider = true;
+        m_MouseReleased = true;
     }
 
     public void OnMouseClick(PVector position) { }

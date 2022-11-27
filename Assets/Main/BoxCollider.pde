@@ -26,6 +26,11 @@ public class BoxCollider extends Collider
         super("Box Collider");
     }
 
+    public BoxCollider(String name)
+    {
+        super(name);
+    }
+
     @Override
     public void Start()
     {
