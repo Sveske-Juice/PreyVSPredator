@@ -73,7 +73,6 @@ public class CameraHandler extends Component implements IMouseEventListener
         // Ignore if ui element was clicked
         if (collider.GetCollisionLayer() == CollisionLayer.UI_ELEMENT.ordinal())
         {
-            println("ignoring camera handle");
             m_IsChasingColldier = true;
             return;
         }

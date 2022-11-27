@@ -40,7 +40,7 @@ public class AnimalControlDisplay extends Component implements IMouseEventListen
 
     private void ShowMenu()
     {
-        // If already open then re-open it by destroying and creating it again
+        // If already open then close it
         if (m_MenuBeingShowed)
         {
             HideMenu();
