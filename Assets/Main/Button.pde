@@ -63,7 +63,7 @@ public class ButtonBehaviour extends Component implements IMouseEventListener
     }
 
     @Override
-    public void Update()
+    public void LateUpdate()
     {
         PVector pos = transform().GetPosition();
 

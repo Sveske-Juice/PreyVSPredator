@@ -1,3 +1,4 @@
+// Prefab for creating the prey control display when clicking on a prey
 public class PreyControlDisplayObject extends GameObject
 {
     public PreyControlDisplayObject()

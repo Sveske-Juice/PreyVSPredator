@@ -5,6 +5,7 @@ public abstract class Scene
     /* Members. */
     protected String m_SceneName = "New Scene";
     protected ArrayList<GameObject> m_GameObjects = new ArrayList<GameObject>();
+    protected ArrayList<GameObject> m_UIObjects = new ArrayList<GameObject>();
     protected PVector m_Dimensions = new PVector(3000f, 3000f);
     private PVector m_MoveTranslation = new PVector();
     private float m_ScaleFactor = 1f;
@@ -17,6 +18,10 @@ public abstract class Scene
     private int m_CurrentPreyCount = 0;
     private int m_MaxPredatorCount = 1000;
     private int m_CurrentPredatorCount = 0;
+    private long m_ObjectFM = 0L; // Object Update Frame Time
+    private long m_LateObjectFM = 0L; // Late Object Update Frame Time
+    private long m_UIFM = 0L; // UI Element Update Frame Time
+    private long m_LateUIFM = 0L; // Late UI Element Update Frame Time
 
     
     /* Getters/Setters. */
@@ -54,9 +59,16 @@ public abstract class Scene
     // TODO use delegate for 3 methods below
     public void StartObjects()
     {
+        // Start GameObjects
         for (int i = 0; i < m_GameObjects.size(); i++)
         {
             m_GameObjects.get(i).StartObject();
+        }
+
+        // Start UI Objects
+        for (int i = 0; i < m_UIObjects.size(); i++)
+        {
+            m_UIObjects.get(i).StartObject();
         }
 
         m_SceneStarted = true;
@@ -65,14 +77,16 @@ public abstract class Scene
     public void UpdateScene()
     {
         // Update all components on every GameObject in the scene
-        long objT = millis();
+        long goT = millis();
         noSmooth();
         println("objects: " + m_GameObjects.size());
+
+        /* Tick Update() on every normal GameObject in scene. */
         for (int i = 0; i < m_GameObjects.size(); i++)
         {
             // long objiT = millis();
             GameObject go = m_GameObjects.get(i); // Cache go
-            // println("Updating: " + go.GetName());
+            
             pushMatrix();
 
             // If the GameObject is fixed then do not translate and scale (Is fixed on UIElement)
@@ -88,16 +102,40 @@ public abstract class Scene
             popMatrix();
             // println("Object " + go.GetName() + " frame time: " + (millis() - objiT));
         }
+        m_ObjectFM = (millis() - goT);
+        println("Object update frame time: " + m_ObjectFM);
 
-        println("Object update frame time: " + (millis() - objT));
+        long uiT = millis();
+        /*  Tick Update() on every UI GameObject (UIElement),
+            so they are on top of normal GameObjects. */
+        for (int i = 0; i < m_UIObjects.size(); i++)
+        {
+            GameObject go = m_UIObjects.get(i); // Cache go
+            pushMatrix();
+            // println("Updating: " + go.GetName());
 
+            // If the UI Element is fixed then do not translate and scale (Is fixed on UIElement)
+            if (!go.IsFixed())
+            {
+                // Translate and scale
+                translate(width / 2f, height / 2f);
+                scale(m_ScaleFactor);
+                translate(-m_MoveTranslation.x - width / 2f, -m_MoveTranslation.y - height / 2f);    
+            }
+            
+            go.UpdateObject();
+            popMatrix();
+        }
+        m_UIFM = (millis() - uiT);
+        println("UI update frame time: " + m_UIFM);
+
+        /* Tick physics system. */
         long phyT = millis();
-
-        // Tick physics system
         m_PhysicsSystem.Step(Time.dt());
         println("Physics update frame time: " + (millis() - phyT));
 
-        // Run late update methods on every component
+        /*  Tick LateUpdate() on every normal GameObject. */
+        long lateGoT = millis();
         for (int i = 0; i < m_GameObjects.size(); i++)
         {
             GameObject go = m_GameObjects.get(i);
@@ -115,16 +153,47 @@ public abstract class Scene
             go.LateUpdateObject();
             popMatrix();
         }
+        m_LateObjectFM = (millis() - lateGoT);
+        println("Object LATE update frame time: " + m_LateObjectFM);
 
-        println("preys: " + m_CurrentPreyCount);
+        /*  Tick LateUpdate() on every UI Object (UIElement), so they get
+            ticked after normal objects. */
+        long lateUiT = millis();
+        for (int i = 0; i < m_UIObjects.size(); i++)
+        {
+            GameObject go = m_UIObjects.get(i);
+            
+            pushMatrix();
+
+            if (!go.IsFixed())
+            {
+                // If the UI Element is fixed then do not translate and scale (Is fixed on UIElement)
+                translate(width / 2f, height / 2f);
+                scale(m_ScaleFactor);
+                translate(-m_MoveTranslation.x - width / 2f, -m_MoveTranslation.y - height / 2f);   
+            }
+            
+            go.LateUpdateObject();
+            popMatrix();
+        }
+        m_LateUIFM = (millis() - lateUiT);
+        println("UI LATE update frame time: " + m_LateUIFM);
+
         println("------------- new frame ------------");
     }
     
     public void ExitObjects()
     {
+        // Exit GameObject
         for (int i = 0; i < m_GameObjects.size(); i++)
         {
             m_GameObjects.get(i).ExitObject();
+        }
+
+        // Exit UI Elements
+        for (int i = 0; i < m_UIObjects.size(); i++)
+        {
+            m_UIObjects.get(i).ExitObject();
         }
     }
     
@@ -142,7 +211,10 @@ public abstract class Scene
         // Set id
         go.SetId(m_ObjectIdCounter++);
 
-        m_GameObjects.add(go);
+        if (go instanceof UIElement)
+            m_UIObjects.add(go);
+        else
+            m_GameObjects.add(go);
 
         if (m_SceneStarted)
         {
@@ -179,16 +251,32 @@ public abstract class Scene
             go.StartObject();
         }
 
-        m_GameObjects.add(go);
+        if (go instanceof UIElement)
+            m_UIObjects.add(go);
+        else
+            m_GameObjects.add(go);
+        
         return go;
     }
 
     public void DestroyGameObject(int id)
     {
+        // Check in GameObjects
         for (int i = 0; i < m_GameObjects.size(); i++)
         {
             if (m_GameObjects.get(i).GetId() == id)
+            {
                 m_GameObjects.remove(i);
+            }
+        }
+
+        // Check in UI Objects
+        for (int i = 0; i < m_UIObjects.size(); i++)
+        {
+            if (m_UIObjects.get(i).GetId() == id)
+            {
+                m_UIObjects.remove(i);
+            }
         }
     }
 
@@ -229,6 +317,9 @@ public class GameScene extends Scene
 
         // Prey control display menu
         GameObject preyCtrlDisplay = AddGameObject(new PreyControlDisplayObject());
+
+        // Debug displayer
+        GameObject debugDisplay = AddGameObject(new DebugDisplayObject());
         
 
         

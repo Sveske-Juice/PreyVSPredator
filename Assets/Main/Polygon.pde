@@ -23,7 +23,7 @@ public class Polygon extends Component
 
     /* Methods. */
     @Override
-    public void Update()
+    public void LateUpdate()
     {
         if (!m_DrawShape || m_PShape == null)
             return;

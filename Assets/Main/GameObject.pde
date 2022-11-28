@@ -113,13 +113,9 @@ public class GameObject
         ExitObject();
 
         // Set all components to null so GC can collect mem
-        for (int i = 0; i < m_Components.size(); i++)
-        {
-            m_Components.get(i);
-        }
-        
         m_Components.clear();
 
+        println("go id: " + m_ObjectId);
         m_BelongingToScene.DestroyGameObject(m_ObjectId);
     }
     

@@ -24,7 +24,7 @@ public class CameraHandler extends Component implements IMouseEventListener
     }
 
     @Override
-    public void Update()
+    public void LateUpdate()
     {
         float mouseAccel = g_InputManager.GetInstance().GetWheelAcceleration();
         float newScaleFactor = m_Scene.GetScaleFactor() + mouseAccel * m_ScaleMultiplier * -1;
