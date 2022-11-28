@@ -24,7 +24,7 @@ public class Progressbar extends Component
     }
 
     @Override
-    public void Update()
+    public void LateUpdate()
     {
         PVector pos = transform().GetPosition();
 

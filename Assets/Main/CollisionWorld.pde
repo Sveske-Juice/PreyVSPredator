@@ -11,10 +11,11 @@ public class CollisionWorld
     /* Constructors. */
 
     /* Methods. */
+    
+    // Custom comparator for comparing by min extent
+    // to sort in descending order
     private Comparator<Collider> m_CompareAABBMinExtent = new Comparator<Collider>()
     {
-        // Custom comparator for comparing by min extent
-        // to sort in descending order
         public int compare(Collider a, Collider b)
         {
             if (a.GetMinExtents().x > b.GetMinExtents().x)
@@ -100,9 +101,10 @@ public class CollisionWorld
             PVector BA = PVector.sub(collision.Points.B, collision.Points.A);
 
             // The depth of the penetration vector with a little offset so they don't collide again
-            float depth = BA.mag() + 0.005f;
+            float depth = BA.mag() + 0.01f;
             int divider = 2;
 
+            // Calculate so each object gets pushed as much back
             PVector resolution = PVector.div(PVector.mult(normal, depth), divider);
 
             PVector ARes = resolution;
@@ -112,7 +114,7 @@ public class CollisionWorld
             B.transform().SubFromPosition(resolution);
             
 
-            PVector tangent = new PVector(-normal.y, normal.x);
+            PVector tangent = new PVector(-normal.y, normal.x); // Normal rotated by 90° CCW.
 
             float Avn = PVector.dot(normal, A.GetVelocity());
             float Avt = PVector.dot(tangent, A.GetVelocity());
@@ -147,7 +149,7 @@ public class CollisionWorld
              */
         }
 
-        // println("fps: " + 1 / Time.dt());
+        println("fps: " + 1 / Time.dt());
         
     }
 

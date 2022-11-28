@@ -13,6 +13,11 @@ public abstract class Scene
     private int m_ComponentIdCounter = 0;
     private int m_ObjectIdCounter = 0;
     private boolean m_SceneStarted = false;
+    private int m_MaxPreyCount = 500;
+    private int m_CurrentPreyCount = 0;
+    private int m_MaxPredatorCount = 1000;
+    private int m_CurrentPredatorCount = 0;
+
     
     /* Getters/Setters. */
     public String GetSceneName() { return m_SceneName; }
@@ -27,6 +32,12 @@ public abstract class Scene
     public BitField GetMouseCollisionMask() { return m_MouseCollisionMask; }
     public int GetComponentIdCounter() { return m_ComponentIdCounter; }
     public void SetComponentIdCounter(int value) { m_ComponentIdCounter = value; }
+    public int GetMaxPreyCount() { return m_MaxPreyCount; }
+    public void SetCurrentPreyCount(int value) { m_CurrentPreyCount = value; }
+    public int GetCurrentPreyCount() { return m_CurrentPreyCount; }
+    public int GetMaxPredatorCount() { return m_MaxPredatorCount; }
+    public void SetCurrentPredatorCount(int value) { m_CurrentPredatorCount = value; }
+    public int GetCurrentPredatorCount() { return m_CurrentPredatorCount; }
     
     public Scene(String sceneName)
     {
@@ -54,11 +65,14 @@ public abstract class Scene
     public void UpdateScene()
     {
         // Update all components on every GameObject in the scene
+        long objT = millis();
+        noSmooth();
+        println("objects: " + m_GameObjects.size());
         for (int i = 0; i < m_GameObjects.size(); i++)
         {
+            // long objiT = millis();
             GameObject go = m_GameObjects.get(i); // Cache go
             // println("Updating: " + go.GetName());
-
             pushMatrix();
 
             // If the GameObject is fixed then do not translate and scale (Is fixed on UIElement)
@@ -72,12 +86,38 @@ public abstract class Scene
             
             go.UpdateObject();
             popMatrix();
+            // println("Object " + go.GetName() + " frame time: " + (millis() - objiT));
         }
+
+        println("Object update frame time: " + (millis() - objT));
+
+        long phyT = millis();
 
         // Tick physics system
         m_PhysicsSystem.Step(Time.dt());
+        println("Physics update frame time: " + (millis() - phyT));
 
-        // println("------------- new frame ------------");
+        // Run late update methods on every component
+        for (int i = 0; i < m_GameObjects.size(); i++)
+        {
+            GameObject go = m_GameObjects.get(i);
+            
+            pushMatrix();
+
+            if (!go.IsFixed())
+            {
+                // Translate and scale
+                translate(width / 2f, height / 2f);
+                scale(m_ScaleFactor);
+                translate(-m_MoveTranslation.x - width / 2f, -m_MoveTranslation.y - height / 2f);   
+            }
+            
+            go.LateUpdateObject();
+            popMatrix();
+        }
+
+        println("preys: " + m_CurrentPreyCount);
+        println("------------- new frame ------------");
     }
     
     public void ExitObjects()
@@ -194,7 +234,7 @@ public class GameScene extends Scene
         
         GameObject prey1 = AddGameObject(new Prey("Prey1"));
         prey1.GetTransform().SetPosition(new PVector(200f, 100f));
-        prey1.AddComponent(new AnimalInputController());
+        // prey1.AddComponent(new AnimalInputController());
         
         // RigidBody body = (RigidBody) prey1.AddComponent(new RigidBody());
 

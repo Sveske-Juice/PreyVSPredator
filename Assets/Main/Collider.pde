@@ -10,6 +10,9 @@ public abstract class Collider extends Component
     // The layer this collider is on
     protected int m_CollisionLayer = CollisionLayer.ANIMAL_MAIN_COLLIDER.ordinal(); // Default to being the main collider of an Animal
     protected boolean m_IsTrigger = false;
+    protected boolean m_ShouldFill = true;
+    protected boolean m_ShouldStroke = false;
+    protected boolean m_ShouldDraw = false;
 
     /* Getters/Setters. */
     public boolean IsTrigger() { return m_IsTrigger; }
@@ -18,7 +21,9 @@ public abstract class Collider extends Component
     public int GetCollisionLayer() { return m_CollisionLayer; }
     public BitField GetCollisionMask() { return m_CollisionMask; }
     public void SetColor(color _color) { m_ColliderColor = _color; }
-
+    public void SetFill(boolean value) { m_ShouldFill = value; }
+    public void SetStroke(boolean value) { m_ShouldStroke = value; }
+    public void SetShouldDraw(boolean value) { m_ShouldDraw = value; }
 
     /* Constructors. */
 
@@ -37,9 +42,20 @@ public abstract class Collider extends Component
     @Override
     public void Update()
     {
-        fill(m_ColliderColor);
+        if (!m_ShouldDraw)
+            return;
+        
+        if (m_ShouldFill)
+            fill(m_ColliderColor);
+        else
+            noFill();
+
+        if (m_ShouldStroke)
+            stroke(color(0, 0, 0));
+        else
+            noStroke();
+
         DrawCollider();
-        fill(255);
     }
 
     public abstract void DrawCollider();

@@ -46,7 +46,7 @@ public class GameObject
         if (component == null)
             return null;
         
-        print("Adding component: " + component.GetName() + " on object: " + m_Name + "\n");
+        // print("Adding component: " + component.GetName() + " on object: " + m_Name + "\n");
         m_Components.add(component);
         
         // Link the component to this GameObject, 
@@ -128,7 +128,7 @@ public class GameObject
         m_ObjectStarted = true;
         for (int i = 0; i < m_Components.size(); i++)
         {
-            print("Starting component: " + m_Components.get(i).GetName() + " on object: " + m_Name + "\n");
+            // print("Starting component: " + m_Components.get(i).GetName() + " on object: " + m_Name + "\n");
             Component component = m_Components.get(i);
 
             if (component.IsEnabled())
@@ -147,12 +147,23 @@ public class GameObject
                 component.Update();
         }
     }
+
+    public void LateUpdateObject()
+    {
+        for (int i = 0; i < m_Components.size(); i++)
+        {
+            Component component = m_Components.get(i);
+
+            if (component.IsEnabled())
+                component.LateUpdate();
+        }
+    }
     
     public void ExitObject()
     {
         for (int i = 0; i < m_Components.size(); i++)
         {
-            print("Exiting component: " + m_Components.get(i).GetName() + " on object: " + m_Name + "\n");
+            // print("Exiting component: " + m_Components.get(i).GetName() + " on object: " + m_Name + "\n");
             m_Components.get(i).Exit();
         }
     }

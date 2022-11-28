@@ -25,7 +25,7 @@ public class PerimeterController extends Component implements ITriggerEventHandl
     private PreyController m_PreyController;
     private Collider m_PreyMainCollider;
     private Collider m_Collider;
-    private color m_ViewPerimeterColliderColor = color(50, 50, 50, 20);
+    private color m_ViewPerimeterColliderColor = color(50, 50, 50);
 
     @Override
     public void Start()
@@ -40,7 +40,8 @@ public class PerimeterController extends Component implements ITriggerEventHandl
         m_Collider.GetCollisionMask().SetBit(CollisionLayer.ANIMAL_MAIN_COLLIDER.ordinal()); // collide against animals
         m_Collider.SetTrigger(true);
         m_Collider.SetColor(m_ViewPerimeterColliderColor);
-        
+        m_Collider.SetStroke(true);
+        m_Collider.SetFill(false);
         m_GameObject.SetTag("Perimeter");
     }
 
@@ -49,15 +50,15 @@ public class PerimeterController extends Component implements ITriggerEventHandl
     {
         // println("components: " + m_GameObject.GetComponents());
         // println("parent: " + transform().GetParent().GetGameObject().GetName());
-        CircleCollider collider = (CircleCollider) m_GameObject.GetComponent(CircleCollider.class);
+        // CircleCollider collider = (CircleCollider) m_GameObject.GetComponent(CircleCollider.class);
         
-        if (collider != null)
-        {
-            if (InputManager.GetInstance().GetKey(38)) // up arrow
-                collider.SetRadius(collider.GetRadius() + 0.5);
-            else if (InputManager.GetInstance().GetKey(40)) // dwn arrow
-                collider.SetRadius(collider.GetRadius() - 0.5);
-        }
+        // if (collider != null)
+        // {
+        //     if (InputManager.GetInstance().GetKey(38)) // up arrow
+        //         collider.SetRadius(collider.GetRadius() + 0.5);
+        //     else if (InputManager.GetInstance().GetKey(40)) // dwn arrow
+        //         collider.SetRadius(collider.GetRadius() - 0.5);
+        // }
     }
 
     public void OnCollisionTrigger(Collider collider)

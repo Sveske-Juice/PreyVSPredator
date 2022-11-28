@@ -104,7 +104,6 @@ public class CameraHandler extends Component implements IMouseEventListener
 
     public void OnMouseRelease(PVector position)
     {
-        // Mouse released, can now select new collider to focus on
         m_MouseReleased = true;
     }
 

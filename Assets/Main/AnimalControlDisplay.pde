@@ -38,7 +38,7 @@ public class AnimalControlDisplay extends Component implements IMouseEventListen
         m_PositionText.SetText("Animal Position: " + m_ConnectedAnimal.GetTransform().GetPosition());
     }
 
-    private void ShowMenu()
+    private void ShowMenu(Animal animal)
     {
         // If already open then close it
         if (m_MenuBeingShowed)
@@ -46,6 +46,12 @@ public class AnimalControlDisplay extends Component implements IMouseEventListen
             HideMenu();
             return;
         }
+
+        m_ConnectedAnimal = animal;
+        m_TakeControl = new TakeControl(m_ConnectedAnimal);
+        
+        // Show the animal's view range (perimeter)
+        m_ConnectedAnimal.GetTransform().GetChild(0).GetGameObject().GetComponent(Collider.class).SetShouldDraw(true);
             
         println("Showing menu");
         CreateMenu();
@@ -58,8 +64,14 @@ public class AnimalControlDisplay extends Component implements IMouseEventListen
 
         m_MenuBackground.GetGameObject().Destroy();
 
+        // Hide the animal's view range
+        m_ConnectedAnimal.GetTransform().GetChild(0).GetGameObject().GetComponent(Collider.class).SetShouldDraw(false);
+
+        // Remove the input controller from the animal if one was added
+        m_ConnectedAnimal.RemoveComponent(AnimalInputController.class);
 
         m_MenuBeingShowed = false;
+        m_ConnectedAnimal = null;
     }
 
     protected void CreateMenu()
@@ -106,9 +118,7 @@ public class AnimalControlDisplay extends Component implements IMouseEventListen
         // Check if it's an animal that was clicked on
         if (collider.GetGameObject() instanceof Animal)
         {
-            m_ConnectedAnimal = (Animal) collider.GetGameObject();
-            m_TakeControl = new TakeControl(m_ConnectedAnimal);
-            ShowMenu();
+            ShowMenu((Animal) collider.GetGameObject());
             return;
         }
         
@@ -116,7 +126,6 @@ public class AnimalControlDisplay extends Component implements IMouseEventListen
         if (collider.GetGameObject().GetTag() != "AnimalControlDisplay")
         {
             HideMenu();
-            m_ConnectedAnimal = null;
             m_TakeControl = null;
         }
     }
@@ -148,6 +157,11 @@ public class TakeControl implements IButtonEventListener
 
     public void OnClick()
     {
+
+        // If component already on animal then do not add
+        if (m_Animal.GetComponent(AnimalInputController.class) != null)
+            return;
+        
         println("adding input controller on: " + m_Animal.GetName());
         m_Animal.AddComponent(new AnimalInputController());
     }

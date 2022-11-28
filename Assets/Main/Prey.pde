@@ -32,21 +32,26 @@ public class Prey extends Animal
 public class PreyController extends AnimalMover implements ITriggerEventHandler
 {
     /* Members. */
-    private color m_ColliderColor = color(0, 180, 0, 60);
+    private Scene m_Scene;
+    private color m_ColliderColor = color(0, 180, 0);
     private int m_ClosePreysCount = 0;
 
     private Collider m_Collider;
-    private Collider m_PerimeterCollider;
+    private CircleCollider m_PerimeterCollider;
     private RigidBody m_RigidBody;
 
-    private int m_NearbyPreys = 0;
-    private int m_MaxNumOfPreys = 3;
-    private float m_SplitTime = 60f; // Amount when a prey should split
+    private int m_NearbyPreys = 0; // How many preys are within this prey's view (perimiter)
+    private int m_SplitMultiplier = 0; // Current split multiplier
+    private int m_MaxSplitMultiplier = 3; // Do not increase split multiplier more than this
+    private int m_MaxNearbyPreysToSplit = 25; // Do not split if there are more than m_MaxNearbyPreysToSplit preys nearby
+    private float m_SplitTime = 1f; // Amount when a prey should split
     private float m_CurrentSplit = 0f; // Current value counter for split
 
     /* Getters/Setters. */
     public void SetNearbyPreys(int value) { m_NearbyPreys = value; }
     public int GetNearbyPreys() { return m_NearbyPreys; }
+    public int GetMaxNearbyPreys() { return m_MaxNearbyPreysToSplit; }
+    public int GetSplitMultiplier() { return m_SplitMultiplier; }
     public float GetSplitTime() { return m_SplitTime; }
     public float GetCurrentSplitTime() { return m_CurrentSplit; }
 
@@ -70,8 +75,10 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
     @Override
     public void Start()
     {
+        m_Scene = m_GameObject.GetBelongingToScene();
+
         // Get the perimeter collider from the child GameObject
-        m_PerimeterCollider = transform().GetChild(0).GetGameObject().GetComponent(Collider.class);
+        m_PerimeterCollider = transform().GetChild(0).GetGameObject().GetComponent(CircleCollider.class);
 
         m_Collider = m_GameObject.GetComponent(Collider.class);
         m_RigidBody = m_GameObject.GetComponent(RigidBody.class);
@@ -81,6 +88,9 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
         m_Collider.GetCollisionMask().SetBit(CollisionLayer.ANIMAL_MAIN_COLLIDER.ordinal()); // collide against other animals
         m_Collider.GetCollisionMask().SetBit(CollisionLayer.ANIMAL_PEREMITER_COLLIDER.ordinal()); // collide against animal's perimeter
         m_Collider.SetColor(m_ColliderColor);
+        m_Collider.SetShouldDraw(true);
+        // m_Collider.SetFill(true);
+        m_Collider.SetStroke(true);
         
         m_GameObject.SetTag("Prey");
     }
@@ -89,12 +99,14 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
     public void Update()
     {
         // Increment current split time with dt and the number of preys as a grow factor
-        if (m_NearbyPreys >= m_MaxNumOfPreys) m_NearbyPreys = m_MaxNumOfPreys; // Limit growth factor to avoid explosion in splitting
+        if (m_NearbyPreys >= m_MaxSplitMultiplier) m_SplitMultiplier = m_MaxSplitMultiplier; // Limit growth factor to avoid explosion in splitting
 
-        m_CurrentSplit += Time.dt() * (m_NearbyPreys + 1);
+        m_CurrentSplit += Time.dt() * (m_SplitMultiplier + 1);
 
-        // If current counter has reached the time requeried for a split then split the prey
-        if (m_CurrentSplit >= m_SplitTime)
+        // If current counter has reached the time requeried for a split and
+        // there's room for the new prey and if the max number of preys
+        // aren't met yet, then split the prey
+        if (m_CurrentSplit >= m_SplitTime && m_NearbyPreys < m_MaxNearbyPreysToSplit && m_Scene.GetCurrentPreyCount() < m_Scene.GetMaxPreyCount())
         {
             SplitPrey();
             m_CurrentSplit = 0f;
@@ -107,8 +119,23 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
 
     private void SplitPrey()
     {
-        Prey newPrey = (Prey) m_GameObject.GetBelongingToScene().AddGameObject(new Prey("Prey (child of " + m_GameObject.GetName() + ")"));
-        newPrey.GetTransform().SetPosition(m_Collider.GetMaxExtents());
+        Prey newPrey = (Prey) m_GameObject.GetBelongingToScene().AddGameObject(new Prey("Prey"));
+        
+        PVector newPreyPos = new PVector();
+
+        // Generate a random polar coordinat inside the preys perimeter
+        float R = m_PerimeterCollider.GetRadius();
+        float r = R * sqrt(random(0, 1)); // New random radius (first component of polar coordinate)
+        float angle = random(0, 1) * 2 * PI; // Get the random angle (second component of polar coordinate)
+
+        // Convert to cartesian coordinate
+        newPreyPos.x = m_PerimeterCollider.transform().GetPosition().x + r * cos(angle);
+        newPreyPos.y = m_PerimeterCollider.transform().GetPosition().y + r * sin(angle);
+        
+        newPrey.GetTransform().SetPosition(newPreyPos);
+        // newPrey.GetComponent(RigidBody.class).SetVelocity((PVector.sub(newPreyPos, transform().GetPosition()).normalize()));
+
+        m_Scene.SetCurrentPreyCount(m_Scene.GetCurrentPreyCount() + 1);
     }
 
     public void OnCollisionTrigger(Collider collider)

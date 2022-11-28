@@ -105,7 +105,5 @@ public class PhysicsSystem extends CollisionWorld
             pos.y = dimensions.y;
         else if (pos.y > dimensions.y)
             pos.y = -dimensions.y;
-        
-    
     }
 }

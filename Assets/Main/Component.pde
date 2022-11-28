@@ -17,7 +17,8 @@ public abstract class Component
     public void SetEnabled(boolean value) { m_Enabled = value; }
     
     /* Methods. */
-    public void Start() {}
-    public void Update() {}
-    public void Exit() {}
+    public void Start() { }
+    public void Update() { }
+    public void LateUpdate() { }
+    public void Exit() { }
 }
