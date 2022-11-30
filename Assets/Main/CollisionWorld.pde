@@ -149,7 +149,7 @@ public class CollisionWorld
              */
         }
 
-        println("fps: " + 1 / Time.dt());
+        // println("fps: " + 1 / Time.dt());
         
     }
 

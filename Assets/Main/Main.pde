@@ -8,6 +8,11 @@ void setup()
     size(1920, 1080);
     frameRate(60);
     //size(800, 800);
+
+    // Render settings
+    noSmooth(); // Better performance without smooth
+    
+
     //rectMode(CENTER);
     g_SceneManager.AddScene(new GameScene());
     g_SceneManager.LoadScene("Game Scene");
@@ -27,7 +32,7 @@ void draw()
 void exit()
 {
     // Perform cleanup before exit
-    println("Unloading active scene and leaving...");
+    // println("Unloading active scene and leaving...");
     g_SceneManager.UnloadActiveScene();
 
     super.exit();

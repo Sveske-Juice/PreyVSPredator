@@ -14,7 +14,7 @@ public abstract class Scene
     private int m_ComponentIdCounter = 0;
     private int m_ObjectIdCounter = 0;
     private boolean m_SceneStarted = false;
-    private int m_MaxPreyCount = 500;
+    private int m_MaxPreyCount = 2000;
     private int m_CurrentPreyCount = 0;
     private int m_MaxPredatorCount = 1000;
     private int m_CurrentPredatorCount = 0;
@@ -22,6 +22,7 @@ public abstract class Scene
     private long m_LateObjectFM = 0L; // Late Object Update Frame Time
     private long m_UIFM = 0L; // UI Element Update Frame Time
     private long m_LateUIFM = 0L; // Late UI Element Update Frame Time
+    private long m_PhysicsFM = 0L; // Physics system update frame time
 
     
     /* Getters/Setters. */
@@ -43,6 +44,12 @@ public abstract class Scene
     public int GetMaxPredatorCount() { return m_MaxPredatorCount; }
     public void SetCurrentPredatorCount(int value) { m_CurrentPredatorCount = value; }
     public int GetCurrentPredatorCount() { return m_CurrentPredatorCount; }
+    public long GetObjectFM() { return m_ObjectFM; }
+    public long GetLateObjectFM() { return m_LateObjectFM; }
+    public long GetUIFM() { return m_UIFM; }
+    public long GetLateUIFM() { return m_LateUIFM; }
+    public long GetPhysicsFM() { return m_PhysicsFM; }
+    public float GetFPS() { return 1 / Time.dt(); }
     
     public Scene(String sceneName)
     {
@@ -78,8 +85,8 @@ public abstract class Scene
     {
         // Update all components on every GameObject in the scene
         long goT = millis();
-        noSmooth();
-        println("objects: " + m_GameObjects.size());
+        
+        // println("objects: " + m_GameObjects.size());
 
         /* Tick Update() on every normal GameObject in scene. */
         for (int i = 0; i < m_GameObjects.size(); i++)
@@ -103,7 +110,7 @@ public abstract class Scene
             // println("Object " + go.GetName() + " frame time: " + (millis() - objiT));
         }
         m_ObjectFM = (millis() - goT);
-        println("Object update frame time: " + m_ObjectFM);
+        // println("Object update frame time: " + m_ObjectFM);
 
         long uiT = millis();
         /*  Tick Update() on every UI GameObject (UIElement),
@@ -127,12 +134,13 @@ public abstract class Scene
             popMatrix();
         }
         m_UIFM = (millis() - uiT);
-        println("UI update frame time: " + m_UIFM);
+        // println("UI update frame time: " + m_UIFM);
 
         /* Tick physics system. */
         long phyT = millis();
         m_PhysicsSystem.Step(Time.dt());
-        println("Physics update frame time: " + (millis() - phyT));
+        m_PhysicsFM = (millis() - phyT);
+        // println("Physics update frame time: " + m_PhysicsFM);
 
         /*  Tick LateUpdate() on every normal GameObject. */
         long lateGoT = millis();
@@ -154,7 +162,7 @@ public abstract class Scene
             popMatrix();
         }
         m_LateObjectFM = (millis() - lateGoT);
-        println("Object LATE update frame time: " + m_LateObjectFM);
+        // println("Object LATE update frame time: " + m_LateObjectFM);
 
         /*  Tick LateUpdate() on every UI Object (UIElement), so they get
             ticked after normal objects. */
@@ -177,9 +185,9 @@ public abstract class Scene
             popMatrix();
         }
         m_LateUIFM = (millis() - lateUiT);
-        println("UI LATE update frame time: " + m_LateUIFM);
+        // println("UI LATE update frame time: " + m_LateUIFM);
 
-        println("------------- new frame ------------");
+        // println("------------- new frame ------------");
     }
     
     public void ExitObjects()

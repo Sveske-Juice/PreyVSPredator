@@ -115,7 +115,7 @@ public class GameObject
         // Set all components to null so GC can collect mem
         m_Components.clear();
 
-        println("go id: " + m_ObjectId);
+        // println("go id: " + m_ObjectId);
         m_BelongingToScene.DestroyGameObject(m_ObjectId);
     }
     

@@ -31,7 +31,7 @@ public class CircleCollider extends Collider
     public void DrawCollider()
     {
         // println("radius on " + GetName() + " : " + m_Radius);
-        // println("min extent: " + GetMinExtents().x);
+        // println("min extent: " + GetMinExtents().x);'
         // println("max extent: " + GetMaxExtents().x);'
         circle(transform().GetPosition().x, transform().GetPosition().y, m_Radius*2);
     }
@@ -92,10 +92,10 @@ public class CircleCollider extends Collider
             A = PVector.add(transform().GetPosition(), PVector.mult(PVector.sub(boxCenter, transform().GetPosition()).normalize(), m_Radius));
         
 
-        fill(255,0,0);
-        circle(closestPoint.x, closestPoint.y, 15);
-        circle(A.x, A.y, 15);
-        fill(255);
+        // fill(255,0,0);
+        // circle(closestPoint.x, closestPoint.y, 15);
+        // circle(A.x, A.y, 15);
+        // fill(255);
 
         return new CollisionPoint(A, closestPoint, PVector.sub(closestPoint, A).normalize(), true);
         

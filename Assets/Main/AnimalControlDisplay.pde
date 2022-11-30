@@ -53,14 +53,14 @@ public class AnimalControlDisplay extends Component implements IMouseEventListen
         // Show the animal's view range (perimeter)
         m_ConnectedAnimal.GetTransform().GetChild(0).GetGameObject().GetComponent(Collider.class).SetShouldDraw(true);
             
-        println("Showing menu");
+        // println("Showing menu");
         CreateMenu();
         m_MenuBeingShowed = true;
     }
 
     private void HideMenu()
     {
-        println("Hiding menu");
+        // println("Hiding menu");
 
         m_MenuBackground.GetGameObject().Destroy();
 
@@ -162,7 +162,7 @@ public class TakeControl implements IButtonEventListener
         if (m_Animal.GetComponent(AnimalInputController.class) != null)
             return;
         
-        println("adding input controller on: " + m_Animal.GetName());
+        // println("adding input controller on: " + m_Animal.GetName());
         m_Animal.AddComponent(new AnimalInputController());
     }
 }
