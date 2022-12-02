@@ -1,17 +1,17 @@
 public class Progressbar extends Component
 {
     /* Members. */
-    private PVector m_Size = new PVector(200f, 50f);
+    private ZVector m_Size = new ZVector(200f, 50f);
     private float m_CurrentProgress = 0f;
     private color m_BackgroundColor = color(38, 50, 74);
     private color m_ProgressColor = color(35, 200, 25);
-    private PVector m_Margin = new PVector();
+    private ZVector m_Margin = new ZVector();
 
     /* Getters/Setters. */
     public void SetProgress(float value) { if (value > 1) value = 1; if (value < 0) value = 0; m_CurrentProgress = value; }
     public float GetProgress() { return m_CurrentProgress; }
-    public void SetSize(PVector size) { m_Size = size; }
-    public void SetMargin(PVector value) { m_Margin = value; }
+    public void SetSize(ZVector size) { m_Size = size; }
+    public void SetMargin(ZVector value) { m_Margin = value; }
 
     public Progressbar()
     {
@@ -26,7 +26,7 @@ public class Progressbar extends Component
     @Override
     public void LateUpdate()
     {
-        PVector pos = transform().GetPosition();
+        ZVector pos = transform().GetPosition();
 
         // Draw background
         fill(m_BackgroundColor);

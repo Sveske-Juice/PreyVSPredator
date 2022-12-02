@@ -40,7 +40,7 @@ public class MouseEventInitiator extends Component
     public void Update()
     {
         boolean mouseClicked = InputManager.GetInstance().IsLeftMousePressed();
-        PVector mouseCords = new PVector(mouseX, mouseY);
+        ZVector mouseCords = new ZVector(mouseX, mouseY);
         
         // Mouse being dragged
         if (mouseClicked && m_MouseClickedLastFrame)
@@ -64,6 +64,7 @@ public class MouseEventInitiator extends Component
         // Mouse only being pressed
         if (mouseClicked && !m_MouseClickedLastFrame)
         {
+            println("mouse clicked at: " + mouseCords);
             for (int i = 0; i < m_MouseEventListeners.size(); i++)
             {
                 m_MouseEventListeners.get(i).OnMouseClick(mouseCords);

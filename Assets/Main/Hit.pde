@@ -5,17 +5,17 @@ represent theese collision hits this way than CollisionPoint.pde. This would go 
 public class Hit
 {
     public Collider collider;
-    public PVector hitPoint;
-    public PVector penetration;
-    public PVector normal;
+    public ZVector hitPoint;
+    public ZVector penetration;
+    public ZVector normal;
     public float hitTime;
 
     public Hit(Collider _collider)
     {
         collider = _collider;
-        hitPoint = new PVector();
-        penetration = new PVector();
-        normal = new PVector();
+        hitPoint = new ZVector();
+        penetration = new ZVector();
+        normal = new ZVector();
         hitTime = 0f;
     }
 }

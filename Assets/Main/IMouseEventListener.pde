@@ -2,7 +2,7 @@
 public interface IMouseEventListener
 {
     public void OnColliderClick(Collider collider);
-    public void OnMouseClick(PVector position);
-    public void OnMouseDrag(PVector position);
-    public void OnMouseRelease(PVector position);
+    public void OnMouseClick(ZVector position);
+    public void OnMouseDrag(ZVector position);
+    public void OnMouseRelease(ZVector position);
 }

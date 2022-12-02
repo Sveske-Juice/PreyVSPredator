@@ -6,15 +6,15 @@ public abstract class Scene
     protected String m_SceneName = "New Scene";
     protected ArrayList<GameObject> m_GameObjects = new ArrayList<GameObject>();
     protected ArrayList<GameObject> m_UIObjects = new ArrayList<GameObject>();
-    protected PVector m_Dimensions = new PVector(3000f, 3000f);
-    private PVector m_MoveTranslation = new PVector();
+    protected ZVector m_Dimensions = new ZVector(3000f, 3000f);
+    private ZVector m_MoveTranslation = new ZVector();
     private float m_ScaleFactor = 1f;
     protected PhysicsSystem m_PhysicsSystem = new PhysicsSystem();
     private BitField m_MouseCollisionMask = new BitField();
     private int m_ComponentIdCounter = 0;
     private int m_ObjectIdCounter = 0;
     private boolean m_SceneStarted = false;
-    private int m_MaxPreyCount = 2000;
+    private int m_MaxPreyCount = 200;
     private int m_CurrentPreyCount = 0;
     private int m_MaxPredatorCount = 1000;
     private int m_CurrentPredatorCount = 0;
@@ -30,9 +30,9 @@ public abstract class Scene
     public ArrayList<GameObject> GetGameObjects() { return m_GameObjects; }
     public void SetGameObjects(ArrayList<GameObject> objects) { m_GameObjects = objects; }
     public PhysicsSystem GetPhysicsSystem() { return m_PhysicsSystem; }
-    public PVector GetDimensions() { return m_Dimensions; }
-    public PVector GetMoveTranslation() { return m_MoveTranslation; }
-    public void SetMoveTranslation(PVector translation) { m_MoveTranslation = translation; }
+    public ZVector GetDimensions() { return m_Dimensions; }
+    public ZVector GetMoveTranslation() { return m_MoveTranslation; }
+    public void SetMoveTranslation(ZVector translation) { m_MoveTranslation = translation; }
     public void SetScaleFactor(float factor) { m_ScaleFactor = factor; }
     public float GetScaleFactor() { return m_ScaleFactor; }
     public BitField GetMouseCollisionMask() { return m_MouseCollisionMask; }
@@ -332,7 +332,7 @@ public class GameScene extends Scene
 
         
         GameObject prey1 = AddGameObject(new Prey("Prey1"));
-        prey1.GetTransform().SetPosition(new PVector(200f, 100f));
+        prey1.GetTransform().SetPosition(new ZVector(200f, 100f));
         // prey1.AddComponent(new AnimalInputController());
         
         // RigidBody body = (RigidBody) prey1.AddComponent(new RigidBody());
@@ -341,28 +341,28 @@ public class GameScene extends Scene
         GameObject topborder = AddGameObject(new GameObject("Top Border"));
         RigidBody tbrb = (RigidBody) topborder.AddComponent(new RigidBody());
         topborder.AddComponent(new BoxCollider(width, 10f));
-        topborder.Gettransform().GetPosition() = new PVector(0, 0);
+        topborder.Gettransform().GetPosition() = new ZVector(0, 0);
         
         GameObject leftborder = AddGameObject(new GameObject("Left Border"));
         RigidBody lbrb = (RigidBody) leftborder.AddComponent(new RigidBody());
         leftborder.AddComponent(new BoxCollider(10f, height));
-        leftborder.Gettransform().GetPosition() = new PVector(0, 0);
+        leftborder.Gettransform().GetPosition() = new ZVector(0, 0);
 
         
         GameObject rightborder = AddGameObject(new GameObject("Right Border"));
         RigidBody rbrb = (RigidBody) rightborder.AddComponent(new RigidBody());
         rightborder.AddComponent(new BoxCollider(10f, height));
-        rightborder.Gettransform().GetPosition() = new PVector(width-10, 0);
+        rightborder.Gettransform().GetPosition() = new ZVector(width-10, 0);
         
         GameObject bottomborder = AddGameObject(new GameObject("Bottom Border"));
         RigidBody bbrb = (RigidBody) bottomborder.AddComponent(new RigidBody());
         bottomborder.AddComponent(new BoxCollider(width, 10f));
-        bottomborder.Gettransform().GetPosition() = new PVector(0, height-30);
+        bottomborder.Gettransform().GetPosition() = new ZVector(0, height-30);
         */
 
         for (int i = 0; i < 0; i++)
         {
-            PVector rand = new PVector(random(0, width), random(0, height-150));
+            ZVector rand = new ZVector(random(0, width), random(0, height-150));
             GameObject prey = AddGameObject(new Prey("Prey" + i));
             prey.AddComponent(new BoxCollider());
             prey.GetTransform().SetPosition(rand);
@@ -371,9 +371,9 @@ public class GameScene extends Scene
 
         for (int i = 0; i < 0; i++)
         {
-            PVector rand = new PVector(random(-m_Dimensions.x, m_Dimensions.x-150), random(-m_Dimensions.y, m_Dimensions.y-150));
+            ZVector rand = new ZVector(random(-m_Dimensions.x, m_Dimensions.x-150), random(-m_Dimensions.y, m_Dimensions.y-150));
             GameObject prey = AddGameObject(new Prey("Prey" + i));
-            prey.GetTransform().SetPosition(rand); //PVector.sub(prey1.Gettransform().GetPosition(), new PVector(500, 500));
+            prey.GetTransform().SetPosition(rand); //ZVector.sub(prey1.Gettransform().GetPosition(), new ZVector(500, 500));
         }
         
     }

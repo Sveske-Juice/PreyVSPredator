@@ -24,6 +24,7 @@ public abstract class Collider extends Component
     public void SetFill(boolean value) { m_ShouldFill = value; }
     public void SetStroke(boolean value) { m_ShouldStroke = value; }
     public void SetShouldDraw(boolean value) { m_ShouldDraw = value; }
+    public abstract ZVector GetCenter();
 
     /* Constructors. */
 
@@ -66,7 +67,7 @@ public abstract class Collider extends Component
     public abstract CollisionPoint TestCollision(BoxCollider collider);
     public abstract CollisionPoint TestCollision(CircleCollider collider);
 
-    public abstract boolean PointInCollider(PVector point);
+    public abstract boolean PointInCollider(ZVector point);
 
     // Clamps a value between a range
     protected float Clamp(float value, float min, float max)
@@ -74,8 +75,8 @@ public abstract class Collider extends Component
         return max(min, min(max, value));
     }
 
-    public abstract PVector GetMinExtents();
-    public abstract PVector GetMaxExtents();
+    public abstract ZVector GetMinExtents();
+    public abstract ZVector GetMaxExtents();
 
     public abstract RaycastHit TestRaycast(Ray ray);
 }

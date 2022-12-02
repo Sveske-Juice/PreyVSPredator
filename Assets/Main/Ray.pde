@@ -1,16 +1,16 @@
 public class Ray
 {
     /* Members. */
-    private PVector m_Origin;
-    private PVector m_Direction;
+    private ZVector m_Origin;
+    private ZVector m_Direction;
 
-    public Ray(PVector origin, PVector direction)
+    public Ray(ZVector origin, ZVector direction)
     {
         m_Origin = origin;
         m_Direction = direction.normalize();
     }
 
     /* Getters/Setters. */
-    public PVector GetOrigin() { return m_Origin; }
-    public PVector GetDir() { return m_Direction; }
+    public ZVector GetOrigin() { return m_Origin; }
+    public ZVector GetDir() { return m_Direction; }
 }

@@ -29,8 +29,8 @@ public class ButtonBehaviour extends Component implements IMouseEventListener
     private BoxCollider m_Collider;
     private String m_Text = "Button Text";
     private ArrayList<IButtonEventListener> m_ButtonListeners = new ArrayList<IButtonEventListener>();
-    private PVector m_Size = new PVector(200f, 50f);
-    private PVector m_Margin = new PVector();
+    private ZVector m_Size = new ZVector(200f, 50f);
+    private ZVector m_Margin = new ZVector();
     private color m_NormalColor = color(38, 50, 74);
     private color m_TextColor = color(255, 255, 255);
 
@@ -47,8 +47,8 @@ public class ButtonBehaviour extends Component implements IMouseEventListener
     /* Getters/Setters. */
     public void SetText(String value) { m_Text = value; }
     public void AddButtonListener(IButtonEventListener listener) { m_ButtonListeners.add(listener); }
-    public void SetSize(PVector size) { m_Size = size; m_Collider.SetWidth(size.x); m_Collider.SetHeight(size.y); }
-    public PVector GetSize() { return m_Size; }
+    public void SetSize(ZVector size) { m_Size = size; m_Collider.SetWidth(size.x); m_Collider.SetHeight(size.y); }
+    public ZVector GetSize() { return m_Size; }
 
     @Override
     public void Start()
@@ -65,7 +65,7 @@ public class ButtonBehaviour extends Component implements IMouseEventListener
     @Override
     public void LateUpdate()
     {
-        PVector pos = transform().GetPosition();
+        ZVector pos = transform().GetPosition();
 
         // Draw button
         fill(m_NormalColor);
@@ -94,7 +94,7 @@ public class ButtonBehaviour extends Component implements IMouseEventListener
         }
     }
     
-    public void OnMouseClick(PVector position) { }
-    public void OnMouseDrag(PVector position) { }
-    public void OnMouseRelease(PVector position) { }
+    public void OnMouseClick(ZVector position) { }
+    public void OnMouseDrag(ZVector position) { }
+    public void OnMouseRelease(ZVector position) { }
 }

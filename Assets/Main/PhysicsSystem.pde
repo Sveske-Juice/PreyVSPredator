@@ -62,7 +62,7 @@ public class PhysicsSystem extends CollisionWorld
 
     // Checks if a point is intersected by any collider in the scene
     // returns the collider the point overlapped with or null.
-    public Collider PointOverlap(PVector point, boolean checkingForMouse)
+    public Collider PointOverlap(ZVector point, boolean checkingForMouse)
     {
         for (int i = 0; i < m_Colliders.size(); i++)
         {
@@ -93,8 +93,8 @@ public class PhysicsSystem extends CollisionWorld
 
     private void KeepTransformInsideDimensions(Transform transform)
     {
-        PVector pos = transform.GetPosition();
-        PVector dimensions = transform.GetGameObject().GetBelongingToScene().GetDimensions();
+        ZVector pos = transform.GetPosition();
+        ZVector dimensions = transform.GetGameObject().GetBelongingToScene().GetDimensions();
 
         if (pos.x < -dimensions.x)
             pos.x = dimensions.x;

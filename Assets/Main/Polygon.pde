@@ -33,7 +33,7 @@ public class Polygon extends Component
 
     private void Display()
     {
-        PVector pos = transform().GetPosition();
+        ZVector pos = transform().GetPosition();
         
         // Create new transformation matrix for displaying the polygon
         pushMatrix();

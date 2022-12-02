@@ -31,7 +31,7 @@ public class DebugDisplay extends Component
     private Polygon m_Background;
     private float m_MenuWidth = 550f;
     private float m_MenuHeight = 350f;
-    private PVector m_MenuPosition = new PVector(width - 10f - m_MenuWidth, 10f); // Top left corner
+    private ZVector m_MenuPosition = new ZVector(width - 10f - m_MenuWidth, 10f); // Top left corner
     private color m_MenuBackgroundColor = color(12, 32, 51, 220);
 
     private float m_CanToggleTime = 0.3f; // Time the menu have to be open/closed before it can be toggled again (so input doesn't fuck it up)
@@ -101,35 +101,35 @@ public class DebugDisplay extends Component
         // Total fps and frame time
         GameObject fmObj = m_Scene.AddGameObject(new UIElement("Frame Time Text Object"), m_Background.transform());
         m_Fps = (Text) fmObj.AddComponent(new Text("Total Frame Time Text"));
-        m_Fps.SetMargin(new PVector(10f, 10f));
+        m_Fps.SetMargin(new ZVector(10f, 10f));
 
         // Physics frame time
         GameObject phyObj = m_Scene.AddGameObject(new UIElement("Physics Frame Time Text Object"), m_Background.transform());
         m_PhyFM = (Text) phyObj.AddComponent(new Text("Physics Frame Time Text"));
-        m_PhyFM.SetMargin(new PVector(10f, 10f));
+        m_PhyFM.SetMargin(new ZVector(10f, 10f));
         m_PhyFM.SetTextColor(color(255, 255, 0));
-        m_PhyFM.transform().SetLocalPosition(new PVector(0f, 100f));
+        m_PhyFM.transform().SetLocalPosition(new ZVector(0f, 100f));
 
         // Object frame time
         GameObject objObj = m_Scene.AddGameObject(new UIElement("Object Frame Time Text Object"), m_Background.transform());
         m_ObjFM = (Text) objObj.AddComponent(new Text("Object Frame Time Text"));
-        m_ObjFM.SetMargin(new PVector(10f, 10f));
+        m_ObjFM.SetMargin(new ZVector(10f, 10f));
         m_ObjFM.SetTextColor(color(255, 255, 0));
-        m_ObjFM.transform().SetLocalPosition(new PVector(0f, 150f));
+        m_ObjFM.transform().SetLocalPosition(new ZVector(0f, 150f));
 
         // UI frame time
         GameObject uiObj = m_Scene.AddGameObject(new UIElement("UI Frame Time Text Object"), m_Background.transform());
         m_UIFM = (Text) uiObj.AddComponent(new Text("UI Frame Time Text"));
-        m_UIFM.SetMargin(new PVector(10f, 10f));
+        m_UIFM.SetMargin(new ZVector(10f, 10f));
         m_UIFM.SetTextColor(color(255, 255, 0));
-        m_UIFM.transform().SetLocalPosition(new PVector(0f, 200f));
+        m_UIFM.transform().SetLocalPosition(new ZVector(0f, 200f));
 
         // Prey count
         GameObject preyObj = m_Scene.AddGameObject(new UIElement("Prey Count Text Object"), m_Background.transform());
         m_PreyCount = (Text) preyObj.AddComponent(new Text("Prey Count Text"));
-        m_PreyCount.SetMargin(new PVector(50f, 10f));
+        m_PreyCount.SetMargin(new ZVector(50f, 10f));
         m_PreyCount.SetTextColor(color(255, 200, 0));
-        m_PreyCount.transform().SetLocalPosition(new PVector(0f, 300f));
+        m_PreyCount.transform().SetLocalPosition(new ZVector(0f, 300f));
 
         m_ShowingMenu = true;
     }

@@ -5,6 +5,7 @@ public class CollisionWorld
 {
     /* Members. */
     protected ArrayList<Collider> m_Colliders = new ArrayList<Collider>();
+    protected int m_VarianceAxis = 0;
 
     /* Getters/Setters. */
 
@@ -18,7 +19,7 @@ public class CollisionWorld
     {
         public int compare(Collider a, Collider b)
         {
-            if (a.GetMinExtents().x > b.GetMinExtents().x)
+            if (a.GetMinExtents().get(m_VarianceAxis) > b.GetMinExtents().get(m_VarianceAxis))
                 return 1;
             else
                 return -1;
@@ -35,20 +36,27 @@ public class CollisionWorld
 
         // Sort collider list based on min extent in x-axis
         Collections.sort(m_Colliders, m_CompareAABBMinExtent);
+        ZVector centerSum = new ZVector();
+        ZVector centerSumSq = new ZVector();
         
         // Detect collisions and create collision objects with sweep and prune algorithm
         for (int i = 0; i < m_Colliders.size(); i++)
         {
             Collider colA = m_Colliders.get(i);
-            float colAMaxExtent = colA.GetMaxExtents().x;
+            float colAMaxExtent = colA.GetMaxExtents().get(m_VarianceAxis);
             BitField colACollisionMask = colA.GetCollisionMask();
+
+            ZVector center = colA.GetCenter();
+            ZVector centerC = center.copy().abs();
+            centerSum.add(centerC);
+            centerSumSq.add(ZVector.mult(centerC, centerC));
 
             for (int j = i + 1; j < m_Colliders.size(); j++)
             {
                 Collider colB = m_Colliders.get(j);
 
                 // If the colliders are not overlaping on the axis we can safely break since it's sorted
-                if (colB.GetMinExtents().x > colAMaxExtent)
+                if (colB.GetMinExtents().get(m_VarianceAxis) > colAMaxExtent)
                     break;
             
 
@@ -83,6 +91,23 @@ public class CollisionWorld
             }
         }
 
+        centerSum = ZVector.div(centerSum, m_Colliders.size());
+        centerSumSq = ZVector.div(centerSumSq, m_Colliders.size());
+        ZVector variance = ZVector.sub(centerSumSq, ZVector.mult(centerSum, centerSum));
+
+        float maxVar = variance.get(0);
+        m_VarianceAxis = 0;
+        if (variance.get(1) > maxVar)
+        {
+            maxVar = variance.get(1);
+            m_VarianceAxis = 1;
+        }
+        
+        if (variance.get(2) > maxVar)
+        {
+            maxVar = variance.get(2);
+            m_VarianceAxis = 2;
+        }
 
         // println("Collision checks this step: " + collisionChecks);
 
@@ -95,45 +120,45 @@ public class CollisionWorld
             RigidBody A = collision.A.GetComponent(RigidBody.class);
             RigidBody B = collision.B.GetComponent(RigidBody.class);
 
-            PVector normal = collision.Points.Normal;
+            ZVector normal = collision.Points.Normal;
 
             // Push back objects
-            PVector BA = PVector.sub(collision.Points.B, collision.Points.A);
+            ZVector BA = ZVector.sub(collision.Points.B, collision.Points.A);
 
             // The depth of the penetration vector with a little offset so they don't collide again
             float depth = BA.mag() + 0.01f;
             int divider = 2;
 
             // Calculate so each object gets pushed as much back
-            PVector resolution = PVector.div(PVector.mult(normal, depth), divider);
+            ZVector resolution = ZVector.div(ZVector.mult(normal, depth), divider);
 
-            PVector ARes = resolution;
-            PVector BRes = resolution;
+            ZVector ARes = resolution;
+            ZVector BRes = resolution;
 
             A.transform().AddToPosition(resolution);
             B.transform().SubFromPosition(resolution);
             
 
-            PVector tangent = new PVector(-normal.y, normal.x); // Normal rotated by 90° CCW.
+            ZVector tangent = new ZVector(-normal.y, normal.x); // Normal rotated by 90° CCW.
 
-            float Avn = PVector.dot(normal, A.GetVelocity());
-            float Avt = PVector.dot(tangent, A.GetVelocity());
+            float Avn = ZVector.dot(normal, A.GetVelocity());
+            float Avt = ZVector.dot(tangent, A.GetVelocity());
             
-            float Bvn = PVector.dot(normal, B.GetVelocity());
-            float Bvt = PVector.dot(tangent, B.GetVelocity());
+            float Bvn = ZVector.dot(normal, B.GetVelocity());
+            float Bvt = ZVector.dot(tangent, B.GetVelocity());
 
 
             float newAvnScalar = (Avn * (A.GetMass() - B.GetMass()) + 2 * B.GetMass() * Bvn)/(A.GetMass() + B.GetMass());
             float newBvnScalar = (Bvn * (B.GetMass() - A.GetMass()) + 2 * A.GetMass() * Avn)/(A.GetMass() + B.GetMass());
 
-            PVector newAvn = PVector.mult(normal, newAvnScalar);
-            PVector newAvt = PVector.mult(tangent, Avt);
+            ZVector newAvn = ZVector.mult(normal, newAvnScalar);
+            ZVector newAvt = ZVector.mult(tangent, Avt);
 
-            PVector newBvn = PVector.mult(normal, newBvnScalar);
-            PVector newBvt = PVector.mult(tangent, Bvt);
+            ZVector newBvn = ZVector.mult(normal, newBvnScalar);
+            ZVector newBvt = ZVector.mult(tangent, Bvt);
             
-            PVector newAVel = PVector.add(newAvn, newAvt);
-            PVector newBVel = PVector.add(newBvn, newBvt);
+            ZVector newAVel = ZVector.add(newAvn, newAvt);
+            ZVector newBVel = ZVector.add(newBvn, newBvt);
 
             // println(newAVel);
             // println(newBVel);

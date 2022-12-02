@@ -121,7 +121,7 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
     {
         Prey newPrey = (Prey) m_GameObject.GetBelongingToScene().AddGameObject(new Prey("Prey"));
         
-        PVector newPreyPos = new PVector();
+        ZVector newPreyPos = new ZVector();
 
         // Generate a random polar coordinat inside the preys perimeter
         float R = m_PerimeterCollider.GetRadius();
@@ -133,7 +133,7 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
         newPreyPos.y = m_PerimeterCollider.transform().GetPosition().y + r * sin(angle);
         
         newPrey.GetTransform().SetPosition(newPreyPos);
-        // newPrey.GetComponent(RigidBody.class).SetVelocity((PVector.sub(newPreyPos, transform().GetPosition()).normalize()));
+        // newPrey.GetComponent(RigidBody.class).SetVelocity((ZVector.sub(newPreyPos, transform().GetPosition()).normalize()));
 
         m_Scene.SetCurrentPreyCount(m_Scene.GetCurrentPreyCount() + 1);
     }

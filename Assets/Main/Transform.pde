@@ -1,18 +1,18 @@
 public class Transform extends Component
 {
   /* Members. */
-  private PVector m_Position = new PVector();
-  public PVector Rotation = new PVector();
-  public PVector Scale = new PVector();
+  private ZVector m_Position = new ZVector();
+  public ZVector Rotation = new ZVector();
+  public ZVector Scale = new ZVector();
 
   private ArrayList<Transform> m_Children = new ArrayList<Transform>();
   private Transform m_Parent = this;
 
   /* Getters/Setters. */
-  public void SetPosition(PVector newPos) { UpdatePositionRecursively(newPos); }
-  public void AddToPosition(PVector amount) { UpdatePositionRecursively(m_Position.add(amount)); }
-  public void SubFromPosition(PVector amount) { UpdatePositionRecursively(m_Position.sub(amount)); }
-  public PVector GetPosition() { return m_Position; }
+  public void SetPosition(ZVector newPos) { UpdatePositionRecursively(newPos); }
+  public void AddToPosition(ZVector amount) { UpdatePositionRecursively(m_Position.add(amount)); }
+  public void SubFromPosition(ZVector amount) { UpdatePositionRecursively(m_Position.sub(amount)); }
+  public ZVector GetPosition() { return m_Position; }
   public Transform GetParent() { return m_Parent; }
   public void SetParent(Transform parent) { m_Parent = parent; }
   public Transform GetChild(int idx) { return m_Children.get(idx); }
@@ -24,7 +24,7 @@ public class Transform extends Component
       Will not set the absolute position but rather an offset from
       it's parent.
   */
-  public void SetLocalPosition(PVector pos)
+  public void SetLocalPosition(ZVector pos)
   {
     // If it's the root transform
     if (m_Parent == this)
@@ -34,7 +34,7 @@ public class Transform extends Component
     }
 
     // Sum up all the parent positions
-    m_Position = new PVector();
+    m_Position = new ZVector();
     Transform currentParent = m_Parent;
     while (currentParent.GetId() != currentParent.GetParent().GetId())
     {
@@ -50,7 +50,7 @@ public class Transform extends Component
   }
 
   // Updates the position of this transform aswell as children's transforms
-  private void UpdatePositionRecursively(PVector newPos)
+  private void UpdatePositionRecursively(ZVector newPos)
   {
     if (newPos == null)
       return;

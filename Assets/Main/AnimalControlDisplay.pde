@@ -3,7 +3,7 @@ public class AnimalControlDisplay extends Component implements IMouseEventListen
 {
     /* Members. */
     protected Scene m_Scene;
-    protected PVector m_MenuPosition = new PVector(10f, 10f);
+    protected ZVector m_MenuPosition = new ZVector(10f, 10f);
 
     protected float m_MenuWidth = 600f;
     protected float m_MenuHeight;
@@ -53,7 +53,6 @@ public class AnimalControlDisplay extends Component implements IMouseEventListen
         // Show the animal's view range (perimeter)
         m_ConnectedAnimal.GetTransform().GetChild(0).GetGameObject().GetComponent(Collider.class).SetShouldDraw(true);
             
-        // println("Showing menu");
         CreateMenu();
         m_MenuBeingShowed = true;
     }
@@ -93,21 +92,21 @@ public class AnimalControlDisplay extends Component implements IMouseEventListen
         Text statTitleTxt = (Text) statTitle.AddComponent(new Text("Statestics Title"));
         statTitleTxt.SetText("Animal Statistics");
         statTitleTxt.SetSize(32);
-        statTitleTxt.SetMargin(new PVector(25f, 25f));
+        statTitleTxt.SetMargin(new ZVector(25f, 25f));
 
         // Create position text element
         GameObject positionTextObj = m_Scene.AddGameObject(new UIElement("Position Text Object"), menuBackground.GetTransform());
         positionTextObj.SetTag("AnimalControlDisplay");
         m_PositionText = (Text) positionTextObj.AddComponent(new Text("Position text"));
-        m_PositionText.SetMargin(new PVector(25f, 25f));
-        m_PositionText.transform().SetLocalPosition(new PVector(0f, 50f));
+        m_PositionText.SetMargin(new ZVector(25f, 25f));
+        m_PositionText.transform().SetLocalPosition(new ZVector(0f, 50f));
 
         // Take control button
         m_TakeControlButton = (Button) m_Scene.AddGameObject(new Button("Take Control Button Object"), menuBackground.GetTransform());
         ButtonBehaviour btnBeh = m_TakeControlButton.GetComponent(ButtonBehaviour.class);
         m_TakeControlButton.SetTag("AnimalControlDisplay");
-        btnBeh.SetSize(new PVector(300f, 100f));
-        m_TakeControlButton.GetTransform().SetLocalPosition(new PVector(m_MenuWidth / 2f - btnBeh.GetSize().x / 2f, 500f));
+        btnBeh.SetSize(new ZVector(300f, 100f));
+        m_TakeControlButton.GetTransform().SetLocalPosition(new ZVector(m_MenuWidth / 2f - btnBeh.GetSize().x / 2f, 500f));
         btnBeh.SetText("Control Animal");
         btnBeh.AddButtonListener(m_TakeControl); // Add callback to button
     }
@@ -130,17 +129,17 @@ public class AnimalControlDisplay extends Component implements IMouseEventListen
         }
     }
 
-    public void OnMouseClick(PVector position)
+    public void OnMouseClick(ZVector position)
     {
 
     }
 
-    public void OnMouseDrag(PVector position)
+    public void OnMouseDrag(ZVector position)
     {
         // TODO Hide the menu if the mouse gets dragged outside the menu
     }
 
-    public void OnMouseRelease(PVector position)
+    public void OnMouseRelease(ZVector position)
     {
 
     }

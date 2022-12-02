@@ -7,14 +7,14 @@ public class Text extends Component
     private int m_HorizontalAlign = LEFT;
     private int m_VerticalAlign = TOP;
     private int m_Size = 24;
-    private PVector m_Margin = new PVector();
+    private ZVector m_Margin = new ZVector();
 
     /* Getters/Setters. */
     public String GetText() { return m_Text; }
     public void SetText(String text) { m_Text = text; }
     public void SetHorizontalAlign(int value) { m_HorizontalAlign = value; }
     public void SetVerticalAlign(int value) { m_VerticalAlign = value; }
-    public void SetMargin(PVector value) { m_Margin = value; }
+    public void SetMargin(ZVector value) { m_Margin = value; }
     public void SetSize(int size) { m_Size = size; }
     public void SetTextColor(color newColor) { m_Color = newColor; }
 
@@ -32,7 +32,7 @@ public class Text extends Component
     public void LateUpdate()
     {
         // Draw the text to the screen
-        PVector pos = transform().GetPosition(); // Cache pos
+        ZVector pos = transform().GetPosition(); // Cache pos
         fill(m_Color);
         textAlign(m_HorizontalAlign, m_VerticalAlign);
         textSize(m_Size);

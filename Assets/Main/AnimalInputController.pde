@@ -19,7 +19,7 @@ public class AnimalInputController extends Component
     public void Update()
     {
         // println("Components: " + m_GameObject.GetComponents());
-        PVector m_Movement = new PVector();
+        ZVector m_Movement = new ZVector();
         
         if (InputManager.GetInstance().GetKey('w'))
             m_Movement.y = -1;
@@ -34,10 +34,10 @@ public class AnimalInputController extends Component
 
         if (InputManager.GetInstance().GetKey('g'))
         {
-            m_Movement = new PVector();
-            m_RigidBody.SetVelocity(new PVector());
+            m_Movement = new ZVector();
+            m_RigidBody.SetVelocity(new ZVector());
         }
-        PVector force = m_Movement.mult(m_AnimalMover.GetMovementSpeed());
+        ZVector force = m_Movement.mult(m_AnimalMover.GetMovementSpeed());
         m_RigidBody.ApplyForce(force);
         // println(force);
 

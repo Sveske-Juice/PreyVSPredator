@@ -4,21 +4,23 @@ public class BoxCollider extends Collider
     private RigidBody m_RigidBody = null;
     private float m_Width = 50f;
     private float m_Height = 50f;
-    private PVector m_Extents = new PVector(m_Width, m_Height);
+    private ZVector m_Extents = new ZVector(m_Width, m_Height);
 
     /* Getters/Setters. */
     public float GetWidth() { return m_Width; }
-    public void SetWidth(float width) { m_Width = width; m_Extents = new PVector(m_Width, m_Height); }
+    public void SetWidth(float width) { m_Width = width; m_Extents = new ZVector(m_Width, m_Height); }
     public float GetHeight() { return m_Height; }
-    public void SetHeight(float height) { m_Height = height; m_Extents = new PVector(m_Width, m_Height); }
-    public PVector GetCenter() { return new PVector(transform().GetPosition().x + m_Width / 2f, transform().GetPosition().y + m_Height / 2f); }
+    public void SetHeight(float height) { m_Height = height; m_Extents = new ZVector(m_Width, m_Height); }
+
+    @Override
+    public ZVector GetCenter() { return new ZVector(transform().GetPosition().x + m_Width / 2f, transform().GetPosition().y + m_Height / 2f); }
 
     public BoxCollider(float width, float height)
     {
         super("Box Collider");
         m_Width = width;
         m_Height = height;
-        m_Extents = new PVector(width, height);
+        m_Extents = new ZVector(width, height);
     }
 
     public BoxCollider()
@@ -64,12 +66,12 @@ public class BoxCollider extends Collider
     @Override
     public CollisionPoint TestCollision(BoxCollider collider)
     {
-        PVector pos = transform().GetPosition(); // cache pos
+        ZVector pos = transform().GetPosition(); // cache pos
         float epsilon = 1e-8;
-        PVector colVel = collider.GetGameObject().GetComponent(RigidBody.class).GetVelocity();
-        PVector boxPos = collider.transform().GetPosition(); // Cache pos
-        PVector deltaPos = PVector.sub(pos, PVector.add(pos, colVel));
-        Hit hit = IntersectSegment(boxPos, deltaPos, new PVector(collider.GetWidth() / 2f, collider.GetHeight() / 2f));
+        ZVector colVel = collider.GetGameObject().GetComponent(RigidBody.class).GetVelocity();
+        ZVector boxPos = collider.transform().GetPosition(); // Cache pos
+        ZVector deltaPos = ZVector.sub(pos, ZVector.add(pos, colVel));
+        Hit hit = IntersectSegment(boxPos, deltaPos, new ZVector(collider.GetWidth() / 2f, collider.GetHeight() / 2f));
         if (hit != null)
         {
             float sweepTime = Clamp(hit.hitTime - epsilon, 0, 1);
@@ -77,11 +79,11 @@ public class BoxCollider extends Collider
             // println("sweep time: " + sweepTime);
             // println("hit time: " + hit.hitTime);
 
-            PVector sweepPos = new PVector();
+            ZVector sweepPos = new ZVector();
             sweepPos.x = (boxPos.x + deltaPos.x) * sweepTime;
             sweepPos.y = (boxPos.y + deltaPos.y) * sweepTime;
 
-            PVector dir = deltaPos.copy().normalize();
+            ZVector dir = deltaPos.copy().normalize();
             // fill(255, 0, 0);
             // circle(hit.hitPoint.x, hit.hitPoint.y, 15);
             //hit.hitPoint.x = Clamp(hit.hitPoint.x + dir.x * collider.GetWidth() / 2f, pos.x - m_Width, pos.x + m_Width);
@@ -104,9 +106,9 @@ public class BoxCollider extends Collider
         return null;
     }
 
-    public Hit IntersectSegment(PVector startPt, PVector deltaPos, PVector padding)
+    public Hit IntersectSegment(ZVector startPt, ZVector deltaPos, ZVector padding)
     {
-        PVector pos = transform().GetPosition(); // Cache pos
+        ZVector pos = transform().GetPosition(); // Cache pos
 
         float scaleX = 1f / deltaPos.x;
         float scaleY = 1f / deltaPos.y;
@@ -139,7 +141,7 @@ public class BoxCollider extends Collider
         // println("sign x: " + signX);
         // println("sign y: " + signY);
         float hitTime = Clamp(nearTime, 0, 1);
-        PVector normal = new PVector();
+        ZVector normal = new ZVector();
         if (nearTimeX > nearTimeY)
         {
             normal.x = -signX;
@@ -151,12 +153,12 @@ public class BoxCollider extends Collider
 
         
 
-        PVector penetration = new PVector();
+        ZVector penetration = new ZVector();
 
         penetration.x = (1f - hitTime) * -deltaPos.x;
         penetration.y = (1f - hitTime) * -deltaPos.y;
 
-        PVector hitPoint = new PVector();
+        ZVector hitPoint = new ZVector();
 
         hitPoint.x = startPt.x + deltaPos.x * hitTime;
         hitPoint.y = startPt.y + deltaPos.y * hitTime;
@@ -181,28 +183,28 @@ public class BoxCollider extends Collider
     }
 
     @Override
-    public boolean PointInCollider(PVector point)
+    public boolean PointInCollider(ZVector point)
     {
         if (point == null) return false;
 
-        PVector pos = transform().GetPosition(); // Cache pos
+        ZVector pos = transform().GetPosition(); // Cache pos
         return (    point.x > pos.x && point.x < pos.x + m_Width &&
                     point.y > pos.y && point.y < pos.y + m_Height);
     }
     
 
     @Override
-    public PVector GetMinExtents()
+    public ZVector GetMinExtents()
     {
         // TODO take offset into account here
         return transform().GetPosition();
     }
 
     @Override
-    public PVector GetMaxExtents()
+    public ZVector GetMaxExtents()
     {
         // TODO take offset into account here
-        return PVector.add(transform().GetPosition(), m_Extents);
+        return ZVector.add(transform().GetPosition(), m_Extents);
     }
 
     private int Sign(float x)

@@ -1,10 +1,10 @@
 public class RigidBody extends Component
 {
     /* Members. */
-    private PVector m_Gravity = new PVector(0f, 0f); // Defualt gravity acceleration
-    private PVector m_Velocity = new PVector();
-    private PVector m_Acceleration = new PVector();
-    private PVector m_NetForce = new PVector();
+    private ZVector m_Gravity = new ZVector(0f, 0f); // Defualt gravity acceleration
+    private ZVector m_Velocity = new ZVector();
+    private ZVector m_Acceleration = new ZVector();
+    private ZVector m_NetForce = new ZVector();
     
     private float m_Mass = 1f; // Mass of entity
 
@@ -14,8 +14,8 @@ public class RigidBody extends Component
 
 
     /* Getters/Setters. */
-    public PVector GetVelocity() { return m_Velocity; }
-    public void SetVelocity(PVector velocity) { m_Velocity = velocity; }
+    public ZVector GetVelocity() { return m_Velocity; }
+    public void SetVelocity(ZVector velocity) { m_Velocity = velocity; }
     public float GetMass() { return m_Mass; }
     public void SetMass(float mass) { m_Mass = mass; }
 
@@ -34,7 +34,7 @@ public class RigidBody extends Component
         m_GameObject.GetBelongingToScene().GetPhysicsSystem().RegisterBody(this);
     }
 
-    public void ApplyForce(PVector force)
+    public void ApplyForce(ZVector force)
     {
         m_NetForce.add(force);
     }
@@ -51,13 +51,13 @@ public class RigidBody extends Component
         m_Acceleration.mult(0);
         m_NetForce.mult(0);
 
-        transform().AddToPosition(PVector.mult(m_Velocity, Time.dt()));
+        transform().AddToPosition(ZVector.mult(m_Velocity, Time.dt()));
 
     }
 
     public void ApplyGravity()
     {
-        ApplyForce(PVector.mult(m_Gravity, m_Mass));
+        ApplyForce(ZVector.mult(m_Gravity, m_Mass));
     }
 
     public float CalcEKin()

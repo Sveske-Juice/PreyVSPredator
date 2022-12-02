@@ -56,10 +56,10 @@ public class CameraHandler extends Component implements IMouseEventListener
     private void ChaseCollider(Collider collider)
     {
         m_ChasingCollider = collider;
-        PVector colliderPos = collider.transform().GetPosition();
+        ZVector colliderPos = collider.transform().GetPosition();
         
         // Offset the collider position so it's centered on the screen
-        PVector newMoveTranslation = PVector.sub(colliderPos, new PVector(width / 2f, height / 2f));
+        ZVector newMoveTranslation = ZVector.sub(colliderPos, new ZVector(width / 2f, height / 2f));
 
         m_Scene.SetMoveTranslation(newMoveTranslation);
     }
@@ -91,21 +91,21 @@ public class CameraHandler extends Component implements IMouseEventListener
         }
     }
 
-    public void OnMouseDrag(PVector position)
+    public void OnMouseDrag(ZVector position)
     {
         if (m_CanSelectNewCollider)
         {
             m_IsChasingColldier = false;
         }
-        PVector mouseCords = new PVector(mouseX, mouseY);
-        PVector diff = PVector.sub(new PVector(pmouseX, pmouseY), mouseCords);
-        m_Scene.GetMoveTranslation().add(PVector.mult(diff, 1 / m_Scene.GetScaleFactor()));
+        ZVector mouseCords = new ZVector(mouseX, mouseY);
+        ZVector diff = ZVector.sub(new ZVector(pmouseX, pmouseY), mouseCords);
+        m_Scene.GetMoveTranslation().add(ZVector.mult(diff, 1 / m_Scene.GetScaleFactor()));
     }
 
-    public void OnMouseRelease(PVector position)
+    public void OnMouseRelease(ZVector position)
     {
         m_MouseReleased = true;
     }
 
-    public void OnMouseClick(PVector position) { }
+    public void OnMouseClick(ZVector position) { }
 }
