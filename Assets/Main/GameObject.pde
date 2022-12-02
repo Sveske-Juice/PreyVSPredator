@@ -39,6 +39,14 @@ public class GameObject
         AddComponent(m_Transform);
     }
 
+    public void CreateTransform(ZVector pos)
+    {
+        // Always add a transform to a Game Object
+        m_Transform = new Transform();
+        m_Transform.SetPosition(pos);
+        AddComponent(m_Transform);
+    }
+
     public void CreateComponents() { }
 
     public Component AddComponent(Component component)

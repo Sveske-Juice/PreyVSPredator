@@ -49,13 +49,13 @@ public class PhysicsSystem extends CollisionWorld
     // and returns a RaycastHit object.
     public RaycastHit Raycast(Ray ray)
     {
-        for (int i = 0; i < m_Colliders.size(); i++)
-        {
-            RaycastHit hit = m_Colliders.get(i).TestRaycast(ray);
+        // for (int i = 0; i < m_Colliders.size(); i++)
+        // {
+        //     RaycastHit hit = m_Colliders.get(i).TestRaycast(ray);
             
-            if (hit.GetHit())
-                return hit;
-        }
+        //     if (hit.GetHit())
+        //         return hit;
+        // }
 
         return new RaycastHit(null, null, -1f, false);
     }
@@ -64,29 +64,29 @@ public class PhysicsSystem extends CollisionWorld
     // returns the collider the point overlapped with or null.
     public Collider PointOverlap(ZVector point, boolean checkingForMouse)
     {
-        for (int i = 0; i < m_Colliders.size(); i++)
-        {
-            if (m_Colliders.get(i).PointInCollider(point))
-            {
-                Collider collider = m_Colliders.get(i);
-                if (!checkingForMouse) // All collision layers accepted if not mouse
-                    return collider;
+        // for (int i = 0; i < m_Colliders.size(); i++)
+        // {
+        //     if (m_Colliders.get(i).PointInCollider(point))
+        //     {
+        //         Collider collider = m_Colliders.get(i);
+        //         if (!checkingForMouse) // All collision layers accepted if not mouse
+        //             return collider;
                 
-                // Check collider layer against mouse collision mask
-                int layer = collider.GetCollisionLayer();
-                // println("Testing layer: " + layer + " on collider: " + collider.GetName());
-                Scene colliderScene = collider.GetGameObject().GetBelongingToScene(); // Scene connected to collider
-                if (colliderScene.GetMouseCollisionMask().IsSet(layer))
-                {
-                    // Mouse is allowed to collider with layer
-                    return collider;
-                }
+        //         // Check collider layer against mouse collision mask
+        //         int layer = collider.GetCollisionLayer();
+        //         // println("Testing layer: " + layer + " on collider: " + collider.GetName());
+        //         Scene colliderScene = collider.GetGameObject().GetBelongingToScene(); // Scene connected to collider
+        //         if (colliderScene.GetMouseCollisionMask().IsSet(layer))
+        //         {
+        //             // Mouse is allowed to collider with layer
+        //             return collider;
+        //         }
 
-                // Mouse is not allowed to collider with layer
-                // continue to next collider
-                continue;
-            }
-        }
+        //         // Mouse is not allowed to collider with layer
+        //         // continue to next collider
+        //         continue;
+        //     }
+        // }
         
         return null;
     }

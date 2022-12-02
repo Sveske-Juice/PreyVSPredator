@@ -14,7 +14,7 @@ public abstract class Scene
     private int m_ComponentIdCounter = 0;
     private int m_ObjectIdCounter = 0;
     private boolean m_SceneStarted = false;
-    private int m_MaxPreyCount = 200;
+    private int m_MaxPreyCount = 1;
     private int m_CurrentPreyCount = 0;
     private int m_MaxPredatorCount = 1000;
     private int m_CurrentPredatorCount = 0;
@@ -215,6 +215,34 @@ public abstract class Scene
 
         // Make sure every GameObject have a transform
         go.CreateTransform();
+
+        // Set id
+        go.SetId(m_ObjectIdCounter++);
+
+        if (go instanceof UIElement)
+            m_UIObjects.add(go);
+        else
+            m_GameObjects.add(go);
+
+        if (m_SceneStarted)
+        {
+            go.CreateComponents();
+            go.StartObject();
+        }
+        
+        return go;
+    }
+
+    public GameObject AddGameObject(GameObject go, ZVector position)
+    {
+        if (go == null)
+            return null;
+        
+        // Set a reference to this scene so the Game Object can access the scene
+        go.SetBelongingToScene(this);
+
+        // Make sure every GameObject have a transform
+        go.CreateTransform(position);
 
         // Set id
         go.SetId(m_ObjectIdCounter++);

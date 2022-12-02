@@ -9,6 +9,8 @@ public class Prey extends Animal
     {
         super(name);
     }
+
+
     
     @Override
     public void CreateComponents()
@@ -119,7 +121,6 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
 
     private void SplitPrey()
     {
-        Prey newPrey = (Prey) m_GameObject.GetBelongingToScene().AddGameObject(new Prey("Prey"));
         
         ZVector newPreyPos = new ZVector();
 
@@ -132,7 +133,7 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
         newPreyPos.x = m_PerimeterCollider.transform().GetPosition().x + r * cos(angle);
         newPreyPos.y = m_PerimeterCollider.transform().GetPosition().y + r * sin(angle);
         
-        newPrey.GetTransform().SetPosition(newPreyPos);
+        Prey newPrey = (Prey) m_GameObject.GetBelongingToScene().AddGameObject(new Prey("Prey"), newPreyPos);
         // newPrey.GetComponent(RigidBody.class).SetVelocity((ZVector.sub(newPreyPos, transform().GetPosition()).normalize()));
 
         m_Scene.SetCurrentPreyCount(m_Scene.GetCurrentPreyCount() + 1);

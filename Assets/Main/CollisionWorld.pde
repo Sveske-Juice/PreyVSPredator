@@ -4,7 +4,8 @@ import java.util.Comparator;
 public class CollisionWorld
 {
     /* Members. */
-    protected ArrayList<Collider> m_Colliders = new ArrayList<Collider>();
+    protected ArrayList<Collider> m_Colliders;
+    // protected ArrayList<Collider> m_Colliders = new ArrayList<Collider>();
     protected int m_VarianceAxis = 0;
 
     /* Getters/Setters. */
@@ -26,73 +27,105 @@ public class CollisionWorld
         }
     };
 
-    public void RegisterCollider(Collider collider) { if (collider == null) return; m_Colliders.add(collider); }
+    public void RegisterCollider(Collider collider)
+    {
+        if (collider == null)
+            return;
+        
+        println("Registering collider: " + collider.GetName());
+        m_ColliderTree.InsertEntity(collider);        
+    }
+
+    protected ArrayList<Collider> GetColliders()
+    {
+        ArrayList<Collider> out = new ArrayList<Collider>();
+        ArrayList<ArrayList<Collider>> colliderGrid = m_ColliderTree.GetAllEntities();
+        for (int i = 0; i < colliderGrid.size(); i++)
+        {
+            out.addAll(colliderGrid.get(i));
+        }
+        return out;
+    }
 
     protected void ResolveCollisions(float dt)
     {
+        // Build collider quad tree
+        QuadTree<Collider>
+
         // Store collisions in this physics step
         ArrayList<Collision> collisions = new ArrayList<Collision>();
         int collisionChecks = 0;
 
-        // Sort collider list based on min extent in x-axis
-        Collections.sort(m_Colliders, m_CompareAABBMinExtent);
+        // println("Colliders: " + GetColliders());
+
+        ArrayList<ArrayList<Collider>> colliderGrid = m_ColliderTree.GetAllEntities();
         ZVector centerSum = new ZVector();
         ZVector centerSumSq = new ZVector();
-        
-        // Detect collisions and create collision objects with sweep and prune algorithm
-        for (int i = 0; i < m_Colliders.size(); i++)
+        int colliders = 0;
+
+        for (int i = 0; i < colliderGrid.size(); i++)
         {
-            Collider colA = m_Colliders.get(i);
-            float colAMaxExtent = colA.GetMaxExtents().get(m_VarianceAxis);
-            BitField colACollisionMask = colA.GetCollisionMask();
+            ArrayList<Collider> cell = colliderGrid.get(i);
 
-            ZVector center = colA.GetCenter();
-            ZVector centerC = center.copy().abs();
-            centerSum.add(centerC);
-            centerSumSq.add(ZVector.mult(centerC, centerC));
+            // Sort collider list based on min extent in x-axis
+            Collections.sort(cell, m_CompareAABBMinExtent);
+            colliders += cell.size();
 
-            for (int j = i + 1; j < m_Colliders.size(); j++)
+            // Detect collisions and create collision objects with sweep and prune algorithm
+            for (int j = 0; j < cell.size(); j++)
             {
-                Collider colB = m_Colliders.get(j);
+                Collider colA = cell.get(j);
+                float colAMaxExtent = colA.GetMaxExtents().get(m_VarianceAxis);
+                BitField colACollisionMask = colA.GetCollisionMask();
 
-                // If the colliders are not overlaping on the axis we can safely break since it's sorted
-                if (colB.GetMinExtents().get(m_VarianceAxis) > colAMaxExtent)
-                    break;
-            
+                ZVector center = colA.GetCenter();
+                ZVector centerC = center.copy().abs();
+                centerSum.add(centerC);
+                centerSumSq.add(ZVector.mult(centerC, centerC));
 
-                // Check for collision layer
-                int colBLayer = colB.GetCollisionLayer();
-                // println("Collision layer b: " + colBLayer + " on obj: " + colB.GetName());
-                if (!colACollisionMask.IsSet(colBLayer))
+                for (int k = j + 1; k < cell.size(); k++)
                 {
-                    // Collision is not allowed between theese colliders
-                    continue;
+                    Collider colB = cell.get(k);
+
+                    // If the colliders are not overlaping on the axis we can safely break since it's sorted
+                    if (colB.GetMinExtents().get(m_VarianceAxis) > colAMaxExtent)
+                        break;
+                
+
+                    // Check for collision layer
+                    int colBLayer = colB.GetCollisionLayer();
+                    // println("Collision layer b: " + colBLayer + " on obj: " + colB.GetName());
+                    if (!colACollisionMask.IsSet(colBLayer))
+                    {
+                        // Collision is not allowed between theese colliders
+                        continue;
+                    }
+
+                    // println("Checking for collision between " + colA.GetName() + " on " + colA.GetGameObject().GetName() + " and " +  colB.GetName() + " on " + colB.GetGameObject().GetName());
+                    // Check collision between the two colliders
+                    CollisionPoint points = colA.TestCollision(colB);
+                    collisionChecks++;
+
+                    if (points == null)
+                        continue;
+
+                    // If any of the colliders are triggers then don't resolve collision
+                    if (colB.IsTrigger() || colA.IsTrigger())
+                    {
+                        RaiseCollisionTriggerEvent(colA, colB);
+                        RaiseCollisionTriggerEvent(colB, colA);
+                        continue; // Continue without resolving the physically resolving the collision
+                    }
+
+                    // Construct collision container
+                    Collision collision = new Collision(colA, colB, colA.GetGameObject(), colB.GetGameObject(), points);
+                    collisions.add(collision);
                 }
-
-                // println("Checking for collision between " + colA.GetName() + " on " + colA.GetGameObject().GetName() + " and " +  colB.GetName() + " on " + colB.GetGameObject().GetName());
-                // Check collision between the two colliders
-                CollisionPoint points = colA.TestCollision(colB);
-                collisionChecks++;
-
-                if (points == null)
-                    continue;
-
-                // If any of the colliders are triggers then don't resolve collision
-                if (colB.IsTrigger() || colA.IsTrigger())
-                {
-                    RaiseCollisionTriggerEvent(colA, colB);
-                    RaiseCollisionTriggerEvent(colB, colA);
-                    continue; // Continue without resolving the physically resolving the collision
-                }
-
-                // Construct collision container
-                Collision collision = new Collision(colA, colB, colA.GetGameObject(), colB.GetGameObject(), points);
-                collisions.add(collision);
             }
         }
 
-        centerSum = ZVector.div(centerSum, m_Colliders.size());
-        centerSumSq = ZVector.div(centerSumSq, m_Colliders.size());
+        centerSum = ZVector.div(centerSum, colliders);
+        centerSumSq = ZVector.div(centerSumSq, colliders);
         ZVector variance = ZVector.sub(centerSumSq, ZVector.mult(centerSum, centerSum));
 
         float maxVar = variance.get(0);
@@ -195,6 +228,23 @@ public class CollisionWorld
                 eventHandler.OnCollisionTrigger(triggeredWith);
             }
 
+        }
+    }
+
+    private void ShowQuadTree(QuadTree quadTree)
+    {
+        stroke(0);
+        noFill();
+        // println("showing tree at: " + quadTree.GetPosition() + " with size: " + quadTree.GetSize());
+        rect(quadTree.GetPosition().x, quadTree.GetPosition().y, quadTree.GetSize().x, quadTree.GetSize().y);
+
+        if (quadTree.IsDivided())
+        {
+            // Recursively show children trees
+            ShowQuadTree(quadTree.GetNorthWest());
+            ShowQuadTree(quadTree.GetNorthEast());
+            ShowQuadTree(quadTree.GetSouthWest());
+            ShowQuadTree(quadTree.GetSouthEast());
         }
     }
 }
