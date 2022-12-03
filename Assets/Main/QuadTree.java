@@ -142,6 +142,38 @@ public class QuadTree<T>
         return found;
     }
 
+    public ArrayList<QuadPoint<T>> Query(QuadCircle range, ArrayList<QuadPoint<T>> found)
+    {
+        // Return the list if the range doesn't intersect with this cell
+        if (!range.Intersects(m_Boundary))
+        {
+            return found;
+        }
+        else // The range intersects with this cell
+        {
+            // Add the Quadpoints in this cell that also intersects with the range
+            for (int i = 0; i < m_Points.size(); i++)
+            {
+                QuadPoint<T> point = m_Points.get(i);
+                if (range.Contains(point.pos))
+                {
+                    found.add(point);
+                }
+            }
+        }
+
+        // Recursively add points from children if its subdivided
+        if (m_Divided)
+        {
+            m_NorthWest.Query(range, found);
+            m_NorthEast.Query(range, found);
+            m_SouthWest.Query(range, found);
+            m_SouthEast.Query(range, found);
+        }
+
+        return found;
+    }
+
     /*
      * Methods for getting all cells in the tree. Basically a list of all the leaf node's quadpoints.
      * The cells are represented by an ArrayList with the QuadPoint<T>.

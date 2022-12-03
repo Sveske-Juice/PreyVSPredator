@@ -53,6 +53,8 @@ public class RigidBody extends Component
 
         transform().AddToPosition(ZVector.mult(m_Velocity, Time.dt()));
 
+        // println("vel: " + m_Velocity);
+
     }
 
     public void ApplyGravity()

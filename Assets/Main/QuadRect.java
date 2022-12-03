@@ -23,7 +23,6 @@ public class QuadRect {
     public static boolean Contains(QuadRect quadRect, ZVector point)
     {
         // Basic point vs AABB collision
-        // TODO use BoxCollider implementation
         return (    point.x > quadRect.pos.x && point.x < quadRect.pos.x + quadRect.size.x &&
                     point.y > quadRect.pos.y && point.y < quadRect.pos.y + quadRect.size.y);
     }

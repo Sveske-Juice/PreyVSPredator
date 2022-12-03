@@ -44,7 +44,7 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
     private int m_SplitMultiplier = 0; // Current split multiplier
     private int m_MaxSplitMultiplier = 3; // Do not increase split multiplier more than this
     private int m_MaxNearbyPreysToSplit = 25; // Do not split if there are more than m_MaxNearbyPreysToSplit preys nearby
-    private float m_SplitTime = 2f; // Amount when a prey should split
+    private float m_SplitTime = 20f; // Amount when a prey should split
     private float m_CurrentSplit = 0f; // Current value counter for split
 
     /* Getters/Setters. */
@@ -99,7 +99,10 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
     public void Update()
     {
         // Increment current split time with dt and the number of preys as a grow factor
-        if (m_NearbyPreys >= m_MaxSplitMultiplier) m_SplitMultiplier = m_MaxSplitMultiplier; // Limit growth factor to avoid explosion in splitting
+        if (m_NearbyPreys >= m_MaxSplitMultiplier) 
+            m_SplitMultiplier = m_MaxSplitMultiplier; // Limit growth factor to avoid explosion in splitting
+        else
+            m_SplitMultiplier = m_NearbyPreys;
 
         m_CurrentSplit += Time.dt() * (m_SplitMultiplier + 1);
 
@@ -128,8 +131,8 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
         float angle = random(0, 1) * 2 * PI; // Get the random angle (second component of polar coordinate)
 
         // Convert to cartesian coordinate
-        newPreyPos.x = m_PerimeterCollider.transform().GetPosition().x + r * cos(angle);
-        newPreyPos.y = m_PerimeterCollider.transform().GetPosition().y + r * sin(angle);
+        newPreyPos.x = m_Collider.transform().GetPosition().x + r * cos(angle);
+        newPreyPos.y = m_Collider.transform().GetPosition().y + r * sin(angle);
         
         Prey newPrey = (Prey) m_GameObject.GetBelongingToScene().AddGameObject(new Prey("Prey"), newPreyPos);
         // newPrey.GetComponent(RigidBody.class).SetVelocity((ZVector.sub(newPreyPos, transform().GetPosition()).normalize()));
