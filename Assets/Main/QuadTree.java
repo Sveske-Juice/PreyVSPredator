@@ -8,7 +8,7 @@ public class QuadTree<T>
     private ArrayList<QuadPoint<T>> m_Points = new ArrayList<QuadPoint<T>>(); // List of points in this cell
     private boolean m_Divided = false; // Flag specifying if this node is subdivided
     private int m_Layer = 0; // Layer in a tree this node is in
-    private int m_LayerDepth = 4; // The max depth the tree can extend to - will not subdivide more
+    private int m_LayerDepth = 5; // The max depth the tree can extend to - will not subdivide more
 
     // Children
     private QuadTree<T> m_NorthWest;

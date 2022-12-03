@@ -30,7 +30,7 @@ public class CollisionWorld
     protected void ResolveCollisions(float dt)
     {
         // Build collider quad tree
-        m_ColliderTree = new QuadTree<Collider>(new QuadRect(m_Scene.GetDimensions().copy().mult(-1f), m_Scene.GetDimensions().copy().mult(2f)), 4);
+        m_ColliderTree = new QuadTree<Collider>(new QuadRect(m_Scene.GetDimensions().copy().mult(-1f), m_Scene.GetDimensions().copy().mult(2f)), 8);
 
         // Insert all colliders to the quad tree so it gets filled and will parition the layout
         for (int i = 0; i < m_Colliders.size(); i++)
