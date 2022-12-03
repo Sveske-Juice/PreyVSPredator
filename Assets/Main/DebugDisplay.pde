@@ -158,5 +158,8 @@ public class DebugDisplay extends Component
         m_UIFM.SetText("UI Tick Frame Time: " + (m_Scene.GetLateUIFM() + m_Scene.GetUIFM()) + "ms");
         m_PreyCount.SetText("Preys in scene: " + m_Scene.GetCurrentPreyCount());
         m_ColChecks.SetText("Collision Checks: " + m_Scene.GetPhysicsSystem().GetCollisionChecks());
+
+        // Show collider quad tree
+        m_Scene.GetPhysicsSystem().ShowQuadTree(m_Scene.GetPhysicsSystem().GetColliderTree());
     }
 }

@@ -14,15 +14,15 @@ public abstract class Scene
     private int m_ComponentIdCounter = 0;
     private int m_ObjectIdCounter = 0;
     private boolean m_SceneStarted = false;
-    private int m_MaxPreyCount = 2000;
+    private int m_MaxPreyCount = 5000;
     private int m_CurrentPreyCount = 0;
     private int m_MaxPredatorCount = 400;
     private int m_CurrentPredatorCount = 0;
-    private long m_ObjectFM = 0L; // Object Update Frame Time
-    private long m_LateObjectFM = 0L; // Late Object Update Frame Time
-    private long m_UIFM = 0L; // UI Element Update Frame Time
-    private long m_LateUIFM = 0L; // Late UI Element Update Frame Time
-    private long m_PhysicsFM = 0L; // Physics system update frame time
+    private float m_ObjectFM = 0L; // Object Update Frame Time
+    private float m_LateObjectFM = 0L; // Late Object Update Frame Time
+    private float m_UIFM = 0L; // UI Element Update Frame Time
+    private float m_LateUIFM = 0L; // Late UI Element Update Frame Time
+    private float m_PhysicsFM = 0L; // Physics system update frame time
 
     
     /* Getters/Setters. */
@@ -44,11 +44,11 @@ public abstract class Scene
     public int GetMaxPredatorCount() { return m_MaxPredatorCount; }
     public void SetCurrentPredatorCount(int value) { m_CurrentPredatorCount = value; }
     public int GetCurrentPredatorCount() { return m_CurrentPredatorCount; }
-    public long GetObjectFM() { return m_ObjectFM; }
-    public long GetLateObjectFM() { return m_LateObjectFM; }
-    public long GetUIFM() { return m_UIFM; }
-    public long GetLateUIFM() { return m_LateUIFM; }
-    public long GetPhysicsFM() { return m_PhysicsFM; }
+    public float GetObjectFM() { return m_ObjectFM / 1000; }
+    public float GetLateObjectFM() { return m_LateObjectFM / 1000; }
+    public float GetUIFM() { return m_UIFM / 1000; }
+    public float GetLateUIFM() { return m_LateUIFM / 1000; }
+    public float GetPhysicsFM() { return m_PhysicsFM / 1000; }
     public float GetFPS() { return 1 / Time.dt(); }
     
     public Scene(String sceneName)

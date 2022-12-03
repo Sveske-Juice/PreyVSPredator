@@ -4,8 +4,8 @@ public class QuadTree<T>
 {
     /* Members. */
     private QuadRect m_Boundary;
-    private int m_Capacity = 5; // How many points there need to be in the cell before it will be subdivided
-    private ArrayList<QuadPoint<T>> m_Points = new ArrayList<QuadPoint<T>>(); // List of points in this cell
+    private int m_Capacity = 8; // How many points there need to be in the cell before it will be subdivided
+    private ArrayList<QuadPoint<T>> m_Points = new ArrayList<QuadPoint<T>>(m_Capacity); // List of points in this cell
     private boolean m_Divided = false; // Flag specifying if this node is subdivided
     private int m_Layer = 0; // Layer in a tree this node is in
     private int m_LayerDepth = 5; // The max depth the tree can extend to - will not subdivide more

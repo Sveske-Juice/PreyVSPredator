@@ -43,8 +43,8 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
     private int m_NearbyPreys = 0; // How many preys are within this prey's view (perimiter)
     private int m_SplitMultiplier = 0; // Current split multiplier
     private int m_MaxSplitMultiplier = 3; // Do not increase split multiplier more than this
-    private int m_MaxNearbyPreysToSplit = 25; // Do not split if there are more than m_MaxNearbyPreysToSplit preys nearby
-    private float m_SplitTime = 0.3f; // Amount when a prey should split
+    private int m_MaxNearbyPreysToSplit = 15; // Do not split if there are more than m_MaxNearbyPreysToSplit preys nearby
+    private float m_SplitTime = .3f; // Amount when a prey should split
     private float m_CurrentSplit = 0f; // Current value counter for split
 
     /* Getters/Setters. */

@@ -44,8 +44,6 @@ public class CollisionWorld
             m_ColliderTree.Insert(new QuadPoint<Collider>(collider.transform().GetPosition(), collider));
         }
         // println("quad tree built");
-
-        ShowQuadTree(m_ColliderTree);
         // Store collisions in this physics step
         ArrayList<Collision> collisions = new ArrayList<Collision>();
         m_CollisionChecks = 0; // Reset checks for this physics step
@@ -114,7 +112,7 @@ public class CollisionWorld
                 ZVector BA = ZVector.sub(collision.Points.B, collision.Points.A);
 
                 // The depth of the penetration vector with a little offset so they don't collide again
-                float depth = BA.mag() + 0.01f;
+                float depth = BA.mag() + 1f;
                 int divider = 2;
 
                 // Calculate so each object gets pushed as much back
@@ -256,11 +254,8 @@ public class CollisionWorld
         }
     }
 
-    private void ShowQuadTree(QuadTree quadTree)
+    public void ShowQuadTree(QuadTree quadTree)
     {
-
-        
-
         if (quadTree.IsDivided())
         {
             // Recursively show children trees
