@@ -6,6 +6,7 @@ public class GameObject
     protected boolean m_ObjectStarted = false;
     protected Scene m_BelongingToScene = null;
     protected String m_Tag = "Default";
+    protected boolean m_IsUI = false;
     protected boolean m_FixedPosition = false;
 
     protected ArrayList<Component> m_Components = new ArrayList<Component>();
@@ -19,6 +20,7 @@ public class GameObject
     public Transform GetTransform() { return m_Transform; }
     public void SetTag(String tag) { m_Tag = tag; }
     public String GetTag() { return m_Tag; }
+    public boolean IsUI() { return m_IsUI; }
     public boolean IsFixed() { return m_FixedPosition; }
     public void SetFixed(boolean value) { m_FixedPosition = value; }
     public void SetId(int value) { m_ObjectId = value; }

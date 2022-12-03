@@ -6,6 +6,7 @@ public class UIElement extends GameObject
 
         // By default fix UIElement GameObject's position and scale
         m_FixedPosition = true;
+        m_IsUI = true;
     }
 
     public UIElement(String name)
@@ -14,5 +15,6 @@ public class UIElement extends GameObject
         
         // By default fix UIElement GameObject's position and scale
         m_FixedPosition = true;
+        m_IsUI = true;
     }
 }

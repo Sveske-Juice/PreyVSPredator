@@ -1,4 +1,4 @@
-public abstract class Collider extends Component implements IQuadTreeEntity
+public abstract class Collider extends Component
 {
     /* Members. */
     protected color m_ColliderColor = color(150, 0, 0, 75);
@@ -25,7 +25,6 @@ public abstract class Collider extends Component implements IQuadTreeEntity
     public void SetStroke(boolean value) { m_ShouldStroke = value; }
     public void SetShouldDraw(boolean value) { m_ShouldDraw = value; }
     public abstract ZVector GetCenter();
-    public ZVector GetPosition() { return transform().GetPosition(); }
 
     /* Constructors. */
 
@@ -80,4 +79,9 @@ public abstract class Collider extends Component implements IQuadTreeEntity
     public abstract ZVector GetMaxExtents();
 
     public abstract RaycastHit TestRaycast(Ray ray);
+
+    public String toString()
+    {
+        return m_Name;
+    }
 }

@@ -4,11 +4,16 @@ import java.util.Comparator;
 public class CollisionWorld
 {
     /* Members. */
-    protected ArrayList<Collider> m_Colliders;
-    // protected ArrayList<Collider> m_Colliders = new ArrayList<Collider>();
+    protected ArrayList<Collider> m_Colliders = new ArrayList<Collider>();
+    protected Scene m_Scene;
+    protected QuadTree<Collider> m_ColliderTree;
     protected int m_VarianceAxis = 0;
+    protected int m_CollisionChecks = 0;
 
     /* Getters/Setters. */
+    public void SetBelongingToScene(Scene scene) { m_Scene = scene; }
+    public QuadTree<Collider> GetColliderTree() { return m_ColliderTree; }
+    public int GetCollisionChecks() { return m_CollisionChecks; }
 
     /* Constructors. */
 
@@ -32,49 +37,62 @@ public class CollisionWorld
         if (collider == null)
             return;
         
-        println("Registering collider: " + collider.GetName());
-        m_ColliderTree.InsertEntity(collider);        
-    }
-
-    protected ArrayList<Collider> GetColliders()
-    {
-        ArrayList<Collider> out = new ArrayList<Collider>();
-        ArrayList<ArrayList<Collider>> colliderGrid = m_ColliderTree.GetAllEntities();
-        for (int i = 0; i < colliderGrid.size(); i++)
-        {
-            out.addAll(colliderGrid.get(i));
-        }
-        return out;
+        // println("Registering collider: " + collider.GetName());
+        m_Colliders.add(collider);
     }
 
     protected void ResolveCollisions(float dt)
     {
         // Build collider quad tree
-        QuadTree<Collider>
+        m_ColliderTree = new QuadTree<Collider>(new QuadRect(m_Scene.GetDimensions().copy().mult(-1f), m_Scene.GetDimensions().copy().mult(2f)), 4);
+
+        // Insert all colliders to the quad tree so it gets filled and will parition the layout
+        for (int i = 0; i < m_Colliders.size(); i++)
+        {
+            Collider collider = m_Colliders.get(i);
+            
+            // Do not include UI colliders
+            if (collider.GetGameObject().IsUI())
+                continue;
+            
+            m_ColliderTree.Insert(new QuadPoint<Collider>(collider.transform().GetPosition(), collider));
+        }
+        // println("quad tree built");
+
+        ShowQuadTree(m_ColliderTree);
+
+        ArrayList<ArrayList<QuadPoint<Collider>>> colliderSubCells = m_ColliderTree.GetSubCellPoints(new ArrayList<ArrayList<QuadPoint<Collider>>>());
+        // println("Collider cells: " + colliderSubCells);
+        for (int i = 0; i < colliderSubCells.size(); i++)
+        {
+            ArrayList<QuadPoint<Collider>> cell = colliderSubCells.get(i);
+            for (int j = 0; j < cell.size(); j++)
+            {
+                QuadPoint<Collider> point = cell.get(j);
+                fill(255, 0, 0);
+                circle(point.pos.x, point.pos.y, 50f);
+            }
+        }
 
         // Store collisions in this physics step
         ArrayList<Collision> collisions = new ArrayList<Collision>();
-        int collisionChecks = 0;
+        m_CollisionChecks = 0; // Reset checks for this physics step
 
-        // println("Colliders: " + GetColliders());
-
-        ArrayList<ArrayList<Collider>> colliderGrid = m_ColliderTree.GetAllEntities();
         ZVector centerSum = new ZVector();
         ZVector centerSumSq = new ZVector();
         int colliders = 0;
 
-        for (int i = 0; i < colliderGrid.size(); i++)
+        // Traverse all cells in the collider tree
+        for (int i = 0; i < colliderSubCells.size(); i++)
         {
-            ArrayList<Collider> cell = colliderGrid.get(i);
-
             // Sort collider list based on min extent in x-axis
-            Collections.sort(cell, m_CompareAABBMinExtent);
-            colliders += cell.size();
+            ArrayList<QuadPoint<Collider>> cell = colliderSubCells.get(i);
+            Collections.sort(m_Colliders, m_CompareAABBMinExtent);
 
             // Detect collisions and create collision objects with sweep and prune algorithm
             for (int j = 0; j < cell.size(); j++)
             {
-                Collider colA = cell.get(j);
+                Collider colA = cell.get(j).pointData;
                 float colAMaxExtent = colA.GetMaxExtents().get(m_VarianceAxis);
                 BitField colACollisionMask = colA.GetCollisionMask();
 
@@ -85,7 +103,7 @@ public class CollisionWorld
 
                 for (int k = j + 1; k < cell.size(); k++)
                 {
-                    Collider colB = cell.get(k);
+                    Collider colB = cell.get(k).pointData;
 
                     // If the colliders are not overlaping on the axis we can safely break since it's sorted
                     if (colB.GetMinExtents().get(m_VarianceAxis) > colAMaxExtent)
@@ -104,7 +122,7 @@ public class CollisionWorld
                     // println("Checking for collision between " + colA.GetName() + " on " + colA.GetGameObject().GetName() + " and " +  colB.GetName() + " on " + colB.GetGameObject().GetName());
                     // Check collision between the two colliders
                     CollisionPoint points = colA.TestCollision(colB);
-                    collisionChecks++;
+                    m_CollisionChecks++;
 
                     if (points == null)
                         continue;
@@ -233,10 +251,8 @@ public class CollisionWorld
 
     private void ShowQuadTree(QuadTree quadTree)
     {
-        stroke(0);
-        noFill();
-        // println("showing tree at: " + quadTree.GetPosition() + " with size: " + quadTree.GetSize());
-        rect(quadTree.GetPosition().x, quadTree.GetPosition().y, quadTree.GetSize().x, quadTree.GetSize().y);
+
+        
 
         if (quadTree.IsDivided())
         {
@@ -245,6 +261,17 @@ public class CollisionWorld
             ShowQuadTree(quadTree.GetNorthEast());
             ShowQuadTree(quadTree.GetSouthWest());
             ShowQuadTree(quadTree.GetSouthEast());
+        }
+        else
+        {
+            stroke(0);
+            noFill();
+            // println("showing tree at: " + quadTree.GetPosition() + " with size: " + quadTree.GetSize());
+            ZVector pos = quadTree.GetBoundary().pos;
+            ZVector size = quadTree.GetBoundary().size;
+
+            rect(pos.x, pos.y, size.x, size.y);
+            fill(255);
         }
     }
 }

@@ -14,7 +14,7 @@ public abstract class Scene
     private int m_ComponentIdCounter = 0;
     private int m_ObjectIdCounter = 0;
     private boolean m_SceneStarted = false;
-    private int m_MaxPreyCount = 1;
+    private int m_MaxPreyCount = 2000;
     private int m_CurrentPreyCount = 0;
     private int m_MaxPredatorCount = 1000;
     private int m_CurrentPredatorCount = 0;
@@ -66,6 +66,8 @@ public abstract class Scene
     // TODO use delegate for 3 methods below
     public void StartObjects()
     {
+        m_PhysicsSystem.SetBelongingToScene(this); // Give collisionworld a reference to this scene
+
         // Start GameObjects
         for (int i = 0; i < m_GameObjects.size(); i++)
         {
@@ -138,7 +140,18 @@ public abstract class Scene
 
         /* Tick physics system. */
         long phyT = millis();
+
+        pushMatrix();
+        
+        // Scale and translate for physics system
+        translate(width / 2f, height / 2f);
+        scale(m_ScaleFactor);
+        translate(-m_MoveTranslation.x - width / 2f, -m_MoveTranslation.y - height / 2f);  
+        
         m_PhysicsSystem.Step(Time.dt());
+        
+        popMatrix();
+
         m_PhysicsFM = (millis() - phyT);
         // println("Physics update frame time: " + m_PhysicsFM);
 
@@ -347,6 +360,10 @@ public class GameScene extends Scene
         // Mouse click event handler
         AddGameObject(new MouseEventInitiatorObject());
 
+        // Collider quad tree debugger
+        AddGameObject(new DebugColliderTreeObject());
+
+        
         // Camera handler
         GameObject camHandler = AddGameObject(new GameObject("Camera Handler"));
         camHandler.AddComponent(new CameraHandler());
@@ -390,11 +407,9 @@ public class GameScene extends Scene
 
         for (int i = 0; i < 0; i++)
         {
-            ZVector rand = new ZVector(random(0, width), random(0, height-150));
-            GameObject prey = AddGameObject(new Prey("Prey" + i));
-            prey.AddComponent(new BoxCollider());
+            ZVector rand = new ZVector(random(-m_Dimensions.x, m_Dimensions.x), random(-m_Dimensions.y, m_Dimensions.y));
+            GameObject prey = AddGameObject(new Prey("Prey1"));
             prey.GetTransform().SetPosition(rand);
-            RigidBody ibody = (RigidBody) prey.AddComponent(new RigidBody());
         }
 
         for (int i = 0; i < 0; i++)

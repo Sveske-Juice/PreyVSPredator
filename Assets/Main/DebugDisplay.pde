@@ -42,6 +42,7 @@ public class DebugDisplay extends Component
     private Text m_ObjFM;
     private Text m_UIFM;
     private Text m_PreyCount;
+    private Text m_ColChecks;
 
     public DebugDisplay()
     {
@@ -124,12 +125,20 @@ public class DebugDisplay extends Component
         m_UIFM.SetTextColor(color(255, 255, 0));
         m_UIFM.transform().SetLocalPosition(new ZVector(0f, 200f));
 
+        // Collision checks
+        GameObject colObj = m_Scene.AddGameObject(new UIElement("Collision Checks Text Object"), m_Background.transform());
+        m_ColChecks = (Text) colObj.AddComponent(new Text("Collision Checks Text"));
+        m_ColChecks.SetMargin(new ZVector(10f, 10f));
+        m_ColChecks.SetTextColor(color(255, 255, 0));
+        m_ColChecks.transform().SetLocalPosition(new ZVector(0f, 250f));
+
         // Prey count
         GameObject preyObj = m_Scene.AddGameObject(new UIElement("Prey Count Text Object"), m_Background.transform());
         m_PreyCount = (Text) preyObj.AddComponent(new Text("Prey Count Text"));
         m_PreyCount.SetMargin(new ZVector(50f, 10f));
         m_PreyCount.SetTextColor(color(255, 200, 0));
         m_PreyCount.transform().SetLocalPosition(new ZVector(0f, 300f));
+
 
         m_ShowingMenu = true;
     }
@@ -148,5 +157,6 @@ public class DebugDisplay extends Component
         m_ObjFM.SetText("Object Tick Frame Time: " + (m_Scene.GetLateObjectFM() + m_Scene.GetObjectFM()) + "ms");
         m_UIFM.SetText("UI Tick Frame Time: " + (m_Scene.GetLateUIFM() + m_Scene.GetUIFM()) + "ms");
         m_PreyCount.SetText("Preys in scene: " + m_Scene.GetCurrentPreyCount());
+        m_ColChecks.SetText("Collision Checks: " + m_Scene.GetPhysicsSystem().GetCollisionChecks());
     }
 }
