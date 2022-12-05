@@ -1,5 +1,3 @@
-import java.util.Collections;
-import java.util.Comparator;
 
 public class CollisionWorld
 {
@@ -8,6 +6,7 @@ public class CollisionWorld
     protected Scene m_Scene;
     protected QuadTree<Collider> m_ColliderTree;
     protected int m_CollisionChecks = 0;
+    private float m_MaxSearchRadius = 400f; // ! This should ideally not be here, but okay for our scenario
 
     /* Getters/Setters. */
     public void SetBelongingToScene(Scene scene) { m_Scene = scene; }
@@ -62,7 +61,9 @@ public class CollisionWorld
             BitField colACollisionMask = colA.GetCollisionMask();
 
             ZVector colPos = colA.transform().GetPosition();
-            QuadCircle range = new QuadCircle(new ZVector(colPos.x, colPos.y), colA.GetRadius()*2);
+            float radius = colA.GetRadius()*2;
+            if (radius > m_MaxSearchRadius) radius = m_MaxSearchRadius;
+            QuadCircle range = new QuadCircle(new ZVector(colPos.x, colPos.y), radius);
             ArrayList<QuadPoint<Collider>> points = m_ColliderTree.Query(range, new ArrayList<QuadPoint<Collider>>());
             // println("points: " + points);
  
@@ -98,6 +99,8 @@ public class CollisionWorld
                     continue; // Continue without physically resolving the collision
                 }
 
+                /* Collision occured - resolve collision. */
+
                 // Construct collision container
                 Collision collision = new Collision(colA, colB, colA.GetGameObject(), colB.GetGameObject(), colPoints);
                 //println("Collision happened between " + collision.ColA.GetGameObject().GetName() + " and " + collision.ColB.GetGameObject().GetName());
@@ -123,7 +126,6 @@ public class CollisionWorld
 
                 A.transform().AddToPosition(resolution);
                 B.transform().SubFromPosition(resolution);
-                
 
                 ZVector tangent = new ZVector(-normal.y, normal.x); // Normal rotated by 90° CCW.
 
@@ -132,7 +134,6 @@ public class CollisionWorld
                 
                 float Bvn = ZVector.dot(normal, B.GetVelocity());
                 float Bvt = ZVector.dot(tangent, B.GetVelocity());
-
 
                 float newAvnScalar = (Avn * (A.GetMass() - B.GetMass()) + 2 * B.GetMass() * Bvn)/(A.GetMass() + B.GetMass());
                 float newBvnScalar = (Bvn * (B.GetMass() - A.GetMass()) + 2 * A.GetMass() * Avn)/(A.GetMass() + B.GetMass());
@@ -148,7 +149,6 @@ public class CollisionWorld
                 
                 A.SetVelocity(newAVel);
                 B.SetVelocity(newBVel);
-
                     
                 // fill(255, 0, 0);
                 // circle(collision.Points.A.x, collision.Points.A.y, 10);

@@ -38,6 +38,9 @@ public class PreyControlDisplay extends AnimalControlDisplay
         if (!m_MenuBeingShowed)
             return;
 
+        if (m_ConnectedAnimal.GetTag() != "Prey")
+            return;
+        
         m_ConnectedPreyController = m_ConnectedAnimal.GetComponent(PreyController.class);
         m_PreysNearby.SetText("Nearby Preys: " + m_ConnectedPreyController.GetNearbyPreys());
         m_SplitMultiplier.SetText("Split Multiplier: " + m_ConnectedPreyController.GetSplitMultiplier());
@@ -54,6 +57,9 @@ public class PreyControlDisplay extends AnimalControlDisplay
     protected void CreateMenu()
     {
         super.CreateMenu();
+
+        if (m_ConnectedAnimal.GetTag() != "Prey")
+            return;
 
         // Create preys nearby element
         GameObject preysNerby = m_Scene.AddGameObject(new UIElement("Prey Nearby Text Object"), m_MenuBackground.transform());

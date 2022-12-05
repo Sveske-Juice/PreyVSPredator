@@ -1,3 +1,6 @@
+/*
+ * Prefab for creating a prey gameobject with it's proper components.
+*/
 public class Prey extends Animal
 {
     /* Members. */
@@ -25,7 +28,7 @@ public class Prey extends Animal
         AddComponent(new RigidBody());
 
         // Create perimeter child object
-        m_BelongingToScene.AddGameObject(new PerimeterControllerObject("Perimeter Controller Object"), m_Transform);
+        m_BelongingToScene.AddGameObject(new PreyPerimeterControllerObject("Perimeter Controller Object"), m_Transform);
     }
 }
 

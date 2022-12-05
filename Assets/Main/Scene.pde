@@ -14,7 +14,8 @@ public abstract class Scene
     private int m_ComponentIdCounter = 0;
     private int m_ObjectIdCounter = 0;
     private boolean m_SceneStarted = false;
-    private int m_MaxPreyCount = 5000;
+    private int m_MaxPreyCount = 0;
+    
     private int m_CurrentPreyCount = 0;
     private int m_MaxPredatorCount = 400;
     private int m_CurrentPredatorCount = 0;
@@ -378,6 +379,9 @@ public class GameScene extends Scene
         
         GameObject prey1 = AddGameObject(new Prey("Prey1"));
         prey1.GetTransform().SetPosition(new ZVector(200f, 100f));
+
+        GameObject predator = AddGameObject(new Predator("Predator"));
+        predator.GetTransform().SetPosition(new ZVector(width, 100f));
         // prey1.AddComponent(new AnimalInputController());
         
         // RigidBody body = (RigidBody) prey1.AddComponent(new RigidBody());
