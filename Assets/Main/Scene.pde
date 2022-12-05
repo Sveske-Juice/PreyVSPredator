@@ -168,7 +168,7 @@ public abstract class Scene
                 // Translate and scale
                 translate(width / 2f, height / 2f);
                 scale(m_ScaleFactor);
-                translate(-m_MoveTranslation.x - width / 2f, -m_MoveTranslation.y - height / 2f);   
+                translate(-m_MoveTranslation.x - width / 2f, -m_MoveTranslation.y - height / 2f);
             }
             
             go.LateUpdateObject();

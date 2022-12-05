@@ -38,6 +38,7 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
     private Scene m_Scene;
     private color m_ColliderColor = color(0, 180, 0);
     private int m_ClosePreysCount = 0;
+    private PreyState m_State = PreyState.WANDERING;
 
     private Collider m_Collider;
     private CircleCollider m_PerimeterCollider;
@@ -120,10 +121,30 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
             m_CurrentSplit = 0f;
         }
 
+
+        switch(m_State)
+        {
+            case WANDERING:
+                Wander();
+                break;
+
+            case GATHERING:
+                Gather();
+                break;
+            
+            default:
+                break;
+        }
+
         // Physics system is updated later than components so no more
         // preys will be spotted this frame and its safe to reset for next frame
         if (m_PerimeterCollider.GetFramesSinceTick() == m_PerimeterCollider.GetTickEveryFrame()) // Make sure the perimiter collider will be ticked next frame
             m_NearbyPreys = 0;
+    }
+
+    private void Gather()
+    {
+        
     }
 
     private void SplitPrey()

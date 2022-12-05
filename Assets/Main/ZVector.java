@@ -187,6 +187,10 @@ public class ZVector
     public static ZVector normalize(ZVector vec)
     {
         float m = vec.mag();
+
+        if (m == 0)
+            return new ZVector();
+        
         return new ZVector(vec.x / m, vec.y / m, vec.z / m);
     }
 

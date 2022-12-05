@@ -41,9 +41,6 @@ public class RigidBody extends Component
 
     public void Move()
     {
-        // Simulate the dynamic friction of the body
-        m_Velocity.mult(m_DynamicFriction);
-
         // Calculate an acceleration based on Newtons 2. law of motion
         m_Acceleration = m_NetForce.div(m_Mass);
         
@@ -55,6 +52,9 @@ public class RigidBody extends Component
         m_NetForce.mult(0);
 
         transform().AddToPosition(ZVector.mult(m_Velocity, Time.dt()));
+
+        // Simulate the dynamic friction of the body
+        m_Velocity.mult(m_DynamicFriction);
     }
 
     public void ApplyGravity()
