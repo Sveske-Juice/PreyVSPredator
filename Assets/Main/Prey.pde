@@ -78,6 +78,8 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
     @Override
     public void Start()
     {
+        super.Start();
+
         m_Scene = m_GameObject.GetBelongingToScene();
 
         // Get the perimeter collider from the child GameObject
@@ -144,6 +146,7 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
         m_Scene.SetCurrentPreyCount(m_Scene.GetCurrentPreyCount() + 1);
     }
 
+    @Override
     public void OnCollisionTrigger(Collider collider)
     {
         // Ignore if we hit the prey's perimeter collider
@@ -151,5 +154,12 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
             return;
         
         // println("Prey main collider triggered with: " + collider.GetName());
+    }
+
+    @Override
+    public void Exit()
+    {
+        // Decrease prey counter
+        m_Scene.SetCurrentPreyCount(m_Scene.GetCurrentPreyCount() - 1);
     }
 }

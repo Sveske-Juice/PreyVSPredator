@@ -44,7 +44,7 @@ public abstract class Collider extends Component
     @Override
     public void Start()
     {
-        m_GameObject.GetBelongingToScene().GetPhysicsSystem().RegisterCollider(this);        
+        m_GameObject.GetBelongingToScene().GetPhysicsSystem().RegisterCollider(this); // Register to collision world
     }
 
     @Override
@@ -64,6 +64,12 @@ public abstract class Collider extends Component
             noStroke();
 
         DrawCollider();
+    }
+
+    @Override
+    public void Exit()
+    {
+        m_GameObject.GetBelongingToScene().GetPhysicsSystem().RemoveCollider(m_Id); // Remove from collision world
     }
 
     public abstract void DrawCollider();

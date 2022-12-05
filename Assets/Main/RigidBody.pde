@@ -8,7 +8,7 @@ public class RigidBody extends Component
     
     private float m_Mass = 1f; // Mass of entity
 
-    private float m_DynamicFriction = 0.99f; // Dynamic friction coefficient
+    private float m_DynamicFriction = 0.95f; // Dynamic friction coefficient
 
     private boolean m_TakesGravity = true; // If the rigidbody will simulate gravity
 
@@ -41,6 +41,9 @@ public class RigidBody extends Component
 
     public void Move()
     {
+        // Simulate the dynamic friction of the body
+        m_Velocity.mult(m_DynamicFriction);
+
         // Calculate an acceleration based on Newtons 2. law of motion
         m_Acceleration = m_NetForce.div(m_Mass);
         
@@ -52,9 +55,6 @@ public class RigidBody extends Component
         m_NetForce.mult(0);
 
         transform().AddToPosition(ZVector.mult(m_Velocity, Time.dt()));
-
-        // println("vel: " + m_Velocity);
-
     }
 
     public void ApplyGravity()

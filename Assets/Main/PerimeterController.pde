@@ -119,7 +119,11 @@ public class PredatorPerimeterController extends Component implements ITriggerEv
         // If the perimeter triggered with a prey
         if (collider.GetGameObject().GetTag() == "Prey")
         {
-            // TODO Change state to be hunting
+            // Set the prey the predator will hunt
+            m_Predator.SetHuntingPrey((Prey) collider.GetGameObject());
+
+            // Update the predator's state
+            m_Predator.SetState(PredatorState.HUNTING);
         }
     }
 }

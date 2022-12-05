@@ -26,6 +26,20 @@ public class CollisionWorld
         m_Colliders.add(collider);
     }
 
+    public void RemoveCollider(int id)
+    {
+        // TODO maybe use hashmap
+
+        for (int i = 0; i < m_Colliders.size(); i++)
+        {
+            if (m_Colliders.get(i).GetId() == id)
+            {
+                m_Colliders.remove(i);
+                break;
+            }
+        }
+    }
+
     protected void ResolveCollisions(float dt)
     {
         // Build collider quad tree
@@ -160,7 +174,12 @@ public class CollisionWorld
                 
                 A.SetVelocity(newAVel);
                 B.SetVelocity(newBVel);
-                    
+
+
+                // Raise collision event on colliders
+                RaiseCollisionEvent(colA, colB);
+                RaiseCollisionEvent(colB, colA);
+
                 // fill(255, 0, 0);
                 // circle(collision.Points.A.x, collision.Points.A.y, 10);
                 // circle(collision.Points.B.x, collision.Points.B.y, 10);
@@ -170,82 +189,15 @@ public class CollisionWorld
 
         // println("Collision checks this step: " + collisionChecks);
 
-        // Resolve collisions for this frame
-        for (int i = 0; i < collisions.size(); i++)
-        {
-            Collision collision = collisions.get(i);
-            //println("Collision happened between " + collision.ColA.GetGameObject().GetName() + " and " + collision.ColB.GetGameObject().GetName());
-            
-            RigidBody A = collision.A.GetComponent(RigidBody.class);
-            RigidBody B = collision.B.GetComponent(RigidBody.class);
-            // println("resolving for: " + collision.A.GetName() +  " and: " + collision.B.GetName());
-
-            ZVector normal = collision.Points.Normal;
-
-            // Push back objects
-            ZVector BA = ZVector.sub(collision.Points.B, collision.Points.A);
-
-            // The depth of the penetration vector with a little offset so they don't collide again
-            float depth = BA.mag() + 0.01f;
-            int divider = 2;
-
-            // Calculate so each object gets pushed as much back
-            ZVector resolution = ZVector.div(ZVector.mult(normal, depth), divider);
-
-            ZVector ARes = resolution;
-            ZVector BRes = resolution;
-
-            // println("Ares: " + ARes);
-            // println("Bres: " + BRes);
-            // println("B pos before:" + B.transform().GetPosition());
-            A.transform().AddToPosition(resolution);
-            B.transform().SubFromPosition(resolution);
-            // println("B pos after:" + B.transform().GetPosition());
-            
-
-            ZVector tangent = new ZVector(-normal.y, normal.x); // Normal rotated by 90° CCW.
-
-            float Avn = ZVector.dot(normal, A.GetVelocity());
-            float Avt = ZVector.dot(tangent, A.GetVelocity());
-            
-            float Bvn = ZVector.dot(normal, B.GetVelocity());
-            float Bvt = ZVector.dot(tangent, B.GetVelocity());
-
-
-            float newAvnScalar = (Avn * (A.GetMass() - B.GetMass()) + 2 * B.GetMass() * Bvn)/(A.GetMass() + B.GetMass());
-            float newBvnScalar = (Bvn * (B.GetMass() - A.GetMass()) + 2 * A.GetMass() * Avn)/(A.GetMass() + B.GetMass());
-
-            ZVector newAvn = ZVector.mult(normal, newAvnScalar);
-            ZVector newAvt = ZVector.mult(tangent, Avt);
-
-            ZVector newBvn = ZVector.mult(normal, newBvnScalar);
-            ZVector newBvt = ZVector.mult(tangent, Bvt);
-            
-            ZVector newAVel = ZVector.add(newAvn, newAvt);
-            ZVector newBVel = ZVector.add(newBvn, newBvt);
-
-            // println(newAVel);
-            // println(newBVel);
-            // println("normal: " + normal);
-            // println("depth: " + depth);
-            // println("normal: " + normal);
-            
-            A.SetVelocity(newAVel);
-            B.SetVelocity(newBVel);
-
-                
-            fill(255, 0, 0);
-            circle(collision.Points.A.x, collision.Points.A.y, 10);
-            circle(collision.Points.B.x, collision.Points.B.y, 10);
-            fill(255);
-            
-        }
-
         // println("fps: " + 1 / Time.dt());
         
     }
 
-    // Triggers the OnCollisionTrigger method on all components on the collider specified by argument "collider"
+    /*
+     * Triggers the OnCollisionTrigger method on all components 
+     * that is listening for trigger (implements ITriggerEventHandler).
+     * Will be raised on the collider specified by 'collider'.
+    */
     private void RaiseCollisionTriggerEvent(Collider collider, Collider triggeredWith)
     {
         ArrayList<Component> components = collider.GetGameObject().GetComponents();
@@ -260,6 +212,29 @@ public class CollisionWorld
             {
                 ITriggerEventHandler eventHandler = (ITriggerEventHandler) component;
                 eventHandler.OnCollisionTrigger(triggeredWith);
+            }
+
+        }
+    }
+    
+    /*
+     * Triggers the OnCollision method on all components 
+     * that is listening for collisions(implements ICollisionEventHandler).
+     * Will be raised on the collider specified by 'collider'.
+    */
+    private void RaiseCollisionEvent(Collider collider, Collider collidedWith)
+    {
+        ArrayList<Component> components = collider.GetGameObject().GetComponents();
+
+        for (int i = 0; i < components.size(); i++)
+        {
+            Component component = components.get(i); // Cache component
+
+            // Check if component is implementing a collision trigger event handler
+            if (component instanceof ICollisionEventHandler)
+            {
+                ICollisionEventHandler eventHandler = (ICollisionEventHandler) component;
+                eventHandler.OnCollision(collidedWith);
             }
 
         }
