@@ -58,6 +58,17 @@ public class CollisionWorld
             else
                 continue;
             
+            // Skip the collision check if the collider doesn't need to be checked this frame
+            if (colA.GetFramesSinceTick() < colA.GetTickEveryFrame())
+            {
+                colA.SetFramesSinceTick(colA.GetFramesSinceTick() + 1); // Increment frames since collision check
+                continue;
+            }
+            
+            
+            colA.SetFramesSinceTick(0); // Reset frames since collision check
+            
+
             BitField colACollisionMask = colA.GetCollisionMask();
 
             ZVector colPos = colA.transform().GetPosition();

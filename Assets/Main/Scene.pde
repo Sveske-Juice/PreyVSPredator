@@ -14,8 +14,7 @@ public abstract class Scene
     private int m_ComponentIdCounter = 0;
     private int m_ObjectIdCounter = 0;
     private boolean m_SceneStarted = false;
-    private int m_MaxPreyCount = 0;
-    
+    private int m_MaxPreyCount = 1;
     private int m_CurrentPreyCount = 0;
     private int m_MaxPredatorCount = 400;
     private int m_CurrentPredatorCount = 0;

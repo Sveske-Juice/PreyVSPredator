@@ -2,17 +2,20 @@ public abstract class Collider extends Component
 {
     /* Members. */
     protected color m_ColliderColor = color(150, 0, 0, 75);
+    protected int m_FramesSinceTick = 0; // Counter variable for counting how many frames since the collider was checked for collision
+    protected int m_TickEveryFrame = 0; // Variable specifying how many frames should go after checking the collider again, default 1 (every frame)
+
 
     // The layers this collider interacts with
     protected BitField m_CollisionMask = new BitField();
 
-
     // The layer this collider is on
     protected int m_CollisionLayer = CollisionLayer.ANIMAL_MAIN_COLLIDER.ordinal(); // Default to being the main collider of an Animal
-    protected boolean m_IsTrigger = false;
-    protected boolean m_ShouldFill = true;
-    protected boolean m_ShouldStroke = false;
-    protected boolean m_ShouldDraw = false;
+
+    protected boolean m_IsTrigger = false; // Is a trigger collider - collision won't physically be resolved
+    protected boolean m_ShouldFill = true; // should fill when drawing collider
+    protected boolean m_ShouldStroke = false; // should stroke when drawing collider
+    protected boolean m_ShouldDraw = false; // should draw collider
 
     /* Getters/Setters. */
     public boolean IsTrigger() { return m_IsTrigger; }
@@ -24,6 +27,10 @@ public abstract class Collider extends Component
     public void SetFill(boolean value) { m_ShouldFill = value; }
     public void SetStroke(boolean value) { m_ShouldStroke = value; }
     public void SetShouldDraw(boolean value) { m_ShouldDraw = value; }
+    public int GetFramesSinceTick() { return m_FramesSinceTick; }
+    public void SetFramesSinceTick(int value) { m_FramesSinceTick = value; }
+    public int GetTickEveryFrame() { return m_TickEveryFrame; }
+    public void SetTickEveryFrame(int value) { m_TickEveryFrame = value; }
     public abstract ZVector GetCenter();
 
     /* Constructors. */

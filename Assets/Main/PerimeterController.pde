@@ -57,6 +57,7 @@ public class PreyPerimeterController extends Component implements ITriggerEventH
 
         // Set view perimeter collider color and collision layer
         m_Collider = m_GameObject.GetComponent(Collider.class);
+        m_Collider.SetTickEveryFrame(60); // Check for collision on perimeter collider very 20th frame
         m_Collider.SetCollisionLayer(CollisionLayer.ANIMAL_PEREMITER_COLLIDER.ordinal());
         m_Collider.GetCollisionMask().SetBit(CollisionLayer.ANIMAL_MAIN_COLLIDER.ordinal()); // collide against animals
         m_Collider.SetTrigger(true);
@@ -96,6 +97,7 @@ public class PredatorPerimeterController extends Component implements ITriggerEv
 
         // Set view perimeter collider color and collision layer
         m_Collider = m_GameObject.GetComponent(Collider.class);
+        m_Collider.SetTickEveryFrame(60); // Check for collision on perimeter collider very 20th frame
         m_Collider.SetCollisionLayer(CollisionLayer.ANIMAL_PEREMITER_COLLIDER.ordinal());
         m_Collider.GetCollisionMask().SetBit(CollisionLayer.ANIMAL_MAIN_COLLIDER.ordinal()); // collide against animals
         m_Collider.SetTrigger(true);

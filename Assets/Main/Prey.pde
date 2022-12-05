@@ -47,7 +47,7 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
     private int m_SplitMultiplier = 0; // Current split multiplier
     private int m_MaxSplitMultiplier = 3; // Do not increase split multiplier more than this
     private int m_MaxNearbyPreysToSplit = 15; // Do not split if there are more than m_MaxNearbyPreysToSplit preys nearby
-    private float m_SplitTime = .3f; // Amount when a prey should split
+    private float m_SplitTime = 2f; // Amount when a prey should split
     private float m_CurrentSplit = 0f; // Current value counter for split
 
     /* Getters/Setters. */
@@ -120,7 +120,8 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
 
         // Physics system is updated later than components so no more
         // preys will be spotted this frame and its safe to reset for next frame
-        m_NearbyPreys = 0;
+        if (m_PerimeterCollider.GetFramesSinceTick() == m_PerimeterCollider.GetTickEveryFrame()) // Make sure the perimiter collider will be ticked next frame
+            m_NearbyPreys = 0;
     }
 
     private void SplitPrey()
