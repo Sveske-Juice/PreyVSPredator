@@ -14,7 +14,7 @@ public abstract class Scene
     private int m_ComponentIdCounter = 0;
     private int m_ObjectIdCounter = 0;
     private boolean m_SceneStarted = false;
-    private int m_MaxPreyCount = 2;
+    private int m_MaxPreyCount = 20;
     private int m_CurrentPreyCount = 1;
     private int m_MaxPredatorCount = 400;
     private int m_CurrentPredatorCount = 0;
@@ -315,6 +315,7 @@ public abstract class Scene
         {
             if (m_GameObjects.get(i).GetId() == id)
             {
+                m_GameObjects.set(i, null);
                 m_GameObjects.remove(i);
             }
         }
@@ -324,6 +325,7 @@ public abstract class Scene
         {
             if (m_UIObjects.get(i).GetId() == id)
             {
+                m_UIObjects.set(i, null);
                 m_UIObjects.remove(i);
             }
         }

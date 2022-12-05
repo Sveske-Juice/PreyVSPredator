@@ -49,6 +49,7 @@ public class CollisionWorld
         for (int i = 0; i < m_Colliders.size(); i++)
         {
             Collider collider = m_Colliders.get(i);
+            if (collider == null) continue;
             
             // Do not include UI colliders
             if (collider.GetGameObject().IsUI())
@@ -128,10 +129,15 @@ public class CollisionWorld
 
                 // Construct collision container
                 Collision collision = new Collision(colA, colB, colA.GetGameObject(), colB.GetGameObject(), colPoints);
-                //println("Collision happened between " + collision.ColA.GetGameObject().GetName() + " and " + collision.ColB.GetGameObject().GetName());
-                
                 RigidBody A = collision.A.GetComponent(RigidBody.class);
                 RigidBody B = collision.B.GetComponent(RigidBody.class);
+
+                // A collider might have been destroyed between removing it and creating the quad tree - the collider is null but still in the tree
+                if (A == null || B == null)
+                    continue;
+                
+                // println("Collision happened between " + collision.ColA.GetGameObject().GetName() + " and " + collision.ColB.GetGameObject().GetName());
+                
                 // println("resolving for: " + collision.A.GetName() +  " and: " + collision.B.GetName());
 
                 ZVector normal = collision.Points.Normal;

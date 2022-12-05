@@ -101,7 +101,5 @@ public class PreyControlDisplay extends AnimalControlDisplay
         m_SplitBlocked.SetTextColor(color(255, 0, 0));
         m_SplitBlocked.SetSize(20);
         m_SplitBlocked.SetText("");
-
-        
     }
 }

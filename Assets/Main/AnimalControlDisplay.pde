@@ -69,6 +69,15 @@ public class AnimalControlDisplay extends Component implements IMouseEventListen
         // Remove the input controller from the animal if one was added
         m_ConnectedAnimal.RemoveComponent(AnimalInputController.class);
 
+        // TODO refactor this
+        PreyController prey = m_ConnectedAnimal.GetComponent(PreyController.class);
+        PredatorController predator = m_ConnectedAnimal.GetComponent(PredatorController.class);
+        
+        if (prey != null)
+            prey.SetState(PreyState.WANDERING);
+        else if (predator != null)
+            predator.SetState(PredatorState.WANDERING);
+
         m_MenuBeingShowed = false;
         m_ConnectedAnimal = null;
     }
@@ -156,12 +165,22 @@ public class TakeControl implements IButtonEventListener
 
     public void OnClick()
     {
-
         // If component already on animal then do not add
         if (m_Animal.GetComponent(AnimalInputController.class) != null)
             return;
         
         // println("adding input controller on: " + m_Animal.GetName());
         m_Animal.AddComponent(new AnimalInputController());
+
+        // TODO refactor this
+        // Set state of animal to possesed (won't wander)
+        PreyController prey = m_Animal.GetComponent(PreyController.class);
+        PredatorController predator = m_Animal.GetComponent(PredatorController.class);
+
+        if (prey != null)
+            prey.SetState(PreyState.POSSESED);
+        else if (predator != null)
+            predator.SetState(PredatorState.POSSESED);
+            
     }
 }
