@@ -29,6 +29,9 @@ public class Prey extends Animal
 
         // Create perimeter child object
         m_BelongingToScene.AddGameObject(new PreyPerimeterControllerObject("Perimeter Controller Object"), m_Transform);
+
+        // Create shape
+        AddComponent(new Polygon(loadShape("prey.svg")));
     }
 }
 
@@ -93,7 +96,7 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
         m_Collider.GetCollisionMask().SetBit(CollisionLayer.ANIMAL_MAIN_COLLIDER.ordinal()); // collide against other animals
         m_Collider.GetCollisionMask().SetBit(CollisionLayer.ANIMAL_PEREMITER_COLLIDER.ordinal()); // collide against animal's perimeter
         m_Collider.SetColor(m_ColliderColor);
-        m_Collider.SetShouldDraw(true);
+        m_Collider.SetShouldDraw(false);
         // m_Collider.SetFill(true);
         m_Collider.SetStroke(true);
         
@@ -103,6 +106,8 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
     @Override
     public void Update()
     {
+        super.Update();
+        
         if (m_NearbyPreys >= m_MaxSplitMultiplier) 
             m_SplitMultiplier = m_MaxSplitMultiplier; // Limit growth factor to avoid explosion in splitting
         else
@@ -181,7 +186,7 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
     public void Exit()
     {
         super.Exit();
-        
+
         // Decrease prey counter
         m_Scene.SetCurrentPreyCount(m_Scene.GetCurrentPreyCount() - 1);
     }

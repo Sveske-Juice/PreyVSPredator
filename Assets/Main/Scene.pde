@@ -1,5 +1,7 @@
-/// Base class for all scenes. Stores all the GameObjects 
-/// and provides functionality to update each GameObject.
+/*
+ * Base class for all scenes. Stores all the GameObjects 
+ * and provides functionality to update each GameObject.
+*/
 public abstract class Scene
 {
     /* Members. */
@@ -14,16 +16,15 @@ public abstract class Scene
     private int m_ComponentIdCounter = 0;
     private int m_ObjectIdCounter = 0;
     private boolean m_SceneStarted = false;
-    private int m_MaxPreyCount = 2000;
+    private int m_MaxPreyCount = 100;
     private int m_CurrentPreyCount = 1;
     private int m_MaxPredatorCount = 400;
     private int m_CurrentPredatorCount = 0;
-    private float m_ObjectFM = 0L; // Object Update Frame Time
-    private float m_LateObjectFM = 0L; // Late Object Update Frame Time
-    private float m_UIFM = 0L; // UI Element Update Frame Time
-    private float m_LateUIFM = 0L; // Late UI Element Update Frame Time
-    private float m_PhysicsFM = 0L; // Physics system update frame time
-
+    private float m_ObjectFM = 0; // Object Update Frame Time
+    private float m_LateObjectFM = 0; // Late Object Update Frame Time
+    private float m_UIFM = 0; // UI Element Update Frame Time
+    private float m_LateUIFM = 0; // Late UI Element Update Frame Time
+    private float m_PhysicsFM = 0; // Physics system update frame time
     
     /* Getters/Setters. */
     public String GetSceneName() { return m_SceneName; }

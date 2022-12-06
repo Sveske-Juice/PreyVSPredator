@@ -32,7 +32,7 @@ void draw()
 void exit()
 {
     // Perform cleanup before exit
-    // println("Unloading active scene and leaving...");
+    println("Unloading active scene and leaving...");
     g_SceneManager.UnloadActiveScene();
 
     super.exit();

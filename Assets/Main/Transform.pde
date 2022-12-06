@@ -2,7 +2,7 @@ public class Transform extends Component
 {
   /* Members. */
   private ZVector m_Position = new ZVector();
-  public ZVector Rotation = new ZVector();
+  public float m_Rotation = 0f;
   public ZVector Scale = new ZVector();
 
   private ArrayList<Transform> m_Children = new ArrayList<Transform>();
@@ -18,6 +18,8 @@ public class Transform extends Component
   public Transform GetChild(int idx) { return m_Children.get(idx); }
   public void AddChild(Transform child) { m_Children.add(child); child.SetParent(this); }
   public int GetChildCount() { return m_Children.size(); }
+  public void SetRotation(float value) { m_Rotation = value; }
+  public float GetRotation() { return m_Rotation; }
 
   /*  
       Sets the transforms position relative to its parent(s).

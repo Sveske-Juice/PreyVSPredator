@@ -162,6 +162,9 @@ public class AnimalControlDisplay extends Component implements IAnimalEventListe
     }
 }
 
+/*
+ * Behaviour for take control button. Handles logic when the button is pressed.
+*/
 public class TakeControl implements IButtonEventListener
 {
     private Animal m_Animal; // Animal to take control of

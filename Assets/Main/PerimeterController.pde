@@ -124,6 +124,8 @@ public class PredatorPerimeterController extends Component implements ITriggerEv
 
             // Update the predator's state
             m_Predator.SetState(PredatorState.HUNTING);
+
+            m_Predator.SetNearbyPreys(m_Predator.GetNearbyPreys() + 1);
         }
     }
 }

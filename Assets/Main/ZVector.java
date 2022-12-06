@@ -129,6 +129,11 @@ public class ZVector
         return newVec;
     }
 
+    public float angle()
+    {
+        return ZVector.angle(this); // Call static method
+    }
+
     public float get(int idx)
     {
         switch (idx)
@@ -229,5 +234,15 @@ public class ZVector
 
         float f = Math.min(m, limit) / m;
         return ZVector.mult(vec, f);
+    }
+
+    public static float angle(ZVector vec)
+    {
+        return (float) -(Math.atan2((double) vec.x, (double) vec.y) - Math.PI);
+    }
+
+    public static float heading(ZVector vec)
+    {
+        return (float) (360 - (((Math.atan2(vec.x, vec.y) * (180 / Math.PI)) + 90) % 360));
     }
 }

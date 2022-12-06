@@ -25,6 +25,9 @@ public class Predator extends Animal
 
         // Create perimeter child object
         m_BelongingToScene.AddGameObject(new PredatorPerimeterControllerObject("Perimeter Controller Object"), m_Transform);
+
+        // Create shape
+        AddComponent(new Polygon(loadShape("predator.svg")));
     }
 }
 
@@ -36,6 +39,8 @@ public class PredatorController extends AnimalMover implements ITriggerEventHand
     private color m_ColliderColor = color(150, 50, 0);
     private PredatorState m_State = PredatorState.WANDERING;
     private Prey m_HuntingPrey;
+    private int m_NearbyPreys = 0;
+    private float m_HuntMovementSpeed = 175f;
     private int m_PreysEaten = 0;
     private float m_MaxNutrients = 100f; // Max nutrient level of predator
     private float m_Nutrients = m_MaxNutrients / 2f; // Current nutrients, starts out being half of max
@@ -77,6 +82,8 @@ public class PredatorController extends AnimalMover implements ITriggerEventHand
     public int GetPreysEaten() { return m_PreysEaten; }
     public float GetNutrients() { return m_Nutrients; }
     public float GetMaxNutrients() { return m_MaxNutrients; }
+    public void SetNearbyPreys(int value) { m_NearbyPreys = value; }
+    public int GetNearbyPreys() { return m_NearbyPreys; }
 
     @Override
     public void Start()
@@ -99,6 +106,8 @@ public class PredatorController extends AnimalMover implements ITriggerEventHand
     @Override
     public void Update()
     {
+        super.Update();
+
         // Make predator hungry
         m_Nutrients -= Time.dt();
         
@@ -124,6 +133,15 @@ public class PredatorController extends AnimalMover implements ITriggerEventHand
                 break;
             
             case HUNTING:
+                SetMovementSpeed(m_HuntMovementSpeed);
+
+                // Prey might have gone out of view -> go back to wandering
+                if (m_HuntingPrey == null)
+                {
+                    SetState(PredatorState.WANDERING);
+                    break;
+                }
+
                 Hunt(m_HuntingPrey);
                 break;
 
@@ -134,6 +152,12 @@ public class PredatorController extends AnimalMover implements ITriggerEventHand
             default:
                 break;
         }
+
+        // If there are no preys nearby and in hunting mode (prey escaped predators view), then go back to wandering
+        if (m_NearbyPreys == 0 && m_State == PredatorState.HUNTING)
+            SetState(PredatorState.WANDERING);
+        
+        m_NearbyPreys = 0;
     }
 
     @Override

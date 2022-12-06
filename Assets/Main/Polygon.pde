@@ -3,12 +3,14 @@ public class Polygon extends Component
     /* Members. */
     private PShape m_PShape;
     private boolean m_DrawShape = true;
+    private float m_RotationOffset = 0f;
 
     /* Getters/Setters. */
     public boolean IsDrawingShape() { return m_DrawShape; }
     public void SetDrawingShape(boolean enabled) { m_DrawShape = enabled; }
     public void SetShape(PShape shape) { m_PShape = shape; }
     public PShape GetShape() { return m_PShape; }
+    public void SetRotationOffset(float value) { m_RotationOffset = value; }
 
     public Polygon()
     {
@@ -40,6 +42,7 @@ public class Polygon extends Component
         
         // Translate the coordinate system so the polygon to draw is in center
         translate(pos.x, pos.y);
+        rotate(m_GameObject.GetTransform().GetRotation() + m_RotationOffset);
 
         // Draw the polygon
         shape(m_PShape);

@@ -4,20 +4,13 @@ public abstract class Animal extends GameObject
     {
         super(name);
     }
-
-    @Override
-    public void CreateComponents()
-    {
-        super.CreateComponents();
-        
-        AddComponent(new Polygon(createShape(RECT, 2, 2, 10, 10)));
-    }
 }
 
 public class AnimalMover extends Component
 {
     /* Members. */
     protected Scene m_Scene;
+    protected Polygon m_Polygon;
     protected float m_MovementSpeed = 125f;
     private float m_CurrentMovementSpeed;
     protected float m_ControlMovementSpeed = 400f;
@@ -39,6 +32,8 @@ public class AnimalMover extends Component
     {
         m_Scene = m_GameObject.GetBelongingToScene();
         m_RigidBody = m_GameObject.GetComponent(RigidBody.class);
+        m_Polygon = m_GameObject.GetComponent(Polygon.class);
+        m_Polygon.SetRotationOffset(0);
     }
 
     @Override
@@ -46,6 +41,14 @@ public class AnimalMover extends Component
     {
         // Register a animal death
         m_Scene.FindGameObject("Animal Event Initiator Handler").GetComponent(AnimalEventInitiator.class).RegisterAnimalDeath((Animal) m_GameObject, m_GameObject.GetId());
+    }
+
+    @Override
+    public void Update()
+    {
+        // Rotate animal in its movement direction
+        // println("angle: " + m_RigidBody.GetVelocity().angle());
+        m_GameObject.GetTransform().SetRotation(m_RigidBody.GetVelocity().copy().normalize().angle());
     }
     
     /*
@@ -56,7 +59,7 @@ public class AnimalMover extends Component
     {
         // Get a position scaled by 'm_WanderDirectionExtend' in the animal's movement direction
         ZVector nextPos = ZVector.add(transform().GetPosition(), ZVector.mult(m_RigidBody.GetVelocity().copy().normalize(), m_WanderDirectionExtend));
-        
+        float speed = m_RigidBody.GetVelocity().mag();
 
         // Generate polar coordinates from a circle to constrain the animals movement to it's velocity
         float angle = random(0, 1) * 2 * PI;
@@ -77,7 +80,7 @@ public class AnimalMover extends Component
         // Set new velocity
         // m_RigidBody.SetVelocity(ZVector.sub(wanderedPos, transform().GetPosition()).normalize().mult(m_CurrentMovementSpeed));
         // Move(ZVector.sub(wanderedPos, transform().GetPosition()).normalize());
-        m_RigidBody.ApplyForce(ZVector.sub(wanderedPos, transform().GetPosition()).normalize().mult(m_RigidBody.GetVelocity().mag()+1));
+        m_RigidBody.ApplyForce(ZVector.sub(wanderedPos, transform().GetPosition()).normalize().mult(speed+1));
     }
 
     /*
