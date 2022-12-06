@@ -180,6 +180,8 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
     @Override
     public void Exit()
     {
+        super.Exit();
+        
         // Decrease prey counter
         m_Scene.SetCurrentPreyCount(m_Scene.GetCurrentPreyCount() - 1);
     }

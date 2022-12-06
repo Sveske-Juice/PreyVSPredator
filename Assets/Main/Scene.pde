@@ -317,6 +317,7 @@ public abstract class Scene
             {
                 m_GameObjects.set(i, null);
                 m_GameObjects.remove(i);
+                break;
             }
         }
 
@@ -327,6 +328,7 @@ public abstract class Scene
             {
                 m_UIObjects.set(i, null);
                 m_UIObjects.remove(i);
+                break;
             }
         }
     }
@@ -365,8 +367,8 @@ public class GameScene extends Scene
         // Collider quad tree debugger
         AddGameObject(new DebugColliderTreeObject());
 
-        
         // Camera handler
+        // TODO use preab
         GameObject camHandler = AddGameObject(new GameObject("Camera Handler"));
         camHandler.AddComponent(new CameraHandler());
 
@@ -376,6 +378,8 @@ public class GameScene extends Scene
         // Predator control display menu
         GameObject predatorCtrlDisplay = AddGameObject(new PredatorControlDisplayObject());
 
+        // Animal event initiator
+        GameObject animalEventInitiator = AddGameObject(new AnimalEventInitiatorObject());
 
         // Debug displayer
         GameObject debugDisplay = AddGameObject(new DebugDisplayObject());

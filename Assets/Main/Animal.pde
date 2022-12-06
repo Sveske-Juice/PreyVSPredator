@@ -40,6 +40,13 @@ public class AnimalMover extends Component
         m_Scene = m_GameObject.GetBelongingToScene();
         m_RigidBody = m_GameObject.GetComponent(RigidBody.class);
     }
+
+    @Override
+    public void Exit()
+    {
+        // Register a animal death
+        m_Scene.FindGameObject("Animal Event Initiator Handler").GetComponent(AnimalEventInitiator.class).RegisterAnimalDeath((Animal) m_GameObject, m_GameObject.GetId());
+    }
     
     /*
      * Will be called every frame the animal is in the wandering state of the FSM.

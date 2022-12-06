@@ -113,14 +113,14 @@ public class GameObject
 
     public void Destroy()
     {
+        // Exit all components on this GameObject
+        ExitObject();
+
         // Loop through all children and exit and remove the components
         for (int i = 0; i < m_Transform.GetChildCount(); i++)
         {
             m_Transform.GetChild(i).GetGameObject().Destroy();
         }
-
-        // Exit all components on this GameObject
-        ExitObject();
 
         // Set all components to null so GC can collect mem
         m_Components.clear();

@@ -1,5 +1,7 @@
-// Mouse Event Initiator prefab creates a GameObject which will trigger
-// all subscribed responders to the IMouseEventListener event.
+/*
+ * Mouse Event Initiator prefab creates a GameObject which will trigger
+ * all subscribed responders to the IMouseEventListener event.
+*/
 public class MouseEventInitiatorObject extends GameObject
 {
     public MouseEventInitiatorObject()
@@ -29,6 +31,11 @@ public class MouseEventInitiator extends Component
 
     /* Getters/Setters. */
     public void AddMouseEventListener(IMouseEventListener listener) { m_MouseEventListeners.add(listener); }
+
+    public MouseEventInitiator()
+    {
+        m_Name = "Mouse Event Initiator Behaviour";
+    }
 
     @Override
     public void Start()

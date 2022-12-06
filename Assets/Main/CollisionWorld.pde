@@ -29,9 +29,10 @@ public class CollisionWorld
     public void RemoveCollider(int id)
     {
         // TODO maybe use hashmap
-
         for (int i = 0; i < m_Colliders.size(); i++)
         {
+            if (m_Colliders.get(i) == null) break; // Collider could have been deleted between frame update, if so it will be removed next frame
+
             if (m_Colliders.get(i).GetId() == id)
             {
                 m_Colliders.remove(i);

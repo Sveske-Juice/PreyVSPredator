@@ -1,5 +1,5 @@
 // Base behaviour class for displaying control side menu on any animal
-public class AnimalControlDisplay extends Component
+public class AnimalControlDisplay extends Component implements IAnimalEventListener
 {
     /* Members. */
     protected Scene m_Scene;
@@ -34,8 +34,10 @@ public class AnimalControlDisplay extends Component
     {
         m_MenuHeight = height - m_MenuPosition.y * 4; // Use Start() since "height" is initialized here
 
-        // Register this class to get mouse events
         m_Scene = m_GameObject.GetBelongingToScene();
+
+        // Register this class to get events about animals (deaths etc.)
+        m_Scene.FindGameObject("Animal Event Initiator Handler").GetComponent(AnimalEventInitiator.class).RegisterListener(this);
     }
 
     @Override
@@ -70,12 +72,12 @@ public class AnimalControlDisplay extends Component
 
     protected void HideMenu()
     {
-        // Ignore if already hidden
-        if (m_MenuBackground == null || m_ConnectedAnimal == null)
+        if (m_MenuBackground != null)
+            m_MenuBackground.GetGameObject().Destroy();
+
+        if (m_ConnectedAnimal == null)
             return;
-
-        m_MenuBackground.GetGameObject().Destroy();
-
+        
         // Hide the animal's view range
         m_ConnectedAnimal.GetTransform().GetChild(0).GetGameObject().GetComponent(Collider.class).SetShouldDraw(false);
 
@@ -146,6 +148,17 @@ public class AnimalControlDisplay extends Component
         m_TakeControlButton.GetTransform().SetLocalPosition(new ZVector(m_MenuWidth / 2f - btnBeh.GetSize().x / 2f, 500f));
         btnBeh.SetText("Control Animal");
         btnBeh.AddButtonListener(m_TakeControl); // Add callback to button
+    }
+
+    @Override
+    public void OnAnimalDeath(Animal animal, int animalId)
+    {
+        if (!m_MenuBeingShowed)
+            return;
+
+        // Check if the animal that died is the same as the one being displayed info about
+        if (m_ConnectedAnimal.GetId() == animalId)
+            HideMenu();
     }
 }
 

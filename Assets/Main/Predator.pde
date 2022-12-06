@@ -42,6 +42,7 @@ public class PredatorController extends AnimalMover implements ITriggerEventHand
     private float m_SplitNutrientPercentage = 0.8f; // Percentage required for split
     private float m_NutrientsGainedWhenEating = 0.1f; // Percentage nutrient gain when eating prey
     private float m_NutrientDropWhenSplit = 0.75f; // Nutrient percentage dropped when predator split
+    private float m_NutrientForDeath = 0f; // Percentage that determines when a predator will die
 
     /* Getters/Setters. */
     public void SetHuntingPrey(Prey prey) { m_HuntingPrey = prey; }
@@ -102,9 +103,16 @@ public class PredatorController extends AnimalMover implements ITriggerEventHand
         m_Nutrients -= Time.dt();
         
         // Split predator if have enough nutrients
-        if ((m_Nutrients / m_MaxNutrients) >= m_SplitNutrientPercentage)
+        float nutrientPercentage = (m_Nutrients / m_MaxNutrients); // Percentage of how nutrient the predator is (1f == max nutrients)
+        if (nutrientPercentage >= m_SplitNutrientPercentage)
         {
             SplitPredator();
+        }
+
+        // Check for starvation
+        if (nutrientPercentage <= m_NutrientForDeath)
+        {
+            StarvePredator();
         }
 
         // Do state specific behaviour
@@ -126,6 +134,15 @@ public class PredatorController extends AnimalMover implements ITriggerEventHand
             default:
                 break;
         }
+    }
+
+    @Override
+    public void Exit()
+    {
+        super.Exit();
+
+        // Decrement number of predators in the scene
+        m_Scene.SetCurrentPredatorCount(m_Scene.GetCurrentPredatorCount() - 1);
     }
 
     /*
@@ -186,6 +203,15 @@ public class PredatorController extends AnimalMover implements ITriggerEventHand
         // Drop nutrients
         m_Nutrients -= m_MaxNutrients * m_NutrientDropWhenSplit;
         if (m_Nutrients < 0) m_Nutrients = 0; // Clamp to be positive
+    }
+
+    /*
+     * Will be called when the predator has reached a nutrient level
+     * that is below 'm_NutrientForDeath'. Will handle starving the animal.
+    */
+    private void StarvePredator()
+    {
+        m_GameObject.Destroy();
     }
 
     @Override
