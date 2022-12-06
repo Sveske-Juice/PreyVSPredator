@@ -36,10 +36,39 @@ public class PredatorController extends AnimalMover implements ITriggerEventHand
     private color m_ColliderColor = color(150, 50, 0);
     private PredatorState m_State = PredatorState.WANDERING;
     private Prey m_HuntingPrey;
+    private int m_PreysEaten = 0;
 
     /* Getters/Setters. */
     public void SetHuntingPrey(Prey prey) { m_HuntingPrey = prey; }
-    public void SetState(PredatorState state) { m_State = state; }
+
+    /*
+     * Will set the state of the animal. Can NOT be forced so specific rules
+     * like not changing when being controlled is active.
+    */
+    public void SetState(PredatorState state)
+    {
+        // Do not allow changing state while animal is being controlled
+        if (m_State == PredatorState.POSSESED)
+            return;
+        
+        m_State = state;
+    }
+
+    /*
+     * Will set the state of the animal. Can be forced so specific rules
+     * like not changing when being controlled is ignored.
+    */
+    public void SetState(PredatorState state, boolean force)
+    {
+        // Do not allow changing state while animal is being controlled
+        if (m_State == PredatorState.POSSESED && !force)
+            return;
+        
+        m_State = state;
+    }
+
+    public PredatorState GetState() { return m_State; }
+    public int GetPreysEaten() { return m_PreysEaten; }
 
     @Override
     public void Start()
@@ -55,6 +84,8 @@ public class PredatorController extends AnimalMover implements ITriggerEventHand
 
         // Get the perimeter collider from the child GameObject
         m_PerimeterCollider = transform().GetChild(0).GetGameObject().GetComponent(CircleCollider.class);
+
+        m_GameObject.SetTag("Predator");
     }
 
     @Override
@@ -104,8 +135,10 @@ public class PredatorController extends AnimalMover implements ITriggerEventHand
         m_HuntingPrey.Destroy();
         m_HuntingPrey = null;
 
+        m_PreysEaten++;
+
         // Change state to wandering
-        m_State = PredatorState.WANDERING;
+        SetState(PredatorState.WANDERING);
     }
 
     @Override

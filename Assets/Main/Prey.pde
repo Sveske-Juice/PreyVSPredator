@@ -105,18 +105,18 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
     @Override
     public void Update()
     {
-        // Increment current split time with dt and the number of preys as a grow factor
+
         if (m_NearbyPreys >= m_MaxSplitMultiplier) 
             m_SplitMultiplier = m_MaxSplitMultiplier; // Limit growth factor to avoid explosion in splitting
         else
             m_SplitMultiplier = m_NearbyPreys;
 
-        m_CurrentSplit += Time.dt() * (m_SplitMultiplier + 1);
+        // Increment current split time with dt if the max number of preys aren't met yet and there's room for the new prey
+        if (m_Scene.GetCurrentPreyCount() < m_Scene.GetMaxPreyCount()  && m_NearbyPreys < m_MaxNearbyPreysToSplit)
+            m_CurrentSplit += Time.dt() * (m_SplitMultiplier + 1);
 
-        // If current counter has reached the time requeried for a split and
-        // there's room for the new prey and if the max number of preys
-        // aren't met yet, then split the prey
-        if (m_CurrentSplit >= m_SplitTime && m_NearbyPreys < m_MaxNearbyPreysToSplit && m_Scene.GetCurrentPreyCount() < m_Scene.GetMaxPreyCount())
+        // If current counter has reached the time requeried for a split 
+        if (m_CurrentSplit >= m_SplitTime)
         {
             SplitPrey();
             m_CurrentSplit = 0f;

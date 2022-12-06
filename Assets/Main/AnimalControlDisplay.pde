@@ -1,5 +1,5 @@
 // Base behaviour class for displaying control side menu on any animal
-public class AnimalControlDisplay extends Component implements IMouseEventListener
+public class AnimalControlDisplay extends Component
 {
     /* Members. */
     protected Scene m_Scene;
@@ -11,12 +11,23 @@ public class AnimalControlDisplay extends Component implements IMouseEventListen
 
     protected boolean m_MenuBeingShowed = false;
     protected Animal m_ConnectedAnimal; // Animal showing stats about
+    protected AnimalMover m_ConnectedAnimalMover;
 
     protected Polygon m_MenuBackground;
     protected Button m_TakeControlButton;
     protected Text m_PositionText;
+    protected Text m_SpeedText;
     private TakeControl m_TakeControl;
 
+    public AnimalControlDisplay(String name)
+    {
+        m_Name = name;
+    }
+
+    public AnimalControlDisplay()
+    {
+        m_Name = "Animal Control Display";
+    }
 
     @Override
     public void Start()
@@ -25,7 +36,6 @@ public class AnimalControlDisplay extends Component implements IMouseEventListen
 
         // Register this class to get mouse events
         m_Scene = m_GameObject.GetBelongingToScene();
-        m_Scene.FindGameObject("Mouse Event Initiator Handler").GetComponent(MouseEventInitiator.class).AddMouseEventListener(this);
     }
 
     @Override
@@ -36,9 +46,10 @@ public class AnimalControlDisplay extends Component implements IMouseEventListen
 
         // Update values on menu
         m_PositionText.SetText("Animal Position: " + m_ConnectedAnimal.GetTransform().GetPosition());
+        m_SpeedText.SetText("Speed: " + round(m_ConnectedAnimalMover.GetGameObject().GetComponent(RigidBody.class).GetVelocity().mag()));
     }
 
-    private void ShowMenu(Animal animal)
+    protected void ShowMenu(Animal animal)
     {
         // If already open then close it
         if (m_MenuBeingShowed)
@@ -49,17 +60,19 @@ public class AnimalControlDisplay extends Component implements IMouseEventListen
 
         m_ConnectedAnimal = animal;
         m_TakeControl = new TakeControl(m_ConnectedAnimal);
+        m_ConnectedAnimalMover = animal.GetComponent(AnimalMover.class);
         
         // Show the animal's view range (perimeter)
         m_ConnectedAnimal.GetTransform().GetChild(0).GetGameObject().GetComponent(Collider.class).SetShouldDraw(true);
-            
         CreateMenu();
         m_MenuBeingShowed = true;
     }
 
-    private void HideMenu()
+    protected void HideMenu()
     {
-        // println("Hiding menu");
+        // Ignore if already hidden
+        if (m_MenuBackground == null || m_ConnectedAnimal == null)
+            return;
 
         m_MenuBackground.GetGameObject().Destroy();
 
@@ -69,6 +82,9 @@ public class AnimalControlDisplay extends Component implements IMouseEventListen
         // Remove the input controller from the animal if one was added
         m_ConnectedAnimal.RemoveComponent(AnimalInputController.class);
 
+        // Hide the animals wandering info
+        m_ConnectedAnimalMover.HideWanderInfo();
+
         // TODO refactor this
         PreyController prey = m_ConnectedAnimal.GetComponent(PreyController.class);
         PredatorController predator = m_ConnectedAnimal.GetComponent(PredatorController.class);
@@ -76,16 +92,20 @@ public class AnimalControlDisplay extends Component implements IMouseEventListen
         if (prey != null)
             prey.SetState(PreyState.WANDERING);
         else if (predator != null)
-            predator.SetState(PredatorState.WANDERING);
+            predator.SetState(PredatorState.WANDERING, true);
 
         m_MenuBeingShowed = false;
         m_ConnectedAnimal = null;
+        m_ConnectedAnimalMover = null;
     }
 
     protected void CreateMenu()
     {
         // Set position of menu
         transform().SetPosition(m_MenuPosition);
+
+        // Show the animals wandering info
+        m_ConnectedAnimalMover.ShowWanderInfo();
 
         /* Create all UI GameObjects that make up the control display. */
         
@@ -106,9 +126,17 @@ public class AnimalControlDisplay extends Component implements IMouseEventListen
         // Create position text element
         GameObject positionTextObj = m_Scene.AddGameObject(new UIElement("Position Text Object"), menuBackground.GetTransform());
         positionTextObj.SetTag("AnimalControlDisplay");
-        m_PositionText = (Text) positionTextObj.AddComponent(new Text("Position text"));
+        m_PositionText = (Text) positionTextObj.AddComponent(new Text("Position Text"));
         m_PositionText.SetMargin(new ZVector(25f, 25f));
         m_PositionText.transform().SetLocalPosition(new ZVector(0f, 50f));
+
+        // Create speed text element
+        GameObject speedTxtObj = m_Scene.AddGameObject(new UIElement("Speed Text Object"), menuBackground.GetTransform());
+        speedTxtObj.SetTag("AnimalControlDisplay");
+        m_SpeedText = (Text) speedTxtObj.AddComponent(new Text("Speed Text"));
+        m_SpeedText.SetMargin(new ZVector(25f, 25f));
+        m_SpeedText.transform().SetLocalPosition(new ZVector(0f, 100f));
+
 
         // Take control button
         m_TakeControlButton = (Button) m_Scene.AddGameObject(new Button("Take Control Button Object"), menuBackground.GetTransform());
@@ -118,39 +146,6 @@ public class AnimalControlDisplay extends Component implements IMouseEventListen
         m_TakeControlButton.GetTransform().SetLocalPosition(new ZVector(m_MenuWidth / 2f - btnBeh.GetSize().x / 2f, 500f));
         btnBeh.SetText("Control Animal");
         btnBeh.AddButtonListener(m_TakeControl); // Add callback to button
-    }
-
-    // If an animal was clicked on, then show the control display
-    public void OnColliderClick(Collider collider)
-    {
-        // Check if it's an animal that was clicked on
-        if (collider.GetGameObject() instanceof Animal)
-        {
-            ShowMenu((Animal) collider.GetGameObject());
-            return;
-        }
-        
-        // Hide the menu if the GameObject clicked wasn't connected to the Control Display (outside the side menu)
-        if (collider.GetGameObject().GetTag() != "AnimalControlDisplay")
-        {
-            HideMenu();
-            m_TakeControl = null;
-        }
-    }
-
-    public void OnMouseClick(ZVector position)
-    {
-
-    }
-
-    public void OnMouseDrag(ZVector position)
-    {
-        // TODO Hide the menu if the mouse gets dragged outside the menu
-    }
-
-    public void OnMouseRelease(ZVector position)
-    {
-
     }
 }
 

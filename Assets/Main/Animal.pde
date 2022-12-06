@@ -20,11 +20,13 @@ public class AnimalMover extends Component
     protected float m_MovementSpeed = 100f;
     protected RigidBody m_RigidBody;
     protected float m_WanderRadius = 50f; // How much the radius of the wandering is
-    protected float m_WanderDirectionExtend = 300f; // How much of the animal's direction (v) will be extended when wandering
+    protected float m_WanderDirectionExtend = 200f; // How much of the animal's direction (v) will be extended when wandering
     protected boolean m_ShowWandererInfo = false;
 
     /* Getters/Setters. */
     public float GetMovementSpeed() { return m_MovementSpeed; }
+    public void ShowWanderInfo() { m_ShowWandererInfo = true; }
+    public void HideWanderInfo() { m_ShowWandererInfo = false; }
 
     /* Methods. */
 
@@ -57,11 +59,13 @@ public class AnimalMover extends Component
             circle(nextPos.x, nextPos.y, m_WanderRadius*2);
             
             fill(255, 0, 0);
-            circle(nextPos.x, nextPos.y, 15);
+            circle(wanderedPos.x, wanderedPos.y, 15);
         }
 
         // Set new velocity
-        m_RigidBody.SetVelocity(ZVector.sub(wanderedPos, transform().GetPosition()).normalize().mult(m_MovementSpeed));
+        // m_RigidBody.SetVelocity(ZVector.sub(wanderedPos, transform().GetPosition()).normalize().mult(m_MovementSpeed));
+        // Move(ZVector.sub(wanderedPos, transform().GetPosition()).normalize());
+        m_RigidBody.ApplyForce(ZVector.sub(wanderedPos, transform().GetPosition()).normalize().mult(m_RigidBody.GetVelocity().mag()+1));
     }
 
     /*
@@ -71,6 +75,6 @@ public class AnimalMover extends Component
     */
     protected void Move(ZVector direction)
     {
-        m_RigidBody.ApplyForce(direction.copy().normalize().mult(m_MovementSpeed));
+        m_RigidBody.ApplyForce(direction.copy().normalize().mult(5));
     }
 }

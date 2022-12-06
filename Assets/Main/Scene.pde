@@ -373,6 +373,10 @@ public class GameScene extends Scene
         // Prey control display menu
         GameObject preyCtrlDisplay = AddGameObject(new PreyControlDisplayObject());
 
+        // Predator control display menu
+        GameObject predatorCtrlDisplay = AddGameObject(new PredatorControlDisplayObject());
+
+
         // Debug displayer
         GameObject debugDisplay = AddGameObject(new DebugDisplayObject());
         

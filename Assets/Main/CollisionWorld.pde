@@ -80,7 +80,6 @@ public class CollisionWorld
                 continue;
             }
             
-            
             colA.SetFramesSinceTick(0); // Reset frames since collision check
             
 

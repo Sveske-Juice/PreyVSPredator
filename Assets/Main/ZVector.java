@@ -120,6 +120,15 @@ public class ZVector
         return ZVector.dist(this, vec); // Call static method
     }
 
+    public ZVector limit(float limit)
+    {
+        ZVector newVec = ZVector.limit(this, limit); // Call static method
+        x = newVec.x;
+        y = newVec.y;
+        z = newVec.z;
+        return newVec;
+    }
+
     public float get(int idx)
     {
         switch (idx)
@@ -210,5 +219,12 @@ public class ZVector
     {
         ZVector combined = sub(vec1, vec2);
         return (float)Math.sqrt(combined.x*combined.x + combined.y*combined.y + combined.z*combined.z);
+    }
+
+    public static ZVector limit(ZVector vec, float limit)
+    {
+        float m = vec.mag();
+        float f = Math.min(m, limit) / m;
+        return ZVector.mult(vec, f);
     }
 }
