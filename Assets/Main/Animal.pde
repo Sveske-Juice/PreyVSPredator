@@ -17,6 +17,7 @@ public abstract class Animal extends GameObject
 public class AnimalMover extends Component
 {
     /* Members. */
+    protected Scene m_Scene;
     protected float m_MovementSpeed = 125f;
     private float m_CurrentMovementSpeed;
     protected float m_ControlMovementSpeed = 400f;
@@ -36,6 +37,7 @@ public class AnimalMover extends Component
     @Override
     public void Start()
     {
+        m_Scene = m_GameObject.GetBelongingToScene();
         m_RigidBody = m_GameObject.GetComponent(RigidBody.class);
     }
     

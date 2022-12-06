@@ -73,7 +73,7 @@ public class ButtonBehaviour extends Component implements IMouseEventListener
         fill(m_CurrentColor);
         rect(pos.x, pos.y, m_Size.x, m_Size.y);
 
-        // Draw text
+        // Draw texta
         fill(m_TextColor);
         textAlign(CENTER, CENTER);
         text(m_Text, pos.x + m_Size.x / 2f, pos.y + m_Size.y / 2f);

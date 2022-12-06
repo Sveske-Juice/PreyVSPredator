@@ -35,7 +35,6 @@ public class Prey extends Animal
 public class PreyController extends AnimalMover implements ITriggerEventHandler
 {
     /* Members. */
-    private Scene m_Scene;
     private color m_ColliderColor = color(0, 180, 0);
     private int m_ClosePreysCount = 0;
     private PreyState m_State = PreyState.WANDERING;
@@ -82,8 +81,6 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
     public void Start()
     {
         super.Start();
-
-        m_Scene = m_GameObject.GetBelongingToScene();
 
         // Get the perimeter collider from the child GameObject
         m_PerimeterCollider = transform().GetChild(0).GetGameObject().GetComponent(CircleCollider.class);
@@ -154,7 +151,6 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
 
     private void SplitPrey()
     {
-        
         ZVector newPreyPos = new ZVector();
 
         // Generate a random polar coordinat inside the preys perimeter
@@ -168,6 +164,7 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
         
         Prey newPrey = (Prey) m_GameObject.GetBelongingToScene().AddGameObject(new Prey("Prey"), newPreyPos);
 
+        // TODO use observer pattern
         m_Scene.SetCurrentPreyCount(m_Scene.GetCurrentPreyCount() + 1);
     }
 

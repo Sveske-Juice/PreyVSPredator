@@ -25,6 +25,8 @@ public class PredatorControlDisplay extends AnimalControlDisplay implements IMou
     /* Members. */
     private Text m_PreysEaten;
     private Text m_StateText;
+    private Progressbar m_NutrientsBar;
+    private color m_NutrientsBarColor = color(255, 220, 85);
     private PredatorController m_PredatorController;
 
     public PredatorControlDisplay()
@@ -55,6 +57,7 @@ public class PredatorControlDisplay extends AnimalControlDisplay implements IMou
 
         m_PreysEaten.SetText("Preys eaten: " + m_PredatorController.GetPreysEaten());
         m_StateText.SetText("State: " + m_PredatorController.GetState());
+        m_NutrientsBar.SetProgress(m_PredatorController.GetNutrients() / m_PredatorController.GetMaxNutrients());
     }
 
     /* Prey specific menu attributes. */
@@ -79,7 +82,24 @@ public class PredatorControlDisplay extends AnimalControlDisplay implements IMou
         eatenPreysObj.SetTag("AnimalControlDisplay");
         m_PreysEaten = (Text) eatenPreysObj.AddComponent(new Text("Predator Eaten Preys Text"));
         m_PreysEaten.SetMargin(new ZVector(25f, 25f));
-        m_PreysEaten.transform().SetLocalPosition(new ZVector(0f, 200f));      
+        m_PreysEaten.transform().SetLocalPosition(new ZVector(0f, 200f));
+        
+        // Create nutrients bar title
+        GameObject nutrientsTitleObj = m_Scene.AddGameObject(new UIElement("Nutrients Title Object"), m_MenuBackground.transform());
+        nutrientsTitleObj.SetTag("AnimalControlDisplay");
+        Text nutrientsTitle = (Text) nutrientsTitleObj.AddComponent(new Text("Nutrients Title"));
+        nutrientsTitle.SetText("Nutrients: ");
+        nutrientsTitle.SetMargin(new ZVector(25f, 25f));
+        nutrientsTitle.transform().SetLocalPosition(new ZVector(0f, 325f));
+
+        // Create Nutrients progress bar
+        GameObject nutrientsBarObj =  m_Scene.AddGameObject(new UIElement("Nutrients Progressbar Object"), m_MenuBackground.transform());
+        nutrientsBarObj.SetTag("AnimalControlDisplay");
+        m_NutrientsBar = (Progressbar) nutrientsBarObj.AddComponent(new Progressbar("Nutrients Progressbar"));
+        m_NutrientsBar.SetMargin(new ZVector(25f, 25f));
+        m_NutrientsBar.SetSize(new ZVector(m_MenuWidth - 100f, 50f));
+        m_NutrientsBar.SetProgressColor(m_NutrientsBarColor);
+        m_NutrientsBar.transform().SetLocalPosition(new ZVector(0f, 375f)); 
     }
 
     /*

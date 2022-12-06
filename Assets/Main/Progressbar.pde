@@ -12,6 +12,7 @@ public class Progressbar extends Component
     public float GetProgress() { return m_CurrentProgress; }
     public void SetSize(ZVector size) { m_Size = size; }
     public void SetMargin(ZVector value) { m_Margin = value; }
+    public void SetProgressColor(color value) { m_ProgressColor = value; }
 
     public Progressbar()
     {

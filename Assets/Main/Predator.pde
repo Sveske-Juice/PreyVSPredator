@@ -32,11 +32,16 @@ public class PredatorController extends AnimalMover implements ITriggerEventHand
 {
     /* Members. */
     private Collider m_Collider;
-    private Collider m_PerimeterCollider;
+    private CircleCollider m_PerimeterCollider;
     private color m_ColliderColor = color(150, 50, 0);
     private PredatorState m_State = PredatorState.WANDERING;
     private Prey m_HuntingPrey;
     private int m_PreysEaten = 0;
+    private float m_MaxNutrients = 100f; // Max nutrient level of predator
+    private float m_Nutrients = m_MaxNutrients / 2f; // Current nutrients, starts out being half of max
+    private float m_SplitNutrientPercentage = 0.8f; // Percentage required for split
+    private float m_NutrientsGainedWhenEating = 0.1f; // Percentage nutrient gain when eating prey
+    private float m_NutrientDropWhenSplit = 0.75f; // Nutrient percentage dropped when predator split
 
     /* Getters/Setters. */
     public void SetHuntingPrey(Prey prey) { m_HuntingPrey = prey; }
@@ -69,6 +74,8 @@ public class PredatorController extends AnimalMover implements ITriggerEventHand
 
     public PredatorState GetState() { return m_State; }
     public int GetPreysEaten() { return m_PreysEaten; }
+    public float GetNutrients() { return m_Nutrients; }
+    public float GetMaxNutrients() { return m_MaxNutrients; }
 
     @Override
     public void Start()
@@ -91,6 +98,15 @@ public class PredatorController extends AnimalMover implements ITriggerEventHand
     @Override
     public void Update()
     {
+        // Make predator hungry
+        m_Nutrients -= Time.dt();
+        
+        // Split predator if have enough nutrients
+        if ((m_Nutrients / m_MaxNutrients) >= m_SplitNutrientPercentage)
+        {
+            SplitPredator();
+        }
+
         // Do state specific behaviour
         switch (m_State)
         {
@@ -139,8 +155,37 @@ public class PredatorController extends AnimalMover implements ITriggerEventHand
 
         m_PreysEaten++;
 
+        // Give nutrients
+        m_Nutrients += m_MaxNutrients * m_NutrientsGainedWhenEating;
+
         // Change state to wandering
         SetState(PredatorState.WANDERING);
+    }
+
+    /*
+     * Will split the predator.
+    */
+    private void SplitPredator()
+    {
+        ZVector newPredatorPos = new ZVector();
+
+        // Generate a random polar coordinat inside the preys perimeter
+        float R = m_PerimeterCollider.GetRadius();
+        float r = R * sqrt(random(0, 1)); // New random radius (first component of polar coordinate)
+        float angle = random(0, 1) * 2 * PI; // Get the random angle (second component of polar coordinate)
+
+        // Convert to cartesian coordinate
+        newPredatorPos.x = m_Collider.transform().GetPosition().x + r * cos(angle);
+        newPredatorPos.y = m_Collider.transform().GetPosition().y + r * sin(angle);
+
+        Predator newPrey = (Predator) m_GameObject.GetBelongingToScene().AddGameObject(new Predator("Predator"), newPredatorPos);
+
+        // TODO use observer pattern
+        m_Scene.SetCurrentPredatorCount(m_Scene.GetCurrentPredatorCount() + 1);
+
+        // Drop nutrients
+        m_Nutrients -= m_MaxNutrients * m_NutrientDropWhenSplit;
+        if (m_Nutrients < 0) m_Nutrients = 0; // Clamp to be positive
     }
 
     @Override
