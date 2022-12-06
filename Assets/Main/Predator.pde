@@ -95,11 +95,16 @@ public class PredatorController extends AnimalMover implements ITriggerEventHand
         switch (m_State)
         {
             case WANDERING:
+                SetMovementSpeed(m_MovementSpeed);
                 Wander();
                 break;
             
             case HUNTING:
                 Hunt(m_HuntingPrey);
+                break;
+
+            case POSSESED:
+                SetMovementSpeed(m_ControlMovementSpeed);
                 break;
 
             default:
@@ -127,12 +132,9 @@ public class PredatorController extends AnimalMover implements ITriggerEventHand
     /*
      * Will handle eating the prey currently hunting (m_HuntingPrey)
     */
-    private void EatPrey()
-    {
-        if (m_HuntingPrey == null)
-            return;
-        
-        m_HuntingPrey.Destroy();
+    private void EatPrey(Prey prey)
+    {        
+        prey.Destroy();
         m_HuntingPrey = null;
 
         m_PreysEaten++;
@@ -149,7 +151,7 @@ public class PredatorController extends AnimalMover implements ITriggerEventHand
             return;
         
         // Eat the prey
-        EatPrey();
+        EatPrey((Prey) collider.GetGameObject());
     }
 
     @Override

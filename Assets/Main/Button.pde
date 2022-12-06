@@ -32,6 +32,8 @@ public class ButtonBehaviour extends Component implements IMouseEventListener
     private ZVector m_Size = new ZVector(200f, 50f);
     private ZVector m_Margin = new ZVector();
     private color m_NormalColor = color(38, 50, 74);
+    private color m_CurrentColor = m_NormalColor;
+    private color m_HighlightColor = color(0, 255, 0);
     private color m_TextColor = color(255, 255, 255);
 
     public ButtonBehaviour()
@@ -68,13 +70,16 @@ public class ButtonBehaviour extends Component implements IMouseEventListener
         ZVector pos = transform().GetPosition();
 
         // Draw button
-        fill(m_NormalColor);
+        fill(m_CurrentColor);
         rect(pos.x, pos.y, m_Size.x, m_Size.y);
 
         // Draw text
         fill(m_TextColor);
         textAlign(CENTER, CENTER);
         text(m_Text, pos.x + m_Size.x / 2f, pos.y + m_Size.y / 2f);
+
+        // Reset current button color to normal
+        m_CurrentColor = m_NormalColor;
     }
 
     public void OnColliderClick(Collider collider)
@@ -84,6 +89,9 @@ public class ButtonBehaviour extends Component implements IMouseEventListener
             return;
 
         RaiseOnClickEvent();
+
+        // Highlight button
+        m_CurrentColor = m_HighlightColor;
     }
 
     private void RaiseOnClickEvent()

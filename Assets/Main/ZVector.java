@@ -224,6 +224,9 @@ public class ZVector
     public static ZVector limit(ZVector vec, float limit)
     {
         float m = vec.mag();
+        if (m <= limit)
+            return vec;
+
         float f = Math.min(m, limit) / m;
         return ZVector.mult(vec, f);
     }

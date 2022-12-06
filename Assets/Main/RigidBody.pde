@@ -9,7 +9,7 @@ public class RigidBody extends Component
     private float m_Mass = 1f; // Mass of entity
 
     private float m_DynamicFriction = 0.95f; // Dynamic friction coefficient
-    private float m_MaxSpeed = 100;
+    private float m_MaxSpeed = 500;
 
     private boolean m_TakesGravity = true; // If the rigidbody will simulate gravity
 
@@ -19,6 +19,7 @@ public class RigidBody extends Component
     public void SetVelocity(ZVector velocity) { m_Velocity = velocity; }
     public float GetMass() { return m_Mass; }
     public void SetMass(float mass) { m_Mass = mass; }
+    public void SetMaxSpeed(float value) { m_MaxSpeed = value; }
 
 
     /* Constructors. */

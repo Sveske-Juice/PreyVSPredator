@@ -59,6 +59,7 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
     public float GetSplitTime() { return m_SplitTime; }
     public float GetCurrentSplitTime() { return m_CurrentSplit; }
     public void SetState(PreyState state) { m_State = state; }
+    public PreyState GetState() { return m_State; }
 
     /* Constructors. */
 
@@ -105,7 +106,6 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
     @Override
     public void Update()
     {
-
         if (m_NearbyPreys >= m_MaxSplitMultiplier) 
             m_SplitMultiplier = m_MaxSplitMultiplier; // Limit growth factor to avoid explosion in splitting
         else
@@ -122,15 +122,19 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
             m_CurrentSplit = 0f;
         }
 
-
         switch(m_State)
         {
             case WANDERING:
+                SetMovementSpeed(m_MovementSpeed);
                 Wander();
                 break;
 
             case GATHERING:
                 Gather();
+                break;
+
+            case POSSESED:
+                SetMovementSpeed(m_ControlMovementSpeed);
                 break;
             
             default:
@@ -163,7 +167,6 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
         newPreyPos.y = m_Collider.transform().GetPosition().y + r * sin(angle);
         
         Prey newPrey = (Prey) m_GameObject.GetBelongingToScene().AddGameObject(new Prey("Prey"), newPreyPos);
-        // newPrey.GetComponent(RigidBody.class).SetVelocity((ZVector.sub(newPreyPos, transform().GetPosition()).normalize()));
 
         m_Scene.SetCurrentPreyCount(m_Scene.GetCurrentPreyCount() + 1);
     }
@@ -174,8 +177,7 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
         // Ignore if we hit the prey's perimeter collider
         if (collider.GetId() == m_PerimeterCollider.GetId())
             return;
-        
-        // println("Prey main collider triggered with: " + collider.GetName());
+
     }
 
     @Override

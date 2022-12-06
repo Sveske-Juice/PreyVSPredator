@@ -17,16 +17,19 @@ public abstract class Animal extends GameObject
 public class AnimalMover extends Component
 {
     /* Members. */
-    protected float m_MovementSpeed = 100f;
+    protected float m_MovementSpeed = 125f;
+    private float m_CurrentMovementSpeed;
+    protected float m_ControlMovementSpeed = 400f;
     protected RigidBody m_RigidBody;
     protected float m_WanderRadius = 50f; // How much the radius of the wandering is
     protected float m_WanderDirectionExtend = 200f; // How much of the animal's direction (v) will be extended when wandering
     protected boolean m_ShowWandererInfo = false;
 
     /* Getters/Setters. */
-    public float GetMovementSpeed() { return m_MovementSpeed; }
+    public float GetMovementSpeed() { return m_CurrentMovementSpeed; }
     public void ShowWanderInfo() { m_ShowWandererInfo = true; }
     public void HideWanderInfo() { m_ShowWandererInfo = false; }
+    public void SetMovementSpeed(float value) { m_CurrentMovementSpeed = value; m_RigidBody.SetMaxSpeed(value); }
 
     /* Methods. */
 
@@ -63,7 +66,7 @@ public class AnimalMover extends Component
         }
 
         // Set new velocity
-        // m_RigidBody.SetVelocity(ZVector.sub(wanderedPos, transform().GetPosition()).normalize().mult(m_MovementSpeed));
+        // m_RigidBody.SetVelocity(ZVector.sub(wanderedPos, transform().GetPosition()).normalize().mult(m_CurrentMovementSpeed));
         // Move(ZVector.sub(wanderedPos, transform().GetPosition()).normalize());
         m_RigidBody.ApplyForce(ZVector.sub(wanderedPos, transform().GetPosition()).normalize().mult(m_RigidBody.GetVelocity().mag()+1));
     }
@@ -75,6 +78,6 @@ public class AnimalMover extends Component
     */
     protected void Move(ZVector direction)
     {
-        m_RigidBody.ApplyForce(direction.copy().normalize().mult(5));
+        m_RigidBody.ApplyForce(direction.copy().normalize().mult(m_CurrentMovementSpeed));
     }
 }
