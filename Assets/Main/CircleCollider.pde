@@ -156,9 +156,13 @@ public class CircleCollider extends Collider
     {
         // TODO take offset into account here
         ZVector pos = transform().GetPosition(); // cache pos
-        ZVector screenPosition = new ZVector(screenX(pos.x, pos.y), screenY(pos.x, pos.y));
-        float dist = screenPosition.dist(point);
-
+        if (!m_GameObject.IsFixed())
+        {
+            // If it's not a fixed/static collider (not ui object) then compare using screen coordiantes
+            pos = new ZVector(screenX(pos.x, pos.y), screenY(pos.x, pos.y));
+        }
+        
+        float dist = pos.dist(point);
         if (dist < m_Radius * m_GameObject.GetBelongingToScene().GetScaleFactor())
             return true;
 

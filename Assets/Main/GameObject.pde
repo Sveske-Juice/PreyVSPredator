@@ -50,6 +50,7 @@ public class GameObject
     }
 
     public void CreateComponents() { }
+    public ArrayList<GameObject> CreateChildren() { return null; }
 
     public Component AddComponent(Component component)
     {

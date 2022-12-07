@@ -66,9 +66,9 @@ public class PhysicsSystem extends CollisionWorld
     {
         for (int i = 0; i < m_Colliders.size(); i++)
         {
-            if (m_Colliders.get(i).PointInCollider(point))
+            Collider collider = m_Colliders.get(i);
+            if (collider.PointInCollider(point))
             {
-                Collider collider = m_Colliders.get(i);
                 if (!checkingForMouse) // All collision layers accepted if not mouse
                     return collider;
                 
@@ -81,10 +81,6 @@ public class PhysicsSystem extends CollisionWorld
                     // Mouse is allowed to collider with layer
                     return collider;
                 }
-
-                // Mouse is not allowed to collider with layer
-                // continue to next collider
-                continue;
             }
         }
         

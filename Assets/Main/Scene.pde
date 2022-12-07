@@ -16,7 +16,7 @@ public abstract class Scene
     private int m_ComponentIdCounter = 0;
     private int m_ObjectIdCounter = 0;
     private boolean m_SceneStarted = false;
-    private int m_MaxPreyCount = 100;
+    private int m_MaxPreyCount = 0;
     private int m_CurrentPreyCount = 1;
     private int m_MaxPredatorCount = 400;
     private int m_CurrentPredatorCount = 0;
@@ -280,6 +280,7 @@ public abstract class Scene
         if (go == null)
             return null;
         
+
         // Set a reference to this scene so the Game Object can access the scene
         go.SetBelongingToScene(this);
 
@@ -295,18 +296,42 @@ public abstract class Scene
         // Set id
         go.SetId(m_ObjectIdCounter++);
 
+        RegisterGameObjectInScene(go);
+
         if (m_SceneStarted)
         {
             go.CreateComponents();
+        }
+
+        // Give the GameObject a chance to create children (update their positions)
+        ArrayList<GameObject> children = go.CreateChildren();
+        if (children != null)
+        {
+            for (int i = 0; i < children.size(); i++)
+            {
+                println("adding child: " + children.get(i).GetName());
+                AddGameObject(children.get(i), go.GetTransform());
+            }
+        }
+
+        if (m_SceneStarted)
+        {
             go.StartObject();
         }
 
+        
+        return go;
+    }
+
+    /*
+     * Will add the GameObject to it's respictive list in the scene.
+    */
+    private void RegisterGameObjectInScene(GameObject go)
+    {
         if (go instanceof UIElement)
             m_UIObjects.add(go);
         else
             m_GameObjects.add(go);
-        
-        return go;
     }
 
     public void DestroyGameObject(int id)

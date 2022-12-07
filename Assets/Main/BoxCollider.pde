@@ -185,6 +185,7 @@ public class BoxCollider extends Collider
     @Override
     public boolean PointInCollider(ZVector point)
     {
+        // TODO implement fixed collider check
         if (point == null) return false;
 
         ZVector pos = transform().GetPosition(); // Cache pos

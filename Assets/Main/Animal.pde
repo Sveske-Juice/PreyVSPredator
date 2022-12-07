@@ -15,8 +15,8 @@ public class AnimalMover extends Component
     private float m_CurrentMovementSpeed;
     protected float m_ControlMovementSpeed = 400f;
     protected RigidBody m_RigidBody;
-    protected float m_WanderRadius = 50f; // How much the radius of the wandering is
-    protected float m_WanderDirectionExtend = 200f; // How much of the animal's direction (v) will be extended when wandering
+    protected float m_WanderRadius = 10f; // How much the radius of the wandering is
+    protected float m_WanderDirectionExtend = 100f; // How much of the animal's direction (v) will be extended when wandering
     protected boolean m_ShowWandererInfo = false;
 
     /* Getters/Setters. */

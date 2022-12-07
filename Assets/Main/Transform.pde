@@ -22,9 +22,9 @@ public class Transform extends Component
   public float GetRotation() { return m_Rotation; }
 
   /*  
-      Sets the transforms position relative to its parent(s).
-      Will not set the absolute position but rather an offset from
-      it's parent.
+   * Sets the transforms position relative to its parent(s).
+   * Will not set the absolute position but rather an offset from
+   * it's parent.
   */
   public void SetLocalPosition(ZVector pos)
   {

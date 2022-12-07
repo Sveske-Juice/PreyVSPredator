@@ -17,6 +17,7 @@ public class AnimalControlDisplay extends Component implements IAnimalEventListe
     protected Button m_TakeControlButton;
     protected Text m_PositionText;
     protected Text m_SpeedText;
+    protected Slider m_MassSlider;
     private TakeControl m_TakeControl;
 
     public AnimalControlDisplay(String name)
@@ -49,6 +50,7 @@ public class AnimalControlDisplay extends Component implements IAnimalEventListe
         // Update values on menu
         m_PositionText.SetText("Animal Position: " + m_ConnectedAnimal.GetTransform().GetPosition());
         m_SpeedText.SetText("Speed: " + round(m_ConnectedAnimalMover.GetGameObject().GetComponent(RigidBody.class).GetVelocity().mag()));
+        println("mass: " + m_MassSlider.GetCurrentValue());
     }
 
     protected void ShowMenu(Animal animal)
@@ -139,13 +141,18 @@ public class AnimalControlDisplay extends Component implements IAnimalEventListe
         m_SpeedText.SetMargin(new ZVector(25f, 25f));
         m_SpeedText.transform().SetLocalPosition(new ZVector(0f, 100f));
 
-
+        // Mass slider
+        SliderObject massSliderObj = (SliderObject) m_Scene.AddGameObject(new SliderObject(), menuBackground.GetTransform());
+        m_MassSlider = massSliderObj.GetComponent(Slider.class);
+        m_MassSlider.SetMargin(new ZVector(25f, 25f));
+        m_MassSlider.transform().SetLocalPosition(new ZVector(0f, 200f));
+        
         // Take control button
         m_TakeControlButton = (Button) m_Scene.AddGameObject(new Button("Take Control Button Object"), menuBackground.GetTransform());
         ButtonBehaviour btnBeh = m_TakeControlButton.GetComponent(ButtonBehaviour.class);
         m_TakeControlButton.SetTag("AnimalControlDisplay");
         btnBeh.SetSize(new ZVector(300f, 100f));
-        m_TakeControlButton.GetTransform().SetLocalPosition(new ZVector(m_MenuWidth / 2f - btnBeh.GetSize().x / 2f, 500f));
+        m_TakeControlButton.GetTransform().SetLocalPosition(new ZVector(m_MenuWidth / 2f - btnBeh.GetSize().x / 2f, 750f));
         btnBeh.SetText("Control Animal");
         btnBeh.AddButtonListener(m_TakeControl); // Add callback to button
     }

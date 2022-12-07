@@ -4,6 +4,7 @@ public class Polygon extends Component
     private PShape m_PShape;
     private boolean m_DrawShape = true;
     private float m_RotationOffset = 0f;
+    private ZVector m_PositionOffset = new ZVector();
 
     /* Getters/Setters. */
     public boolean IsDrawingShape() { return m_DrawShape; }
@@ -21,6 +22,13 @@ public class Polygon extends Component
     {
         m_PShape = shape;
         m_Name = "Polygon";
+    }
+
+    public Polygon(PShape shape, ZVector offset)
+    {
+        m_PShape = shape;
+        m_Name = "Polygon";
+        m_PositionOffset = offset;
     }
 
     /* Methods. */
@@ -41,8 +49,11 @@ public class Polygon extends Component
         pushMatrix();
         
         // Translate the coordinate system so the polygon to draw is in center
-        translate(pos.x, pos.y);
+        translate(pos.x + m_PositionOffset.x, pos.y + m_PositionOffset.y);
         rotate(m_GameObject.GetTransform().GetRotation() + m_RotationOffset);
+
+        // Draw from center
+        shapeMode(CENTER);
 
         // Draw the polygon
         shape(m_PShape);

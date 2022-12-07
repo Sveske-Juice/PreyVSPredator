@@ -20,7 +20,7 @@ void setup()
 
 void draw()
 {
-    background(200);
+    background(color(40, 180, 60));
 
     Time.Tick(millis());
 
