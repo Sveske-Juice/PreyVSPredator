@@ -77,16 +77,15 @@ public class CameraHandler extends Component implements IMouseEventListener
             return;
         }
         
-        // Check if it's an animal that was clicked on
+        // Start chasing if an animal that was clicked on
         if (collider.GetGameObject() instanceof Animal)
         {
             m_IsChasingColldier = true;
             m_CanSelectNewCollider = false;
             ChaseCollider(collider);
         }
-        else
+        else // if not the stop chasing
         {
-            m_ChasingCollider = null;
             m_IsChasingColldier = false;
         }
     }

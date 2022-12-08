@@ -81,7 +81,7 @@ public class PreyControlDisplay extends AnimalControlDisplay implements IMouseEv
         stateTxtObj.SetTag("AnimalControlDisplay");
         m_StateText = (Text) stateTxtObj.AddComponent(new Text("Prey State Text"));
         m_StateText.SetMargin(new ZVector(25f, 25f));
-        m_StateText.transform().SetLocalPosition(new ZVector(0f, 250f));   
+        m_StateText.transform().SetLocalPosition(new ZVector(0f, 275f));   
 
         // Create preys nearby element
         GameObject preysNerby = m_Scene.AddGameObject(new UIElement("Prey Nearby Text Object"), m_MenuBackground.transform());

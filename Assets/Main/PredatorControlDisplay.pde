@@ -75,7 +75,7 @@ public class PredatorControlDisplay extends AnimalControlDisplay implements IMou
         stateTxtObj.SetTag("AnimalControlDisplay");
         m_StateText = (Text) stateTxtObj.AddComponent(new Text("Predator State Text"));
         m_StateText.SetMargin(new ZVector(25f, 25f));
-        m_StateText.transform().SetLocalPosition(new ZVector(0f, 150f));
+        m_StateText.transform().SetLocalPosition(new ZVector(0f, 175f));
 
         // Create preys nearby element
         GameObject eatenPreysObj = m_Scene.AddGameObject(new UIElement("Predator Eaten Preys Text Object"), m_MenuBackground.transform());

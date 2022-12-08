@@ -29,21 +29,29 @@ public class SliderObject extends UIElement
 public class Slider extends Component
 {
     /* Members. */
-    private float m_MaxValue = 400f; // The max value of the slider
-    private float m_MinValue = 0f; // The minimum value of the slider
-    private float m_CurrentValue = m_MaxValue / 2f; // Set the current value to be in the middle of the slider
+    private float m_MaxValue = 1000f; // The max value of the slider
+    private float m_SliderLength = 400f;
+    private float m_MinValue = 100f; // The minimum value of the slider
+    private float m_CurrentValue = 0f;
+    private float m_Progress = 0f; // Holds the acual progress value of the slider (a linear interpolated value between min and max)
     private color m_SliderColor = color(40, 60, 110);
     private ZVector m_Margin = new ZVector();
     private float m_Thickness = 8f; // Slider line thickness/weight
     private Knob m_KnobBehaviour;
+    private boolean m_ShowMinText = true; // Should show text field of the minimum value
+    private boolean m_ShowMaxText = true; // Should show text field of the max value
 
     /* Getters/Setters. */
     public void SetMaxValue(float value) { m_MaxValue = value; }
     public float GetMaxValue() { return m_MaxValue; }
+    public void SetMinValue(float value) { m_MinValue = value; }
+    public float GetMinValue() { return m_MinValue; }
+    
     public void SetSliderColor(color value) { m_SliderColor = value; }
     public void SetMargin(ZVector value) { m_Margin = value; }
     public void SetThickness(float value) { m_Thickness = value; }
-    public float GetCurrentValue() { return m_CurrentValue; }
+    public float GetProgress() { return m_Progress; }
+    public void SetShowProgressText(boolean value) { m_KnobBehaviour.SetShowProgressText(value); /* Forward the setter to the knob behaviour. */ }
 
     @Override
     public void Start()
@@ -63,9 +71,20 @@ public class Slider extends Component
         // Draw slider line
         stroke(m_SliderColor);
         strokeWeight(m_Thickness);
-        line(pos.x, pos.y, pos.x + m_MaxValue, pos.y);
+        line(pos.x, pos.y, pos.x + m_SliderLength, pos.y);
         strokeWeight(1f); // Default
         stroke(0); // Default
+
+        // Draw texts
+        if (m_ShowMinText)
+        {
+            text(m_MinValue + "", pos.x, pos.y + 10f);
+        }
+
+        if (m_ShowMaxText)
+        {
+            text(m_MaxValue + "", pos.x + m_SliderLength, pos.y + 10f);
+        }
     }
 
     /*
@@ -82,9 +101,15 @@ public class Slider extends Component
         // Apply new position
         m_KnobBehaviour.transform().SetPosition(clampedKnobPos);
 
-        // Update slider value
+        // Update slider position value
         m_CurrentValue = clampedKnobPos.x - transform().GetPosition().x - m_Margin.x;
-        m_CurrentValue = Clamp(m_CurrentValue, m_MinValue, m_MaxValue); // Clamp to min and max slider values
+
+        // Update slider progress value
+
+        float t = m_CurrentValue / m_SliderLength; // Get percentage
+
+        // Linear interpolate along the min and max values by its progress percentage, t
+        m_Progress = m_MinValue + t * (m_MaxValue - m_MinValue);
     }
 
     /*
@@ -96,7 +121,7 @@ public class Slider extends Component
         ZVector sliderPos = ZVector.add(transform().GetPosition(), m_Margin);
 
         ZVector clamped = vec.copy();
-        clamped.x = Clamp(vec.x, sliderPos.x, sliderPos.x + m_MaxValue);
+        clamped.x = Clamp(vec.x, sliderPos.x, sliderPos.x + m_SliderLength);
         clamped.y = Clamp(vec.y, sliderPos.y, sliderPos.y);
         return clamped;
     }
@@ -136,24 +161,27 @@ public class Knob extends Component implements IMouseEventListener
     /* Members. */
     private Slider m_SliderBehaviour;
     private Collider m_KnobCollider;
-    private float m_KnobRadius = 30f;
+    private float m_KnobRadius = 35f;
     private color m_KnobColor = color(0, 255, 0);
     private boolean m_KnobClicked = false;
     private boolean m_MouseDrag = false;
     private ZVector m_MouseDiff = new ZVector();
+    private color m_CurrentTextColor = color(0, 0, 0);
+    private int m_CurrentTextSize = 14;
+    private boolean m_ShowCurrentText = true; // Should show text field of the current value inside the knob
 
     /* Getters/Setters. */
     public void SetKnobRadius(float value) { m_KnobRadius = value; }
     public void SetKnobColor(color value) { m_KnobColor = value; }
+    public void SetShowProgressText(boolean value) { m_ShowCurrentText = value; }
 
     @Override
     public void Start()
     {
-        println("starting KNOB! pos: " + transform().GetPosition());
         m_SliderBehaviour = transform().GetParent().GetGameObject().GetComponent(Slider.class);
         m_KnobCollider = m_GameObject.GetComponent(Collider.class);
         m_KnobCollider.SetTrigger(true);
-        m_KnobCollider.SetShouldDraw(true);
+
         // Register this class to get mouse events
         m_GameObject.GetBelongingToScene().FindGameObject("Mouse Event Initiator Handler").GetComponent(MouseEventInitiator.class).AddMouseEventListener(this);
     }
@@ -179,6 +207,15 @@ public class Knob extends Component implements IMouseEventListener
         // Draw slider knob
         fill(m_KnobColor);
         circle(pos.x, pos.y, m_KnobRadius);
+
+        // Draw progress value inside knob
+        if (m_ShowCurrentText)
+        {
+            fill(m_CurrentTextColor);
+            textAlign(CENTER, CENTER);
+            textSize(m_CurrentTextSize);
+            text(round(m_SliderBehaviour.GetProgress()), pos.x, pos.y);
+        }
     }
 
     @Override

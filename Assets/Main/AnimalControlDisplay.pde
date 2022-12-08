@@ -11,7 +11,8 @@ public class AnimalControlDisplay extends Component implements IAnimalEventListe
 
     protected boolean m_MenuBeingShowed = false;
     protected Animal m_ConnectedAnimal; // Animal showing stats about
-    protected AnimalMover m_ConnectedAnimalMover;
+    protected AnimalMover m_ConnectedAnimalMover; // Animal mover behaviour showing stats about
+    protected RigidBody m_ConnectedBody; // RigidBody of animal showing stats about
 
     protected Polygon m_MenuBackground;
     protected Button m_TakeControlButton;
@@ -50,7 +51,8 @@ public class AnimalControlDisplay extends Component implements IAnimalEventListe
         // Update values on menu
         m_PositionText.SetText("Animal Position: " + m_ConnectedAnimal.GetTransform().GetPosition());
         m_SpeedText.SetText("Speed: " + round(m_ConnectedAnimalMover.GetGameObject().GetComponent(RigidBody.class).GetVelocity().mag()));
-        println("mass: " + m_MassSlider.GetCurrentValue());
+        m_ConnectedBody.SetMass(m_MassSlider.GetProgress());
+        // println("mass: " + m_MassSlider.GetProgress());
     }
 
     protected void ShowMenu(Animal animal)
@@ -65,6 +67,7 @@ public class AnimalControlDisplay extends Component implements IAnimalEventListe
         m_ConnectedAnimal = animal;
         m_TakeControl = new TakeControl(m_ConnectedAnimal);
         m_ConnectedAnimalMover = animal.GetComponent(AnimalMover.class);
+        m_ConnectedBody = animal.GetComponent(RigidBody.class);
         
         // Show the animal's view range (perimeter)
         m_ConnectedAnimal.GetTransform().GetChild(0).GetGameObject().GetComponent(Collider.class).SetShouldDraw(true);
@@ -140,11 +143,21 @@ public class AnimalControlDisplay extends Component implements IAnimalEventListe
         m_SpeedText = (Text) speedTxtObj.AddComponent(new Text("Speed Text"));
         m_SpeedText.SetMargin(new ZVector(25f, 25f));
         m_SpeedText.transform().SetLocalPosition(new ZVector(0f, 100f));
-
+        
         // Mass slider
         SliderObject massSliderObj = (SliderObject) m_Scene.AddGameObject(new SliderObject(), menuBackground.GetTransform());
         m_MassSlider = massSliderObj.GetComponent(Slider.class);
         m_MassSlider.SetMargin(new ZVector(25f, 25f));
+        m_MassSlider.SetMaxValue(100f);
+        m_MassSlider.SetMinValue(1f);
+        
+        // Create title for slider
+        Text massTxt = (Text) massSliderObj.AddComponent(new Text("Mass slider title"));
+        massTxt.SetText("Mass:");
+        massTxt.SetMargin(new ZVector(25f, -25f));
+
+
+
         m_MassSlider.transform().SetLocalPosition(new ZVector(0f, 200f));
         
         // Take control button
