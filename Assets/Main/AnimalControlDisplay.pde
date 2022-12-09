@@ -19,6 +19,7 @@ public class AnimalControlDisplay extends Component implements IAnimalEventListe
     protected Text m_PositionText;
     protected Text m_SpeedText;
     protected Slider m_MassSlider;
+    protected Slider m_SpeedSlider;
     private TakeControl m_TakeControl;
 
     public AnimalControlDisplay(String name)
@@ -52,6 +53,7 @@ public class AnimalControlDisplay extends Component implements IAnimalEventListe
         m_PositionText.SetText("Animal Position: " + m_ConnectedAnimal.GetTransform().GetPosition());
         m_SpeedText.SetText("Speed: " + round(m_ConnectedAnimalMover.GetGameObject().GetComponent(RigidBody.class).GetVelocity().mag()));
         m_ConnectedBody.SetMass(m_MassSlider.GetProgress());
+        m_ConnectedAnimalMover.SetSpeedMultiplier(m_SpeedSlider.GetProgress());
         // println("mass: " + m_MassSlider.GetProgress());
     }
 
@@ -149,16 +151,30 @@ public class AnimalControlDisplay extends Component implements IAnimalEventListe
         m_MassSlider = massSliderObj.GetComponent(Slider.class);
         m_MassSlider.SetMargin(new ZVector(25f, 25f));
         m_MassSlider.SetMaxValue(100f);
-        m_MassSlider.SetMinValue(1f);
-        
-        // Create title for slider
+        m_MassSlider.SetMinValue(10f);
+        m_MassSlider.SetProgress(m_ConnectedBody.GetMass());
+        m_MassSlider.transform().SetLocalPosition(new ZVector(0f, 200f));
+
+        // Create title for mass slider
         Text massTxt = (Text) massSliderObj.AddComponent(new Text("Mass slider title"));
         massTxt.SetText("Mass:");
         massTxt.SetMargin(new ZVector(25f, -25f));
 
+        // Speed multiplier slider
+        SliderObject speedSliderObj = (SliderObject) m_Scene.AddGameObject(new SliderObject(), menuBackground.GetTransform());
+        m_SpeedSlider = speedSliderObj.GetComponent(Slider.class);
+        m_SpeedSlider.SetMargin(new ZVector(25f, 25f));
+        m_SpeedSlider.SetMaxValue(10f);
+        m_SpeedSlider.SetMinValue(1f);
+        m_SpeedSlider.SetProgress(m_ConnectedAnimalMover.GetSpeedMultiplier());
+        m_SpeedSlider.transform().SetLocalPosition(new ZVector(0f, 300f));
+        
+        // Create title for speed slider
+        Text speedTxt = (Text) speedSliderObj.AddComponent(new Text("Speed slider title"));
+        speedTxt.SetText("Speed multipier:");
+        speedTxt.SetMargin(new ZVector(25f, -25f));
 
 
-        m_MassSlider.transform().SetLocalPosition(new ZVector(0f, 200f));
         
         // Take control button
         m_TakeControlButton = (Button) m_Scene.AddGameObject(new Button("Take Control Button Object"), menuBackground.GetTransform());

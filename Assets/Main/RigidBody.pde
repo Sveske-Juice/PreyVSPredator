@@ -6,7 +6,7 @@ public class RigidBody extends Component
     private ZVector m_Acceleration = new ZVector();
     private ZVector m_NetForce = new ZVector();
     
-    private float m_Mass = 1f; // Mass of entity
+    private float m_Mass = 25f; // Mass of entity
 
     private float m_DynamicFriction = 0.95f; // Dynamic friction coefficient
     private float m_MaxSpeed = 500;
@@ -49,6 +49,7 @@ public class RigidBody extends Component
         // Use Euler's method to get the position of the entity next frame
         m_Velocity.add(m_Acceleration);
         m_Velocity.limit(m_MaxSpeed);
+
 
         // Reset acceleration and the net force
         m_Acceleration.mult(0);

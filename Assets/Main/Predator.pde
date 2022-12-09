@@ -157,7 +157,10 @@ public class PredatorController extends AnimalMover implements ITriggerEventHand
         if (m_NearbyPreys == 0 && m_State == PredatorState.HUNTING)
             SetState(PredatorState.WANDERING);
         
-        m_NearbyPreys = 0;
+        // Physics system is updated later than components so no more
+        // preys will be spotted this frame and its safe to reset for next frame
+        if (m_PerimeterCollider.GetFramesSinceTick() == m_PerimeterCollider.GetTickEveryFrame()) // Make sure the perimiter collider will be ticked next frame
+            m_NearbyPreys = 0;
     }
 
     @Override

@@ -29,9 +29,9 @@ public class SliderObject extends UIElement
 public class Slider extends Component
 {
     /* Members. */
-    private float m_MaxValue = 1000f; // The max value of the slider
+    private float m_MaxValue = 100f; // The max value of the slider
     private float m_SliderLength = 400f;
-    private float m_MinValue = 100f; // The minimum value of the slider
+    private float m_MinValue = 10f; // The minimum value of the slider
     private float m_CurrentValue = 0f;
     private float m_Progress = 0f; // Holds the acual progress value of the slider (a linear interpolated value between min and max)
     private color m_SliderColor = color(40, 60, 110);
@@ -52,15 +52,27 @@ public class Slider extends Component
     public void SetThickness(float value) { m_Thickness = value; }
     public float GetProgress() { return m_Progress; }
     public void SetShowProgressText(boolean value) { m_KnobBehaviour.SetShowProgressText(value); /* Forward the setter to the knob behaviour. */ }
+    public void SetProgress(float progress)
+    {
+        // println("setting progress to: " + progress);
+        // println("max: " + m_MaxValue);
+        // println("len: " + m_SliderLength);
 
+        // TODO FIXME doesn't work propely, too lazy to fixx
+        float v = (progress / m_MaxValue) * m_SliderLength;
+        
+        m_KnobBehaviour.transform().SetPosition(new ZVector(v, 0f));
+    }
+
+    
     @Override
     public void Start()
     {
         // Get reference to the knob behaviour class
         m_KnobBehaviour = transform().GetChild(0).GetGameObject().GetComponent(Knob.class);
 
-        // Move knob to default value
-        MoveKnob(new ZVector(m_CurrentValue));
+        // setup pos value
+        MoveKnob(new ZVector(0f));
     }
 
     @Override
@@ -76,6 +88,8 @@ public class Slider extends Component
         stroke(0); // Default
 
         // Draw texts
+        fill(255);
+        textSize(14);
         if (m_ShowMinText)
         {
             text(m_MinValue + "", pos.x, pos.y + 10f);
@@ -105,7 +119,6 @@ public class Slider extends Component
         m_CurrentValue = clampedKnobPos.x - transform().GetPosition().x - m_Margin.x;
 
         // Update slider progress value
-
         float t = m_CurrentValue / m_SliderLength; // Get percentage
 
         // Linear interpolate along the min and max values by its progress percentage, t

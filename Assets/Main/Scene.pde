@@ -16,7 +16,7 @@ public abstract class Scene
     private int m_ComponentIdCounter = 0;
     private int m_ObjectIdCounter = 0;
     private boolean m_SceneStarted = false;
-    private int m_MaxPreyCount = 0;
+    private int m_MaxPreyCount = 100;
     private int m_CurrentPreyCount = 1;
     private int m_MaxPredatorCount = 400;
     private int m_CurrentPredatorCount = 0;
@@ -309,7 +309,6 @@ public abstract class Scene
         {
             for (int i = 0; i < children.size(); i++)
             {
-                println("adding child: " + children.get(i).GetName());
                 AddGameObject(children.get(i), go.GetTransform());
             }
         }
