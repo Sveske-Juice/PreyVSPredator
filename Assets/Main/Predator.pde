@@ -48,7 +48,20 @@ public class PredatorController extends AnimalMover implements ITriggerEventHand
     private float m_NutrientsGainedWhenEating = 0.1f; // Percentage nutrient gain when eating prey
     private float m_NutrientDropWhenSplit = 0.75f; // Nutrient percentage dropped when predator split
     private float m_NutrientForDeath = 0f; // Percentage that determines when a predator will die
-    private PShape m_TargetShape;
+    private PImage m_TargetIcon;
+    private Runnable m_ShowTargetIcon = new Runnable() // Job for show the target icon on the prey being hunted
+    {
+        @Override
+        public void run()
+        {
+            if (m_HuntingPrey == null)
+                return;
+            
+            ZVector pos = m_HuntingPrey.GetTransform().GetPosition();
+            imageMode(CENTER);
+            image(m_TargetIcon, pos.x, pos.y);
+        }
+    };
 
     /* Getters/Setters. */
     public void SetHuntingPrey(Prey prey) { m_HuntingPrey = prey; }
@@ -75,7 +88,7 @@ public class PredatorController extends AnimalMover implements ITriggerEventHand
         // Do not allow changing state while animal is being controlled
         if (m_State == PredatorState.POSSESED && !force)
             return;
-        
+
         m_State = state;
     }
 
@@ -97,7 +110,7 @@ public class PredatorController extends AnimalMover implements ITriggerEventHand
         m_Collider.GetCollisionMask().SetBit(CollisionLayer.ANIMAL_PEREMITER_COLLIDER.ordinal()); // collide against animal's perimeter
         m_Collider.SetColor(m_ColliderColor);
         m_Collider.SetShouldDraw(true);
-        m_TargetShape = loadShape("target.svg");
+        m_TargetIcon = loadImage("target.png");
 
         // Get the perimeter collider from the child GameObject
         m_PerimeterCollider = transform().GetChild(0).GetGameObject().GetComponent(CircleCollider.class);
@@ -144,10 +157,11 @@ public class PredatorController extends AnimalMover implements ITriggerEventHand
                     break;
                 }
 
+                // Register End of frame job to make sure the target icon will be displayed on top
+                m_Scene.RegisterEndOfFrameJob(m_ShowTargetIcon);
+
+                // Hun the prey
                 Hunt(m_HuntingPrey);
-                m_TargetShape.disableStyle();
-                
-                ShowTarget(m_HuntingPrey.GetTransform().GetPosition());
                 break;
 
             case POSSESED:
@@ -249,10 +263,7 @@ public class PredatorController extends AnimalMover implements ITriggerEventHand
     /*
      * Will show the target icon at a specific position specified by 'position'
     */
-    private void ShowTarget(ZVector position)
-    {
-        shape(m_TargetShape, position.x, position.y);
-    }
+
 
     @Override
     public void OnCollision(Collider collider)

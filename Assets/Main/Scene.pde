@@ -8,6 +8,7 @@ public abstract class Scene
     protected String m_SceneName = "New Scene";
     protected ArrayList<GameObject> m_GameObjects = new ArrayList<GameObject>();
     protected ArrayList<GameObject> m_UIObjects = new ArrayList<GameObject>();
+    private ArrayList<Runnable> m_EndOfFrameJobs = new ArrayList<Runnable>();
     protected ZVector m_Dimensions = new ZVector(3000f, 3000f);
     private ZVector m_MoveTranslation = new ZVector();
     private float m_ScaleFactor = 1f;
@@ -53,6 +54,7 @@ public abstract class Scene
     public float GetPhysicsFM() { return m_PhysicsFM / 1000; }
     public float GetFPS() { return 1 / Time.dt(); }
     public int GetBushCount() { return m_BushCount; }
+    public void RegisterEndOfFrameJob(Runnable job) { m_EndOfFrameJobs.add(job); }
     
     public Scene(String sceneName)
     {
@@ -191,7 +193,7 @@ public abstract class Scene
 
             if (!go.IsFixed())
             {
-                // If the UI Element is fixed then do not translate and scale (Is fixed on UIElement)
+                // If the UI Elemem_EndOfFrameJobsnt is fixed then do not translate and scale (Is fixed on UIElement)
                 translate(width / 2f, height / 2f);
                 scale(m_ScaleFactor);
                 translate(-m_MoveTranslation.x - width / 2f, -m_MoveTranslation.y - height / 2f);   
@@ -201,6 +203,20 @@ public abstract class Scene
             popMatrix();
         }
         m_LateUIFM = (millis() - lateUiT);
+
+        // Translate and scale for end jobs
+        translate(width / 2f, height / 2f);
+        scale(m_ScaleFactor);
+        translate(-m_MoveTranslation.x - width / 2f, -m_MoveTranslation.y - height / 2f);
+
+        // Last thing to do is to run all the end of frame jobs
+        for (int i = 0; i < m_EndOfFrameJobs.size(); i++)
+        {
+            m_EndOfFrameJobs.get(i).run();
+        }
+
+        m_EndOfFrameJobs.clear();
+
         // println("UI LATE update frame time: " + m_LateUIFM);
 
         // println("------------- new frame ------------");
