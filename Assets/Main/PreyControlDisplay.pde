@@ -41,7 +41,7 @@ public class PreyControlDisplay extends AnimalControlDisplay implements IMouseEv
     {
         super.Start();
 
-        m_Scene.FindGameObject("Mouse Event Initiator Handler").GetComponent(MouseEventInitiator.class).AddMouseEventListener(this);
+        m_GameScene.FindGameObject("Mouse Event Initiator Handler").GetComponent(MouseEventInitiator.class).AddMouseEventListener(this);
     }
 
     @Override
@@ -63,8 +63,8 @@ public class PreyControlDisplay extends AnimalControlDisplay implements IMouseEv
 
         if (m_ConnectedPreyController.GetNearbyPreys() >= m_ConnectedPreyController.GetMaxNearbyPreys())
             m_SplitBlocked.SetText("Blocked because to many preys are nearby!");
-        else if (m_Scene.GetCurrentPreyCount() >= m_Scene.GetMaxPreyCount())
-            m_SplitBlocked.SetText("Blocked because prey count has reached maximum! (" + m_Scene.GetMaxPreyCount() + ")");
+        else if (m_GameScene.GetGameSettings().GetCurrentPreyCount() >= m_GameScene.GetGameSettings().GetMaxPreyCount())
+            m_SplitBlocked.SetText("Blocked because prey count has reached maximum! (" + m_GameScene.GetGameSettings().GetMaxPreyCount() + ")");
     }
 
     /* Prey specific menu attributes. */
@@ -77,21 +77,21 @@ public class PreyControlDisplay extends AnimalControlDisplay implements IMouseEv
             return;
 
         // Create animal state text
-        GameObject stateTxtObj = m_Scene.AddGameObject(new UIElement("Prey State Text Object"), m_MenuBackground.transform());
+        GameObject stateTxtObj = m_GameScene.AddGameObject(new UIElement("Prey State Text Object"), m_MenuBackground.transform());
         stateTxtObj.SetTag("AnimalControlDisplay");
         m_StateText = (Text) stateTxtObj.AddComponent(new Text("Prey State Text"));
         m_StateText.SetMargin(new ZVector(25f, 25f));
         m_StateText.transform().SetLocalPosition(new ZVector(0f, 350f));   
 
         // Create preys nearby element
-        GameObject preysNerby = m_Scene.AddGameObject(new UIElement("Prey Nearby Text Object"), m_MenuBackground.transform());
+        GameObject preysNerby = m_GameScene.AddGameObject(new UIElement("Prey Nearby Text Object"), m_MenuBackground.transform());
         preysNerby.SetTag("AnimalControlDisplay");
         m_PreysNearby = (Text) preysNerby.AddComponent(new Text("Prey Nearby Text"));
         m_PreysNearby.SetMargin(new ZVector(25f, 25f));
         m_PreysNearby.transform().SetLocalPosition(new ZVector(0f, 425f));      
 
         // Create Split multiplier text
-        GameObject splitMultObj = m_Scene.AddGameObject(new UIElement("Split Multiplier Text Object"), m_MenuBackground.transform());
+        GameObject splitMultObj = m_GameScene.AddGameObject(new UIElement("Split Multiplier Text Object"), m_MenuBackground.transform());
         preysNerby.SetTag("AnimalControlDisplay");
         m_SplitMultiplier = (Text) splitMultObj.AddComponent(new Text("Split Multiplier Text"));
         m_SplitMultiplier.SetMargin(new ZVector(25f, 25f));
@@ -100,7 +100,7 @@ public class PreyControlDisplay extends AnimalControlDisplay implements IMouseEv
         m_SplitMultiplier.transform().SetLocalPosition(new ZVector(0f, 500f)); 
 
         // Create split title
-        GameObject splitTitle = m_Scene.AddGameObject(new UIElement("Split Title Object"), m_MenuBackground.transform());
+        GameObject splitTitle = m_GameScene.AddGameObject(new UIElement("Split Title Object"), m_MenuBackground.transform());
         splitTitle.SetTag("AnimalControlDisplay");
         Text splitTitleTxt = (Text) splitTitle.AddComponent(new Text("Split Title"));
         splitTitleTxt.SetText("Split Progress:");
@@ -108,7 +108,7 @@ public class PreyControlDisplay extends AnimalControlDisplay implements IMouseEv
         splitTitleTxt.transform().SetLocalPosition(new ZVector(0f,550f));
 
         // Create Split progress bar
-        GameObject splitBar =  m_Scene.AddGameObject(new UIElement("Prey Split Progressbar Object"), m_MenuBackground.transform());
+        GameObject splitBar =  m_GameScene.AddGameObject(new UIElement("Prey Split Progressbar Object"), m_MenuBackground.transform());
         splitBar.SetTag("AnimalControlDisplay");
         m_SplitBar = (Progressbar) splitBar.AddComponent(new Progressbar("Prey Split Progressbar"));
         m_SplitBar.SetMargin(new ZVector(25f, 25f));
@@ -116,7 +116,7 @@ public class PreyControlDisplay extends AnimalControlDisplay implements IMouseEv
         m_SplitBar.transform().SetLocalPosition(new ZVector(0f, 600f));
 
         // Create split block text
-        GameObject splitBlockObj =  m_Scene.AddGameObject(new UIElement("Split Blocked Text Object"), m_MenuBackground.transform());
+        GameObject splitBlockObj =  m_GameScene.AddGameObject(new UIElement("Split Blocked Text Object"), m_MenuBackground.transform());
         splitBlockObj.SetTag("AnimalControlDisplay");
         m_SplitBlocked = (Text) splitBlockObj.AddComponent(new Text("Split Blocked Text"));
         m_SplitBlocked.SetMargin(new ZVector(25f, 25f));

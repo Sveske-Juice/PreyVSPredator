@@ -14,13 +14,17 @@ public class BushSpawnerObject extends GameObject
 
 public class BushSpawner extends Component
 {
+    private GameScene m_GameScene;
+
     @Override
     public void Start()
     {
-        ZVector dimensions = m_GameObject.GetBelongingToScene().GetDimensions();
+        m_GameScene = (GameScene) m_GameObject.GetBelongingToScene();
+        
+        ZVector dimensions = m_GameScene.GetDimensions();
 
         // Populate list with bushes
-        for (int i = 0; i < m_GameObject.GetBelongingToScene().GetBushCount(); i++)
+        for (int i = 0; i < m_GameScene.GetGameSettings().GetBushCount(); i++)
         {
             ZVector randPos = new ZVector(random(-dimensions.x, dimensions.x), random(-dimensions.y, dimensions.y));
             GameObject bush = m_GameObject.GetBelongingToScene().AddGameObject(new BushObject());

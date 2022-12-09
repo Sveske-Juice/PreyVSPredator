@@ -9,7 +9,7 @@ public abstract class Animal extends GameObject
 public class AnimalMover extends Component
 {
     /* Members. */
-    protected Scene m_Scene;
+    protected GameScene m_GameScene;
     protected Polygon m_Polygon;
     protected float m_MovementSpeed = 250f;
     protected float m_SpeedMultiplier = 1f;
@@ -35,7 +35,7 @@ public class AnimalMover extends Component
     @Override
     public void Start()
     {
-        m_Scene = m_GameObject.GetBelongingToScene();
+        m_GameScene = (GameScene) m_GameObject.GetBelongingToScene();
         m_RigidBody = m_GameObject.GetComponent(RigidBody.class);
         m_Polygon = m_GameObject.GetComponent(Polygon.class);
         m_Polygon.SetRotationOffset(0);
@@ -45,7 +45,7 @@ public class AnimalMover extends Component
     public void Exit()
     {
         // Register a animal death
-        m_Scene.FindGameObject("Animal Event Initiator Handler").GetComponent(AnimalEventInitiator.class).RegisterAnimalDeath((Animal) m_GameObject, m_GameObject.GetId());
+        m_GameScene.FindGameObject("Animal Event Initiator Handler").GetComponent(AnimalEventInitiator.class).RegisterAnimalDeath((Animal) m_GameObject, m_GameObject.GetId());
     }
 
     @Override

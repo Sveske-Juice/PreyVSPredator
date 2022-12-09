@@ -2,7 +2,7 @@
 public class AnimalControlDisplay extends Component implements IAnimalEventListener
 {
     /* Members. */
-    protected Scene m_Scene;
+    protected GameScene m_GameScene;
     protected ZVector m_MenuPosition = new ZVector(10f, 10f);
 
     protected float m_MenuWidth = 600f;
@@ -37,10 +37,10 @@ public class AnimalControlDisplay extends Component implements IAnimalEventListe
     {
         m_MenuHeight = height - m_MenuPosition.y * 4; // Use Start() since "height" is initialized here
 
-        m_Scene = m_GameObject.GetBelongingToScene();
+        m_GameScene = (GameScene) m_GameObject.GetBelongingToScene();
 
         // Register this class to get events about animals (deaths etc.)
-        m_Scene.FindGameObject("Animal Event Initiator Handler").GetComponent(AnimalEventInitiator.class).RegisterListener(this);
+        m_GameScene.FindGameObject("Animal Event Initiator Handler").GetComponent(AnimalEventInitiator.class).RegisterListener(this);
     }
 
     @Override
@@ -119,13 +119,13 @@ public class AnimalControlDisplay extends Component implements IAnimalEventListe
         /* Create all UI GameObjects that make up the control display. */
         
         // Create background for menu
-        GameObject menuBackground = m_Scene.AddGameObject(new UIElement("Animal Control Display Menu Background"), transform());
+        GameObject menuBackground = m_GameScene.AddGameObject(new UIElement("Animal Control Display Menu Background"), transform());
         menuBackground.SetTag("AnimalControlDisplay");
         m_MenuBackground = (Polygon) menuBackground.AddComponent(new Polygon(createShape(RECT, 0f, 0f, m_MenuWidth, m_MenuHeight)));
         m_MenuBackground.GetShape().setFill(m_MenuBackgroundColor);
 
         // Create statistics text element
-        GameObject statTitle = m_Scene.AddGameObject(new UIElement("Statistics Title Object"), menuBackground.GetTransform());
+        GameObject statTitle = m_GameScene.AddGameObject(new UIElement("Statistics Title Object"), menuBackground.GetTransform());
         statTitle.SetTag("AnimalControlDisplay");
         Text statTitleTxt = (Text) statTitle.AddComponent(new Text("Statestics Title"));
         statTitleTxt.SetText("Animal Statistics");
@@ -133,21 +133,21 @@ public class AnimalControlDisplay extends Component implements IAnimalEventListe
         statTitleTxt.SetMargin(new ZVector(25f, 25f));
 
         // Create position text element
-        GameObject positionTextObj = m_Scene.AddGameObject(new UIElement("Position Text Object"), menuBackground.GetTransform());
+        GameObject positionTextObj = m_GameScene.AddGameObject(new UIElement("Position Text Object"), menuBackground.GetTransform());
         positionTextObj.SetTag("AnimalControlDisplay");
         m_PositionText = (Text) positionTextObj.AddComponent(new Text("Position Text"));
         m_PositionText.SetMargin(new ZVector(25f, 25f));
         m_PositionText.transform().SetLocalPosition(new ZVector(0f, 50f));
 
         // Create speed text element
-        GameObject speedTxtObj = m_Scene.AddGameObject(new UIElement("Speed Text Object"), menuBackground.GetTransform());
+        GameObject speedTxtObj = m_GameScene.AddGameObject(new UIElement("Speed Text Object"), menuBackground.GetTransform());
         speedTxtObj.SetTag("AnimalControlDisplay");
         m_SpeedText = (Text) speedTxtObj.AddComponent(new Text("Speed Text"));
         m_SpeedText.SetMargin(new ZVector(25f, 25f));
         m_SpeedText.transform().SetLocalPosition(new ZVector(0f, 100f));
         
         // Mass slider
-        SliderObject massSliderObj = (SliderObject) m_Scene.AddGameObject(new SliderObject(), menuBackground.GetTransform());
+        SliderObject massSliderObj = (SliderObject) m_GameScene.AddGameObject(new SliderObject(), menuBackground.GetTransform());
         m_MassSlider = massSliderObj.GetComponent(Slider.class);
         m_MassSlider.SetMargin(new ZVector(25f, 25f));
         m_MassSlider.SetMaxValue(100f);
@@ -161,7 +161,7 @@ public class AnimalControlDisplay extends Component implements IAnimalEventListe
         massTxt.SetMargin(new ZVector(25f, -25f));
 
         // Speed multiplier slider
-        SliderObject speedSliderObj = (SliderObject) m_Scene.AddGameObject(new SliderObject(), menuBackground.GetTransform());
+        SliderObject speedSliderObj = (SliderObject) m_GameScene.AddGameObject(new SliderObject(), menuBackground.GetTransform());
         m_SpeedSlider = speedSliderObj.GetComponent(Slider.class);
         m_SpeedSlider.SetMargin(new ZVector(25f, 25f));
         m_SpeedSlider.SetMaxValue(10f);
@@ -177,7 +177,7 @@ public class AnimalControlDisplay extends Component implements IAnimalEventListe
 
         
         // Take control button
-        m_TakeControlButton = (Button) m_Scene.AddGameObject(new Button("Take Control Button Object"), menuBackground.GetTransform());
+        m_TakeControlButton = (Button) m_GameScene.AddGameObject(new Button("Take Control Button Object"), menuBackground.GetTransform());
         ButtonBehaviour btnBeh = m_TakeControlButton.GetComponent(ButtonBehaviour.class);
         m_TakeControlButton.SetTag("AnimalControlDisplay");
         btnBeh.SetSize(new ZVector(300f, 100f));
@@ -210,6 +210,7 @@ public class TakeControl implements IButtonEventListener
         m_Animal = animal;
     }
 
+    @Override
     public void OnClick()
     {
         // If component already on animal then do not add

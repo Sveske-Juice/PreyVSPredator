@@ -35,6 +35,9 @@ public class ButtonBehaviour extends Component implements IMouseEventListener
     private color m_CurrentColor = m_NormalColor;
     private color m_HighlightColor = color(0, 255, 0);
     private color m_TextColor = color(255, 255, 255);
+    private int m_TextSize = 24;
+    private float m_ButtonCooldown = 1f;
+    private float m_CurrentCooldown = 0f;
 
     public ButtonBehaviour()
     {
@@ -76,10 +79,14 @@ public class ButtonBehaviour extends Component implements IMouseEventListener
         // Draw texta
         fill(m_TextColor);
         textAlign(CENTER, CENTER);
+        textSize(m_TextSize);
         text(m_Text, pos.x + m_Size.x / 2f, pos.y + m_Size.y / 2f);
 
         // Reset current button color to normal
         m_CurrentColor = m_NormalColor;
+
+        // Add to the cooldown timer
+        m_CurrentCooldown += Time.dt();
     }
 
     public void OnColliderClick(Collider collider)
@@ -88,14 +95,22 @@ public class ButtonBehaviour extends Component implements IMouseEventListener
         if (m_Collider.GetId() != collider.GetId())
             return;
 
+        // Make sure the cooldown time has gone before triggering again
+        if (m_CurrentCooldown < m_ButtonCooldown)
+            return;
+
         RaiseOnClickEvent();
 
         // Highlight button
         m_CurrentColor = m_HighlightColor;
+
+        // Reset cooldown timer
+        m_CurrentCooldown = 0f;
     }
 
     private void RaiseOnClickEvent()
     {
+        println("button clicked, listeners: " + m_ButtonListeners.size());
         for (int i = 0; i < m_ButtonListeners.size(); i++)
         {
             m_ButtonListeners.get(i).OnClick();

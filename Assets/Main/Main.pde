@@ -11,11 +11,8 @@ void setup()
 
     // Render settings
     noSmooth(); // Better performance without smooth
-    
-
-    //rectMode(CENTER);
-    g_SceneManager.AddScene(new GameScene());
-    g_SceneManager.LoadScene("Game Scene");
+    g_SceneManager.AddScene(new MenuScene());
+    g_SceneManager.LoadScene("Menu Scene");
 }
 
 void draw()

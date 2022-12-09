@@ -39,7 +39,7 @@ public class PredatorControlDisplay extends AnimalControlDisplay implements IMou
     {
         super.Start();
 
-        m_Scene.FindGameObject("Mouse Event Initiator Handler").GetComponent(MouseEventInitiator.class).AddMouseEventListener(this);
+        m_GameScene.FindGameObject("Mouse Event Initiator Handler").GetComponent(MouseEventInitiator.class).AddMouseEventListener(this);
     }
 
     @Override
@@ -71,21 +71,21 @@ public class PredatorControlDisplay extends AnimalControlDisplay implements IMou
 
 
         // Create state text
-        GameObject stateTxtObj = m_Scene.AddGameObject(new UIElement("Predator State Text Object"), m_MenuBackground.transform());
+        GameObject stateTxtObj = m_GameScene.AddGameObject(new UIElement("Predator State Text Object"), m_MenuBackground.transform());
         stateTxtObj.SetTag("AnimalControlDisplay");
         m_StateText = (Text) stateTxtObj.AddComponent(new Text("Predator State Text"));
         m_StateText.SetMargin(new ZVector(25f, 25f));
         m_StateText.transform().SetLocalPosition(new ZVector(0f, 350f));
 
         // Create preys nearby element
-        GameObject eatenPreysObj = m_Scene.AddGameObject(new UIElement("Predator Eaten Preys Text Object"), m_MenuBackground.transform());
+        GameObject eatenPreysObj = m_GameScene.AddGameObject(new UIElement("Predator Eaten Preys Text Object"), m_MenuBackground.transform());
         eatenPreysObj.SetTag("AnimalControlDisplay");
         m_PreysEaten = (Text) eatenPreysObj.AddComponent(new Text("Predator Eaten Preys Text"));
         m_PreysEaten.SetMargin(new ZVector(25f, 25f));
         m_PreysEaten.transform().SetLocalPosition(new ZVector(0f, 400f));
         
         // Create nutrients bar title
-        GameObject nutrientsTitleObj = m_Scene.AddGameObject(new UIElement("Nutrients Title Object"), m_MenuBackground.transform());
+        GameObject nutrientsTitleObj = m_GameScene.AddGameObject(new UIElement("Nutrients Title Object"), m_MenuBackground.transform());
         nutrientsTitleObj.SetTag("AnimalControlDisplay");
         Text nutrientsTitle = (Text) nutrientsTitleObj.AddComponent(new Text("Nutrients Title"));
         nutrientsTitle.SetText("Nutrients: ");
@@ -93,7 +93,7 @@ public class PredatorControlDisplay extends AnimalControlDisplay implements IMou
         nutrientsTitle.transform().SetLocalPosition(new ZVector(0f, 450f));
 
         // Create Nutrients progress bar
-        GameObject nutrientsBarObj =  m_Scene.AddGameObject(new UIElement("Nutrients Progressbar Object"), m_MenuBackground.transform());
+        GameObject nutrientsBarObj =  m_GameScene.AddGameObject(new UIElement("Nutrients Progressbar Object"), m_MenuBackground.transform());
         nutrientsBarObj.SetTag("AnimalControlDisplay");
         m_NutrientsBar = (Progressbar) nutrientsBarObj.AddComponent(new Progressbar("Nutrients Progressbar"));
         m_NutrientsBar.SetMargin(new ZVector(25f, 25f));

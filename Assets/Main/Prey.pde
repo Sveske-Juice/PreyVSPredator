@@ -114,7 +114,7 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
             m_SplitMultiplier = m_NearbyPreys;
 
         // Increment current split time with dt if the max number of preys aren't met yet and there's room for the new prey
-        if (m_Scene.GetCurrentPreyCount() < m_Scene.GetMaxPreyCount()  && m_NearbyPreys < m_MaxNearbyPreysToSplit)
+        if (m_GameScene.GetGameSettings().GetCurrentPreyCount() < m_GameScene.GetGameSettings().GetMaxPreyCount()  && m_NearbyPreys < m_MaxNearbyPreysToSplit)
             m_CurrentSplit += Time.dt() * (m_SplitMultiplier + 1);
 
         // If current counter has reached the time requeried for a split 
@@ -170,7 +170,7 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
         Prey newPrey = (Prey) m_GameObject.GetBelongingToScene().AddGameObject(new Prey("Prey"), newPreyPos);
 
         // TODO use observer pattern
-        m_Scene.SetCurrentPreyCount(m_Scene.GetCurrentPreyCount() + 1);
+        m_GameScene.GetGameSettings().SetCurrentPreyCount(m_GameScene.GetGameSettings().GetCurrentPreyCount() + 1);
     }
 
     @Override
@@ -188,6 +188,6 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
         super.Exit();
 
         // Decrease prey counter
-        m_Scene.SetCurrentPreyCount(m_Scene.GetCurrentPreyCount() - 1);
+        m_GameScene.GetGameSettings().SetCurrentPreyCount(m_GameScene.GetGameSettings().GetCurrentPreyCount() - 1);
     }
 }

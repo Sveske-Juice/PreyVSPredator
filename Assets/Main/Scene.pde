@@ -5,11 +5,11 @@
 public abstract class Scene
 {
     /* Members. */
+    protected ZVector m_Dimensions = new ZVector(3000f, 3000f);
     protected String m_SceneName = "New Scene";
     protected ArrayList<GameObject> m_GameObjects = new ArrayList<GameObject>();
     protected ArrayList<GameObject> m_UIObjects = new ArrayList<GameObject>();
     private ArrayList<Runnable> m_EndOfFrameJobs = new ArrayList<Runnable>();
-    protected ZVector m_Dimensions = new ZVector(3000f, 3000f);
     private ZVector m_MoveTranslation = new ZVector();
     private float m_ScaleFactor = 1f;
     protected PhysicsSystem m_PhysicsSystem = new PhysicsSystem();
@@ -17,23 +17,18 @@ public abstract class Scene
     private int m_ComponentIdCounter = 0;
     private int m_ObjectIdCounter = 0;
     private boolean m_SceneStarted = false;
-    private int m_MaxPreyCount = 100;
-    protected int m_CurrentPreyCount = 10;
-    private int m_MaxPredatorCount = 400;
-    protected int m_CurrentPredatorCount = 3;
     private float m_ObjectFM = 0; // Object Update Frame Time
     private float m_LateObjectFM = 0; // Late Object Update Frame Time
     private float m_UIFM = 0; // UI Element Update Frame Time
     private float m_LateUIFM = 0; // Late UI Element Update Frame Time
     private float m_PhysicsFM = 0; // Physics system update frame time
-    private int m_BushCount = 30;
     
     /* Getters/Setters. */
+    public ZVector GetDimensions() { return m_Dimensions; }
     public String GetSceneName() { return m_SceneName; }
     public ArrayList<GameObject> GetGameObjects() { return m_GameObjects; }
     public void SetGameObjects(ArrayList<GameObject> objects) { m_GameObjects = objects; }
     public PhysicsSystem GetPhysicsSystem() { return m_PhysicsSystem; }
-    public ZVector GetDimensions() { return m_Dimensions; }
     public ZVector GetMoveTranslation() { return m_MoveTranslation; }
     public void SetMoveTranslation(ZVector translation) { m_MoveTranslation = translation; }
     public void SetScaleFactor(float factor) { m_ScaleFactor = factor; }
@@ -41,19 +36,12 @@ public abstract class Scene
     public BitField GetMouseCollisionMask() { return m_MouseCollisionMask; }
     public int GetComponentIdCounter() { return m_ComponentIdCounter; }
     public void SetComponentIdCounter(int value) { m_ComponentIdCounter = value; }
-    public int GetMaxPreyCount() { return m_MaxPreyCount; }
-    public void SetCurrentPreyCount(int value) { m_CurrentPreyCount = value; }
-    public int GetCurrentPreyCount() { return m_CurrentPreyCount; }
-    public int GetMaxPredatorCount() { return m_MaxPredatorCount; }
-    public void SetCurrentPredatorCount(int value) { m_CurrentPredatorCount = value; }
-    public int GetCurrentPredatorCount() { return m_CurrentPredatorCount; }
     public float GetObjectFM() { return m_ObjectFM / 1000; }
     public float GetLateObjectFM() { return m_LateObjectFM / 1000; }
     public float GetUIFM() { return m_UIFM / 1000; }
     public float GetLateUIFM() { return m_LateUIFM / 1000; }
     public float GetPhysicsFM() { return m_PhysicsFM / 1000; }
     public float GetFPS() { return 1 / Time.dt(); }
-    public int GetBushCount() { return m_BushCount; }
     public void RegisterEndOfFrameJob(Runnable job) { m_EndOfFrameJobs.add(job); }
     
     public Scene(String sceneName)
@@ -392,16 +380,25 @@ public abstract class Scene
 
 public class GameScene extends Scene
 {
-    public GameScene(String sceneName)
+    /* Members. */
+    private GameSettings m_GameSettings;
+
+    /* Getters/Setters. */
+    public GameSettings GetGameSettings() { return m_GameSettings; }
+
+    public GameScene(GameSettings gameSettings, String sceneName)
     {
         super(sceneName);
+        m_GameSettings = gameSettings;
     }
 
-    public GameScene()
+    public GameScene(GameSettings gameSettings)
     {
         super("Game Scene");
+        m_GameSettings = gameSettings;
     }
     
+    @Override
     public void CreateScene()
     {
         // Mouse click event handler
@@ -431,7 +428,7 @@ public class GameScene extends Scene
         AddGameObject(new BushSpawnerObject());
         
         // Create start preys
-        for (int i = 0; i < m_CurrentPreyCount; i++)
+        for (int i = 0; i < m_GameSettings.GetCurrentPreyCount(); i++)
         {
             ZVector rand = new ZVector(random(-m_Dimensions.x, m_Dimensions.x), random(-m_Dimensions.y, m_Dimensions.y));
             GameObject prey = AddGameObject(new Prey("Prey"));
@@ -439,7 +436,7 @@ public class GameScene extends Scene
         }
 
         // Create start predators
-        for (int i = 0; i < m_CurrentPredatorCount; i++)
+        for (int i = 0; i < m_GameSettings.GetCurrentPredatorCount(); i++)
         {
             ZVector rand = new ZVector(random(-m_Dimensions.x, m_Dimensions.x), random(-m_Dimensions.y, m_Dimensions.y));
             GameObject predator = AddGameObject(new Predator("Predator"));
@@ -473,19 +470,37 @@ public class GameScene extends Scene
         bottomborder.Gettransform().GetPosition() = new ZVector(0, height-30);
         */
 
-        for (int i = 0; i < 0; i++)
-        {
-            ZVector rand = new ZVector(random(-m_Dimensions.x, m_Dimensions.x), random(-m_Dimensions.y, m_Dimensions.y));
-            GameObject prey = AddGameObject(new Prey("Prey1"));
-            prey.GetTransform().SetPosition(rand);
-        }
+        // for (int i = 0; i < 0; i++)
+        // {
+        //     ZVector rand = new ZVector(random(-m_Dimensions.x, m_Dimensions.x), random(-m_Dimensions.y, m_Dimensions.y));
+        //     GameObject prey = AddGameObject(new Prey("Prey1"));
+        //     prey.GetTransform().SetPosition(rand);
+        // }
 
-        for (int i = 0; i < 0; i++)
-        {
-            ZVector rand = new ZVector(random(-m_Dimensions.x, m_Dimensions.x-150), random(-m_Dimensions.y, m_Dimensions.y-150));
-            GameObject prey = AddGameObject(new Prey("Prey" + i));
-            prey.GetTransform().SetPosition(rand); //ZVector.sub(prey1.Gettransform().GetPosition(), new ZVector(500, 500));
-        }
+        // for (int i = 0; i < 0; i++)
+        // {
+        //     ZVector rand = new ZVector(random(-m_Dimensions.x, m_Dimensions.x-150), random(-m_Dimensions.y, m_Dimensions.y-150));
+        //     GameObject prey = AddGameObject(new Prey("Prey" + i));
+        //     prey.GetTransform().SetPosition(rand); //ZVector.sub(prey1.Gettransform().GetPosition(), new ZVector(500, 500));
+        // }
         
+    }
+}
+
+public class MenuScene extends Scene
+{
+    public MenuScene()
+    {
+        super("Menu Scene");
+    }
+
+    @Override
+    public void CreateScene()
+    {
+        // Mouse click event handler
+        AddGameObject(new MouseEventInitiatorObject());
+
+       // Create main menu handler behavior class
+       AddGameObject(new MainMenuHandlerObject());
     }
 }

@@ -158,7 +158,7 @@ public class PredatorController extends AnimalMover implements ITriggerEventHand
                 }
 
                 // Register End of frame job to make sure the target icon will be displayed on top
-                m_Scene.RegisterEndOfFrameJob(m_ShowTargetIcon);
+                m_GameScene.RegisterEndOfFrameJob(m_ShowTargetIcon);
 
                 // Hun the prey
                 Hunt(m_HuntingPrey);
@@ -188,7 +188,7 @@ public class PredatorController extends AnimalMover implements ITriggerEventHand
         super.Exit();
 
         // Decrement number of predators in the scene
-        m_Scene.SetCurrentPredatorCount(m_Scene.GetCurrentPredatorCount() - 1);
+        m_GameScene.GetGameSettings().SetCurrentPredatorCount(m_GameScene.GetGameSettings().GetCurrentPredatorCount() - 1);
     }
 
     /*
@@ -244,7 +244,7 @@ public class PredatorController extends AnimalMover implements ITriggerEventHand
         Predator newPrey = (Predator) m_GameObject.GetBelongingToScene().AddGameObject(new Predator("Predator"), newPredatorPos);
 
         // TODO use observer pattern
-        m_Scene.SetCurrentPredatorCount(m_Scene.GetCurrentPredatorCount() + 1);
+        m_GameScene.GetGameSettings().SetCurrentPredatorCount(m_GameScene.GetGameSettings().GetCurrentPredatorCount() + 1);
 
         // Drop nutrients
         m_Nutrients -= m_MaxNutrients * m_NutrientDropWhenSplit;

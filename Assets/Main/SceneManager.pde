@@ -9,7 +9,18 @@ public class SceneManager
     public Scene GetActiveScene() { return m_ActiveScene; }
     
     /* Methods. */
-    public void AddScene(Scene scene) { m_Scenes.add(scene); }
+    public void AddScene(Scene scene)
+    {
+        // Make sure scene with same name doesn't already exist
+        String name = scene.GetSceneName();
+        for (int i = 0; i< m_Scenes.size(); i++)
+        {
+            if (name == m_Scenes.get(i).GetSceneName())
+                return;
+        }
+
+        m_Scenes.add(scene); 
+    }
     
     /// Starts all the GameObjects in a scene
     /// specified by the argument "sceneName"
@@ -23,7 +34,7 @@ public class SceneManager
             {
                 // Exit objects on current scene
                 if (m_ActiveScene != null)
-                    m_ActiveScene.ExitObjects();
+                    UnloadActiveScene();
 
                 // Load new scene by creating and starting all objects in that scene
                 m_ActiveScene = m_Scenes.get(i);
