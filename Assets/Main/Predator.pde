@@ -40,14 +40,15 @@ public class PredatorController extends AnimalMover implements ITriggerEventHand
     private PredatorState m_State = PredatorState.WANDERING;
     private Prey m_HuntingPrey;
     private int m_NearbyPreys = 0;
-    private float m_HuntMovementSpeed = 175f;
+    private float m_HuntMovementSpeed = 300f; // speed of predator when hunting prey (little bit faster than normal)
     private int m_PreysEaten = 0;
     private float m_MaxNutrients = 100f; // Max nutrient level of predator
-    private float m_Nutrients = m_MaxNutrients / 2f; // Current nutrients, starts out being half of max
     private float m_SplitNutrientPercentage = 0.8f; // Percentage required for split
+    private float m_Nutrients = m_MaxNutrients * m_SplitNutrientPercentage; // Current nutrients, starts out right under split threshold
     private float m_NutrientsGainedWhenEating = 0.1f; // Percentage nutrient gain when eating prey
     private float m_NutrientDropWhenSplit = 0.75f; // Nutrient percentage dropped when predator split
     private float m_NutrientForDeath = 0f; // Percentage that determines when a predator will die
+    private PShape m_TargetShape;
 
     /* Getters/Setters. */
     public void SetHuntingPrey(Prey prey) { m_HuntingPrey = prey; }
@@ -96,6 +97,7 @@ public class PredatorController extends AnimalMover implements ITriggerEventHand
         m_Collider.GetCollisionMask().SetBit(CollisionLayer.ANIMAL_PEREMITER_COLLIDER.ordinal()); // collide against animal's perimeter
         m_Collider.SetColor(m_ColliderColor);
         m_Collider.SetShouldDraw(true);
+        m_TargetShape = loadShape("target.svg");
 
         // Get the perimeter collider from the child GameObject
         m_PerimeterCollider = transform().GetChild(0).GetGameObject().GetComponent(CircleCollider.class);
@@ -143,6 +145,9 @@ public class PredatorController extends AnimalMover implements ITriggerEventHand
                 }
 
                 Hunt(m_HuntingPrey);
+                m_TargetShape.disableStyle();
+                
+                ShowTarget(m_HuntingPrey.GetTransform().GetPosition());
                 break;
 
             case POSSESED:
@@ -239,6 +244,14 @@ public class PredatorController extends AnimalMover implements ITriggerEventHand
     private void StarvePredator()
     {
         m_GameObject.Destroy();
+    }
+
+    /*
+     * Will show the target icon at a specific position specified by 'position'
+    */
+    private void ShowTarget(ZVector position)
+    {
+        shape(m_TargetShape, position.x, position.y);
     }
 
     @Override

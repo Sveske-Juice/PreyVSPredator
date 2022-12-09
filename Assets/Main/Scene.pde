@@ -17,14 +17,15 @@ public abstract class Scene
     private int m_ObjectIdCounter = 0;
     private boolean m_SceneStarted = false;
     private int m_MaxPreyCount = 100;
-    private int m_CurrentPreyCount = 1;
+    protected int m_CurrentPreyCount = 10;
     private int m_MaxPredatorCount = 400;
-    private int m_CurrentPredatorCount = 0;
+    protected int m_CurrentPredatorCount = 3;
     private float m_ObjectFM = 0; // Object Update Frame Time
     private float m_LateObjectFM = 0; // Late Object Update Frame Time
     private float m_UIFM = 0; // UI Element Update Frame Time
     private float m_LateUIFM = 0; // Late UI Element Update Frame Time
     private float m_PhysicsFM = 0; // Physics system update frame time
+    private int m_BushCount = 30;
     
     /* Getters/Setters. */
     public String GetSceneName() { return m_SceneName; }
@@ -51,6 +52,7 @@ public abstract class Scene
     public float GetLateUIFM() { return m_LateUIFM / 1000; }
     public float GetPhysicsFM() { return m_PhysicsFM / 1000; }
     public float GetFPS() { return 1 / Time.dt(); }
+    public int GetBushCount() { return m_BushCount; }
     
     public Scene(String sceneName)
     {
@@ -67,6 +69,7 @@ public abstract class Scene
     // TODO use delegate for 3 methods below
     public void StartObjects()
     {
+        m_SceneStarted = true;
         m_PhysicsSystem.SetBelongingToScene(this); // Give collisionworld a reference to this scene
 
         // Start GameObjects
@@ -81,7 +84,6 @@ public abstract class Scene
             m_UIObjects.get(i).StartObject();
         }
 
-        m_SceneStarted = true;
     }
     
     public void UpdateScene()
@@ -223,7 +225,7 @@ public abstract class Scene
     {
         if (go == null)
             return null;
-        
+
         // Set a reference to this scene so the Game Object can access the scene
         go.SetBelongingToScene(this);
 
@@ -409,13 +411,25 @@ public class GameScene extends Scene
         // Debug displayer
         GameObject debugDisplay = AddGameObject(new DebugDisplayObject());
         
-
+        // Bush spawner
+        AddGameObject(new BushSpawnerObject());
         
-        GameObject prey1 = AddGameObject(new Prey("Prey1"));
-        prey1.GetTransform().SetPosition(new ZVector(200f, 100f));
+        // Create start preys
+        for (int i = 0; i < m_CurrentPreyCount; i++)
+        {
+            ZVector rand = new ZVector(random(-m_Dimensions.x, m_Dimensions.x), random(-m_Dimensions.y, m_Dimensions.y));
+            GameObject prey = AddGameObject(new Prey("Prey"));
+            prey.GetTransform().SetPosition(rand);
+        }
 
-        GameObject predator = AddGameObject(new Predator("Predator"));
-        predator.GetTransform().SetPosition(new ZVector(width, 100f));
+        // Create start predators
+        for (int i = 0; i < m_CurrentPredatorCount; i++)
+        {
+            ZVector rand = new ZVector(random(-m_Dimensions.x, m_Dimensions.x), random(-m_Dimensions.y, m_Dimensions.y));
+            GameObject predator = AddGameObject(new Predator("Predator"));
+            predator.GetTransform().SetPosition(rand);
+        }
+
         // prey1.AddComponent(new AnimalInputController());
         
         // RigidBody body = (RigidBody) prey1.AddComponent(new RigidBody());
