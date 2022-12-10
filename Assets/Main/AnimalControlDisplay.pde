@@ -121,7 +121,7 @@ public class AnimalControlDisplay extends Component implements IAnimalEventListe
         // Create background for menu
         GameObject menuBackground = m_GameScene.AddGameObject(new UIElement("Animal Control Display Menu Background"), transform());
         menuBackground.SetTag("AnimalControlDisplay");
-        m_MenuBackground = (Polygon) menuBackground.AddComponent(new Polygon(createShape(RECT, 0f, 0f, m_MenuWidth, m_MenuHeight)));
+        m_MenuBackground = (Polygon) menuBackground.AddComponent(new Polygon(createShape(RECT, 0f, 0f, m_MenuWidth, m_MenuHeight, 25f)));
         m_MenuBackground.GetShape().setFill(m_MenuBackgroundColor);
 
         // Create statistics text element
@@ -174,8 +174,6 @@ public class AnimalControlDisplay extends Component implements IAnimalEventListe
         speedTxt.SetText("Speed multipier:");
         speedTxt.SetMargin(new ZVector(25f, -25f));
 
-
-        
         // Take control button
         m_TakeControlButton = (Button) m_GameScene.AddGameObject(new Button("Take Control Button Object"), menuBackground.GetTransform());
         ButtonBehaviour btnBeh = m_TakeControlButton.GetComponent(ButtonBehaviour.class);
@@ -183,6 +181,7 @@ public class AnimalControlDisplay extends Component implements IAnimalEventListe
         btnBeh.SetSize(new ZVector(300f, 100f));
         m_TakeControlButton.GetTransform().SetLocalPosition(new ZVector(m_MenuWidth / 2f - btnBeh.GetSize().x / 2f, 750f));
         btnBeh.SetText("Control Animal");
+        btnBeh.SetCornerRadius(25f);
         btnBeh.AddButtonListener(m_TakeControl); // Add callback to button
     }
 

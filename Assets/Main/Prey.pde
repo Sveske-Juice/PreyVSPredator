@@ -50,7 +50,6 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
     private int m_SplitMultiplier = 0; // Current split multiplier
     private int m_MaxSplitMultiplier = 3; // Do not increase split multiplier more than this
     private int m_MaxNearbyPreysToSplit = 15; // Do not split if there are more than m_MaxNearbyPreysToSplit preys nearby
-    private float m_SplitTime = 30f; // Amount when a prey should split
     private float m_CurrentSplit = 0f; // Current value counter for split
 
     /* Getters/Setters. */
@@ -58,7 +57,6 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
     public int GetNearbyPreys() { return m_NearbyPreys; }
     public int GetMaxNearbyPreys() { return m_MaxNearbyPreysToSplit; }
     public int GetSplitMultiplier() { return m_SplitMultiplier; }
-    public float GetSplitTime() { return m_SplitTime; }
     public float GetCurrentSplitTime() { return m_CurrentSplit; }
     public void SetState(PreyState state) { m_State = state; }
     public PreyState GetState() { return m_State; }
@@ -68,13 +66,6 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
     // Default constructor, use default movement speed
     public PreyController()
     {
-        m_Name = "Prey Mover";
-    }
-
-    // Specify movement speed
-    public PreyController(float moveSpeed)
-    {
-        m_MovementSpeed = moveSpeed;
         m_Name = "Prey Mover";
     }
 
@@ -96,7 +87,7 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
         m_Collider.GetCollisionMask().SetBit(CollisionLayer.ANIMAL_MAIN_COLLIDER.ordinal()); // collide against other animals
         m_Collider.GetCollisionMask().SetBit(CollisionLayer.ANIMAL_PEREMITER_COLLIDER.ordinal()); // collide against animal's perimeter
         m_Collider.SetColor(m_ColliderColor);
-        m_Collider.SetShouldDraw(true);
+        // m_Collider.SetShouldDraw(true);
         // m_Collider.SetFill(true);
         m_Collider.SetStroke(true);
         
@@ -118,7 +109,7 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
             m_CurrentSplit += Time.dt() * (m_SplitMultiplier + 1);
 
         // If current counter has reached the time requeried for a split 
-        if (m_CurrentSplit >= m_SplitTime)
+        if (m_CurrentSplit >= m_GameScene.GetGameSettings().GetPreySplitTime())
         {
             SplitPrey();
             m_CurrentSplit = 0f;
@@ -127,7 +118,7 @@ public class PreyController extends AnimalMover implements ITriggerEventHandler
         switch(m_State)
         {
             case WANDERING:
-                SetMovementSpeed(m_MovementSpeed);
+                SetMovementSpeed(m_GameScene.GetGameSettings().GetAnimalMovementSpeed());
                 Wander();
                 break;
 

@@ -59,7 +59,7 @@ public class PreyControlDisplay extends AnimalControlDisplay implements IMouseEv
         m_StateText.SetText("State: " + m_ConnectedPreyController.GetState());
         m_PreysNearby.SetText("Nearby Preys: " + m_ConnectedPreyController.GetNearbyPreys());
         m_SplitMultiplier.SetText("Split Multiplier: " + m_ConnectedPreyController.GetSplitMultiplier());
-        m_SplitBar.SetProgress(m_ConnectedPreyController.GetCurrentSplitTime() / m_ConnectedPreyController.GetSplitTime());
+        m_SplitBar.SetProgress(m_ConnectedPreyController.GetCurrentSplitTime() / m_GameScene.GetGameSettings().GetPreySplitTime());
 
         if (m_ConnectedPreyController.GetNearbyPreys() >= m_ConnectedPreyController.GetMaxNearbyPreys())
             m_SplitBlocked.SetText("Blocked because to many preys are nearby!");

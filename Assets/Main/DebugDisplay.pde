@@ -42,6 +42,7 @@ public class DebugDisplay extends Component
     private Text m_ObjFM;
     private Text m_UIFM;
     private Text m_PreyCount;
+    private Text m_PredatorCount;
     private Text m_ColChecks;
 
     public DebugDisplay()
@@ -96,7 +97,7 @@ public class DebugDisplay extends Component
 
         // Create background
         GameObject menuBackground = m_GameScene.AddGameObject(new UIElement("Debug Display Background Object"), transform());
-        m_Background = (Polygon) menuBackground.AddComponent(new Polygon(createShape(RECT, 0f, 0f, m_MenuWidth, m_MenuHeight)));
+        m_Background = (Polygon) menuBackground.AddComponent(new Polygon(createShape(RECT, 0f, 0f, m_MenuWidth, m_MenuHeight, 25f)));
         m_Background.GetShape().setFill(m_MenuBackgroundColor);
 
         // Total fps and frame time
@@ -135,10 +136,16 @@ public class DebugDisplay extends Component
         // Prey count
         GameObject preyObj = m_GameScene.AddGameObject(new UIElement("Prey Count Text Object"), m_Background.transform());
         m_PreyCount = (Text) preyObj.AddComponent(new Text("Prey Count Text"));
-        m_PreyCount.SetMargin(new ZVector(50f, 10f));
+        m_PreyCount.SetMargin(new ZVector(25f, 10f));
         m_PreyCount.SetTextColor(color(255, 200, 0));
         m_PreyCount.transform().SetLocalPosition(new ZVector(0f, 300f));
 
+        // Predator count
+        GameObject predObj = m_GameScene.AddGameObject(new UIElement("Predator Count Text Object"), m_Background.transform());
+        m_PredatorCount = (Text) predObj.AddComponent(new Text("Predator Count Text"));
+        m_PredatorCount.SetMargin(new ZVector(25f, 10f));
+        m_PredatorCount.SetTextColor(color(255, 200, 0));
+        m_PredatorCount.transform().SetLocalPosition(new ZVector(250f, 300f));
 
         m_ShowingMenu = true;
     }
@@ -152,11 +159,12 @@ public class DebugDisplay extends Component
 
     private void UpdateMenu()
     {
-        m_Fps.SetText("FPS: " + m_GameScene.GetFPS() + "                               frametime: " + Time.dt() + "ms");
-        m_PhyFM.SetText("Physics Frame Time: " + m_GameScene.GetPhysicsFM() + "ms");
-        m_ObjFM.SetText("Object Tick Frame Time: " + (m_GameScene.GetLateObjectFM() + m_GameScene.GetObjectFM()) + "ms");
+        m_Fps.SetText("FPS: " + m_GameScene.GetFPS() + ",  frametime: " + Time.dt() + "ms");
+        m_PhyFM.SetText("Physics Frame Time: " + m_GameScene.GetPhysicsFM() + "ms" + ", pct: " + round(100 * m_GameScene.GetPhysicsFM() / Time.dt()) + "%");
+        m_ObjFM.SetText("Object Tick Frame Time: " + (m_GameScene.GetLateObjectFM() + m_GameScene.GetObjectFM()) + "ms" + ", pct: " + round(100 *(m_GameScene.GetLateObjectFM() + m_GameScene.GetObjectFM()) / Time.dt()) + "%");
         m_UIFM.SetText("UI Tick Frame Time: " + (m_GameScene.GetLateUIFM() + m_GameScene.GetUIFM()) + "ms");
         m_PreyCount.SetText("Preys in scene: " + m_GameScene.GetGameSettings().GetCurrentPreyCount());
+        m_PredatorCount.SetText("Predators in scene: " + m_GameScene.GetGameSettings().GetCurrentPredatorCount());
         m_ColChecks.SetText("Collision Checks: " + m_GameScene.GetPhysicsSystem().GetCollisionChecks());
 
         // Show collider quad tree

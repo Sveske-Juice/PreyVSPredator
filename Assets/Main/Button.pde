@@ -30,14 +30,14 @@ public class ButtonBehaviour extends Component implements IMouseEventListener
     private String m_Text = "Button Text";
     private ArrayList<IButtonEventListener> m_ButtonListeners = new ArrayList<IButtonEventListener>();
     private ZVector m_Size = new ZVector(200f, 50f);
-    private ZVector m_Margin = new ZVector();
     private color m_NormalColor = color(38, 50, 74);
     private color m_CurrentColor = m_NormalColor;
     private color m_HighlightColor = color(0, 255, 0);
     private color m_TextColor = color(255, 255, 255);
     private int m_TextSize = 24;
-    private float m_ButtonCooldown = 1f;
-    private float m_CurrentCooldown = 0f;
+    private float m_ButtonCooldown = 0.1f; // Time taken for the button to be pressed again
+    private float m_CurrentCooldown = m_ButtonCooldown; // Current cooldown of button (start at no cooldown)
+    private float m_CornerRadius = 0f;
 
     public ButtonBehaviour()
     {
@@ -54,6 +54,8 @@ public class ButtonBehaviour extends Component implements IMouseEventListener
     public void AddButtonListener(IButtonEventListener listener) { m_ButtonListeners.add(listener); }
     public void SetSize(ZVector size) { m_Size = size; m_Collider.SetWidth(size.x); m_Collider.SetHeight(size.y); }
     public ZVector GetSize() { return m_Size; }
+    public void SetCornerRadius(float value) { m_CornerRadius = value; }
+    public void SetTextSize(int value) { m_TextSize = value; }
 
     @Override
     public void Start()
@@ -74,7 +76,7 @@ public class ButtonBehaviour extends Component implements IMouseEventListener
 
         // Draw button
         fill(m_CurrentColor);
-        rect(pos.x, pos.y, m_Size.x, m_Size.y);
+        rect(pos.x, pos.y, m_Size.x, m_Size.y, m_CornerRadius);
 
         // Draw texta
         fill(m_TextColor);
@@ -110,7 +112,7 @@ public class ButtonBehaviour extends Component implements IMouseEventListener
 
     private void RaiseOnClickEvent()
     {
-        println("button clicked, listeners: " + m_ButtonListeners.size());
+        // println("button clicked, listeners: " + m_ButtonListeners.size());
         for (int i = 0; i < m_ButtonListeners.size(); i++)
         {
             m_ButtonListeners.get(i).OnClick();

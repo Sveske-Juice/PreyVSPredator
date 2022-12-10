@@ -40,13 +40,12 @@ public class PredatorController extends AnimalMover implements ITriggerEventHand
     private PredatorState m_State = PredatorState.WANDERING;
     private Prey m_HuntingPrey;
     private int m_NearbyPreys = 0;
-    private float m_HuntMovementSpeed = 300f; // speed of predator when hunting prey (little bit faster than normal)
     private int m_PreysEaten = 0;
     private float m_MaxNutrients = 100f; // Max nutrient level of predator
     private float m_SplitNutrientPercentage = 0.8f; // Percentage required for split
     private float m_Nutrients = m_MaxNutrients * m_SplitNutrientPercentage; // Current nutrients, starts out right under split threshold
     private float m_NutrientsGainedWhenEating = 0.1f; // Percentage nutrient gain when eating prey
-    private float m_NutrientDropWhenSplit = 0.75f; // Nutrient percentage dropped when predator split
+    private float m_NutrientDropWhenSplit = 0.25f; // Nutrient percentage dropped when predator split
     private float m_NutrientForDeath = 0f; // Percentage that determines when a predator will die
     private PImage m_TargetIcon;
     private Runnable m_ShowTargetIcon = new Runnable() // Job for show the target icon on the prey being hunted
@@ -109,7 +108,7 @@ public class PredatorController extends AnimalMover implements ITriggerEventHand
         m_Collider.GetCollisionMask().SetBit(CollisionLayer.ANIMAL_MAIN_COLLIDER.ordinal()); // collide against other animals
         m_Collider.GetCollisionMask().SetBit(CollisionLayer.ANIMAL_PEREMITER_COLLIDER.ordinal()); // collide against animal's perimeter
         m_Collider.SetColor(m_ColliderColor);
-        m_Collider.SetShouldDraw(true);
+        // m_Collider.SetShouldDraw(true);
         m_TargetIcon = loadImage("target.png");
 
         // Get the perimeter collider from the child GameObject
@@ -128,7 +127,7 @@ public class PredatorController extends AnimalMover implements ITriggerEventHand
         
         // Split predator if have enough nutrients
         float nutrientPercentage = (m_Nutrients / m_MaxNutrients); // Percentage of how nutrient the predator is (1f == max nutrients)
-        if (nutrientPercentage >= m_SplitNutrientPercentage)
+        if (nutrientPercentage >= m_SplitNutrientPercentage && m_GameScene.GetGameSettings().GetCurrentPredatorCount() < m_GameScene.GetGameSettings().GetMaxPredatorCount())
         {
             SplitPredator();
         }
@@ -143,12 +142,12 @@ public class PredatorController extends AnimalMover implements ITriggerEventHand
         switch (m_State)
         {
             case WANDERING:
-                SetMovementSpeed(m_MovementSpeed);
+                SetMovementSpeed(m_GameScene.GetGameSettings().GetAnimalMovementSpeed());
                 Wander();
                 break;
             
             case HUNTING:
-                SetMovementSpeed(m_HuntMovementSpeed);
+                SetMovementSpeed(m_GameScene.GetGameSettings().GetPredatorHuntSpeed());
 
                 // Prey might have gone out of view -> go back to wandering
                 if (m_HuntingPrey == null)

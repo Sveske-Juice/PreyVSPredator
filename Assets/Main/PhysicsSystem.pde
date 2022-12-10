@@ -67,6 +67,7 @@ public class PhysicsSystem extends CollisionWorld
         for (int i = 0; i < m_Colliders.size(); i++)
         {
             Collider collider = m_Colliders.get(i);
+            // println("testing: " + collider.GetName() + " on: " +collider.GetGameObject().GetName());
             if (collider.PointInCollider(point))
             {
                 if (!checkingForMouse) // All collision layers accepted if not mouse

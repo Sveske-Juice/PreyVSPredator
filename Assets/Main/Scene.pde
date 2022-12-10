@@ -6,6 +6,7 @@ public abstract class Scene
 {
     /* Members. */
     protected ZVector m_Dimensions = new ZVector(3000f, 3000f);
+    protected color m_BackgroundColor = color(40, 180, 60);
     protected String m_SceneName = "New Scene";
     protected ArrayList<GameObject> m_GameObjects = new ArrayList<GameObject>();
     protected ArrayList<GameObject> m_UIObjects = new ArrayList<GameObject>();
@@ -78,6 +79,9 @@ public abstract class Scene
     
     public void UpdateScene()
     {
+        // Clear scene from last frame
+        background(m_BackgroundColor);
+
         // Update all components on every GameObject in the scene
         long goT = millis();
         
@@ -257,7 +261,7 @@ public abstract class Scene
     {
         if (go == null)
             return null;
-        
+
         // Set a reference to this scene so the Game Object can access the scene
         go.SetBelongingToScene(this);
 
@@ -286,7 +290,6 @@ public abstract class Scene
         if (go == null)
             return null;
         
-
         // Set a reference to this scene so the Game Object can access the scene
         go.SetBelongingToScene(this);
 
@@ -500,7 +503,7 @@ public class MenuScene extends Scene
         // Mouse click event handler
         AddGameObject(new MouseEventInitiatorObject());
 
-       // Create main menu handler behavior class
-       AddGameObject(new MainMenuHandlerObject());
+        // Create main menu handler behavior class
+        AddGameObject(new MainMenuHandlerObject());
     }
 }

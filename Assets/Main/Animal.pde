@@ -11,7 +11,6 @@ public class AnimalMover extends Component
     /* Members. */
     protected GameScene m_GameScene;
     protected Polygon m_Polygon;
-    protected float m_MovementSpeed = 250f;
     protected float m_SpeedMultiplier = 1f;
     private float m_CurrentMovementSpeed;
     protected float m_ControlMovementSpeed = 400f;
@@ -73,17 +72,20 @@ public class AnimalMover extends Component
 
         if (m_ShowWandererInfo) // Show debug information
         {
+            ZVector pos = transform().GetPosition();
+            line(pos.x, pos.y, nextPos.x, nextPos.y);
+
             noFill();
             stroke(0);
             circle(nextPos.x, nextPos.y, m_WanderRadius*2);
             
-            fill(255, 0, 0);
-            circle(wanderedPos.x, wanderedPos.y, 15);
+            line(nextPos.x, nextPos.y, wanderedPos.x, wanderedPos.y);
+
+            fill(0);
+            circle(wanderedPos.x, wanderedPos.y, 10f);
         }
 
-        // Set new velocity
-        // m_RigidBody.SetVelocity(ZVector.sub(wanderedPos, transform().GetPosition()).normalize().mult(m_CurrentMovementSpeed));
-        // Move(ZVector.sub(wanderedPos, transform().GetPosition()).normalize());
+        // Apply force in new wander direction
         m_RigidBody.ApplyForce(ZVector.sub(wanderedPos, transform().GetPosition()).normalize().mult(m_CurrentMovementSpeed));
     }
 

@@ -17,8 +17,6 @@ void setup()
 
 void draw()
 {
-    background(color(40, 180, 60));
-
     Time.Tick(millis());
 
     g_SceneManager.UpdateActiveScene();
