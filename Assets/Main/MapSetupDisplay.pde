@@ -66,8 +66,11 @@ public class MapSetupDisplay extends Component
         @Override
         public void OnClick()
         {
-            g_SceneManager.AddScene(new GameScene(new EpicGameSettings()));
-            g_SceneManager.LoadScene("Game Scene");
+            // Show custom map setup menu
+            m_Scene.AddGameObject(new CustomMapSeupMenuObject());
+            
+            // Destroy this menu
+            m_GameObject.Destroy();
         }
     };
 
@@ -82,12 +85,11 @@ public class MapSetupDisplay extends Component
         CreateMenu();
     }
 
+    /*
+     * Create map setup menu during runtime.
+    */
     private void CreateMenu()
     {
-        /*
-         * Create map setup menu during runtime.
-        */
-
         // Create background for menu
         GameObject menuBackground = m_Scene.AddGameObject(new UIElement("Map Setup Display Menu Background"), transform());
         m_MenuBackground = (Polygon) menuBackground.AddComponent(new Polygon(createShape(RECT, 0f, 0f, m_MenuWidth, m_MenuHeight, 25f)));
@@ -151,6 +153,6 @@ public class MapSetupDisplay extends Component
         customBtn.SetText("Custom sim");
         customBtn.SetTextSize(48);
         customBtnObj.GetTransform().SetLocalPosition(new ZVector(m_MenuWidth / 2f - customBtn.GetSize().x / 2f, m_MenuHeight / 100 * 60));
-        customBtn.AddButtonListener(m_EpicButtonHandler);
+        customBtn.AddButtonListener(m_CustomButtonHandler);
     }
 }

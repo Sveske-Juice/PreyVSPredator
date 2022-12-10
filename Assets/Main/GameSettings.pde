@@ -28,13 +28,16 @@ public class GameSettings
     /*
      * Constructor for creating custom game settings.
     */
-    public GameSettings(int maxPreyCount, int currentPreyCount, int maxPredatorCount, int currentPredatorCount, int bushCount)
+    public GameSettings(int maxPreyCount, int currentPreyCount, int maxPredatorCount, int currentPredatorCount, int bushCount, float preySplitTime, float animalMovementSpeed, float predatorHuntSpeed)
     {
         m_MaxPreyCount = maxPreyCount;
         m_CurrentPreyCount = currentPreyCount;
         m_MaxPredatorCount = maxPredatorCount;
         m_CurrentPredatorCount = currentPredatorCount;
         m_BushCount = bushCount;
+        m_PreySplitTime = preySplitTime;
+        m_AnimalMovementSpeed = animalMovementSpeed;
+        m_PredatorHuntSpeed = predatorHuntSpeed;
     }
 
     /*

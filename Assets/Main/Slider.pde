@@ -46,7 +46,7 @@ public class Slider extends Component
     public float GetMaxValue() { return m_MaxValue; }
     public void SetMinValue(float value) { m_MinValue = value; }
     public float GetMinValue() { return m_MinValue; }
-    
+    public void SetSliderLength(float value) { m_SliderLength = value; }
     public void SetSliderColor(color value) { m_SliderColor = value; }
     public void SetMargin(ZVector value) { m_Margin = value; }
     public void SetThickness(float value) { m_Thickness = value; }
