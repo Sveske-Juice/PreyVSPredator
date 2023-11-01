@@ -62,7 +62,6 @@ public class AnimalMover extends Component
     {
         // Get a position scaled by 'm_WanderDirectionExtend' in the animal's movement direction
         ZVector nextPos = ZVector.add(transform().GetPosition(), ZVector.mult(m_RigidBody.GetVelocity().copy().normalize(), m_WanderDirectionExtend));
-        float speed = m_RigidBody.GetVelocity().mag();
 
         // Generate polar coordinates from a circle to constrain the animals movement to it's velocity
         m_WanderAngle += random(-m_WanderAngleChange, m_WanderAngleChange);
